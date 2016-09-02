@@ -1,0 +1,13 @@
+﻿@model System.Data.EntityException
+@{ViewBag.Title = "Error BD";}
+<div class="row">
+    <div class="col-xs-10 no-float center-block">
+        <div class="alert alert-danger">
+            <div class="row text-center text-capitalize">
+                <h2>Error de base de datos</h2>
+            </div>
+            @Model
+        </div>
+        <div class="alert alert-info text-center">Para más información contacte con el administrador del sistema</div>
+    </div>
+</div>

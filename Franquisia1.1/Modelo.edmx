@@ -1,0 +1,2290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ModeloAplicacion.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.1" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="anexos">
+          <Key>
+            <PropertyRef Name="idcia" />
+            <PropertyRef Name="tipane" />
+            <PropertyRef Name="codane" />
+          </Key>
+          <Property Name="idcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="tipane" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="codane" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="desane" Type="char" MaxLength="120" />
+          <Property Name="refane" Type="char" MaxLength="200" />
+          <Property Name="rucane" Type="char" MaxLength="11" />
+          <Property Name="tipdoc" Type="char" MaxLength="4" />
+          <Property Name="nrodoc" Type="char" MaxLength="20" />
+          <Property Name="repane" Type="char" MaxLength="80" />
+          <Property Name="carane" Type="char" MaxLength="80" />
+          <Property Name="provane" Type="char" MaxLength="80" />
+          <Property Name="depane" Type="char" MaxLength="80" />
+          <Property Name="paisane" Type="char" MaxLength="80" />
+          <Property Name="posane" Type="char" MaxLength="80" />
+          <Property Name="telane" Type="char" MaxLength="50" />
+          <Property Name="situane" Type="char" MaxLength="1" />
+          <Property Name="fcrea" Type="char" MaxLength="10" />
+          <Property Name="fmod" Type="char" MaxLength="10" />
+          <Property Name="usuario" Type="char" MaxLength="6" />
+          <Property Name="is_renigv" Type="char" MaxLength="1" />
+          <Property Name="entfin" Type="char" MaxLength="4" />
+          <Property Name="nrocta" Type="char" MaxLength="30" />
+          <Property Name="mon" Type="char" MaxLength="4" />
+          <Property Name="tipcta" Type="char" MaxLength="4" />
+          <Property Name="ctaane" Type="char" MaxLength="12" />
+          <Property Name="alma_mp" Type="char" MaxLength="2" />
+          <Property Name="is_mp" Type="char" MaxLength="1" />
+          <Property Name="tipo_caja" Type="char" MaxLength="4" />
+          <Property Name="is_servicio" Type="char" MaxLength="1" />
+          <Property Name="alma_pt" Type="char" MaxLength="2" />
+          <Property Name="tipper" Type="char" MaxLength="4" />
+          <Property Name="apepat" Type="char" MaxLength="20" />
+          <Property Name="apemat" Type="char" MaxLength="20" />
+          <Property Name="nombre1" Type="char" MaxLength="20" />
+          <Property Name="nombre2" Type="char" MaxLength="20" />
+          <Property Name="foto" Type="longblob" />
+          <Property Name="is_domiciliado" Type="char" MaxLength="1" />
+          <Property Name="apliconve" Type="char" MaxLength="1" />
+          <Property Name="convenio" Type="char" MaxLength="4" />
+          <Property Name="corto" Type="char" MaxLength="20" />
+          <Property Name="procmp" Type="char" MaxLength="10" />
+          <Property Name="subprocmp" Type="char" MaxLength="5" />
+          <Property Name="codaux" Type="char" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="ciafile">
+          <Key>
+            <PropertyRef Name="idcia" />
+          </Key>
+          <Property Name="idcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="descia" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ruccia" Type="char" MaxLength="11" Nullable="false" />
+          <Property Name="repcia" Type="varchar" MaxLength="120" Nullable="false" />
+          <Property Name="shortcia" Type="char" MaxLength="30" Nullable="false" />
+          <Property Name="typecia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="statecia" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="regpatcia" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="dircia" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ubigeo" Type="char" MaxLength="6" />
+          <Property Name="desSi" Type="char" MaxLength="1" />
+          <Property Name="desNo" Type="char" MaxLength="1" />
+          <Property Name="actividad" Type="char" MaxLength="6" />
+          <Property Name="reglab" Type="char" MaxLength="1" />
+          <Property Name="codaux" Type="char" MaxLength="4" />
+          <Property Name="logo" Type="longblob" />
+          <Property Name="ispresupuesto" Type="char" MaxLength="1" />
+          <Property Name="tipdoc" Type="char" MaxLength="4" />
+          <Property Name="nrodoc" Type="char" MaxLength="20" />
+          <Property Name="floid" Type="varchar" MaxLength="40" />
+          <Property Name="plancuentas" Type="char" MaxLength="4" />
+          <Property Name="regtributario" Type="char" MaxLength="4" />
+          <Property Name="telefonos" Type="varchar" MaxLength="120" />
+          <Property Name="website" Type="varchar" MaxLength="120" />
+          <Property Name="cargorep" Type="varchar" MaxLength="80" />
+          <Property Name="kcatalogo" Type="char" MaxLength="4" />
+          <Property Name="kmetval" Type="char" MaxLength="4" />
+        </EntityType>
+        <EntityType Name="ciausrfile">
+          <Key>
+            <PropertyRef Name="idcia" />
+            <PropertyRef Name="idusr" />
+          </Key>
+          <Property Name="idcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="idusr" Type="char" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="claserv">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="codigo" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="cuenta" Type="char" MaxLength="12" Nullable="false" />
+          <Property Name="situa" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="conc">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CODIGO" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="SUCURSAL" Type="char" MaxLength="4" />
+          <Property Name="UNDATENCION" Type="char" MaxLength="10" />
+          <Property Name="PERATENCION" Type="char" MaxLength="4" />
+          <Property Name="FECHA" Type="date" />
+          <Property Name="HORA" Type="char" MaxLength="8" />
+          <Property Name="USER" Type="char" MaxLength="6" />
+          <Property Name="SITUACION" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="cond">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+            <PropertyRef Name="ITEM" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CODIGO" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="ITEM" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="CONVENTA" Type="char" MaxLength="4" />
+          <Property Name="CANTIDAD" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="PREUNI" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="TOTAL" Type="decimal" Precision="15" Scale="2" />
+        </EntityType>
+        <EntityType Name="convensuc">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="sucursal" />
+            <PropertyRef Name="conventa" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="sucursal" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="conventa" Type="char" MaxLength="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="conventa">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="codigo" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="80" />
+          <Property Name="claserv" Type="char" MaxLength="2" />
+          <Property Name="is_equialm" Type="char" MaxLength="1" />
+          <Property Name="equivalencia" Type="char" MaxLength="20" />
+          <Property Name="cuenta" Type="char" MaxLength="12" />
+          <Property Name="tipovalorventa" Type="char" MaxLength="4" />
+          <Property Name="foto" Type="longblob" />
+          <Property Name="situa" Type="char" MaxLength="1" />
+          <Property Name="foto64" Type="longblob" />
+        </EntityType>
+        <EntityType Name="divatencion">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="SUCURSAL" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="SUCURSAL" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="CODIGO" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="80" />
+        </EntityType>
+        <EntityType Name="forpago">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="codigo" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="is_tarjeta" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="situa" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="forventa">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="codigo" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="dessunat" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="naturaleza" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="dias" Type="int" Nullable="false" />
+          <Property Name="situa" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="maesgen">
+          <Key>
+            <PropertyRef Name="idmaesgen" />
+            <PropertyRef Name="clavemaesgen" />
+          </Key>
+          <Property Name="idmaesgen" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="clavemaesgen" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="desmaesgen" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="abrevia" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="parm1maesgen" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="parm2maesgen" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="parm3maesgen" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="parm4maesgen" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="parm5maesgen" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="parm6maesgen" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="einvoice" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="statemaesgen" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="tipomaesgen" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="numcia">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="PROCESO" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="PROCESO" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="NUMERO" Type="int" />
+        </EntityType>
+        <EntityType Name="numpemi">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="PUNEMI" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="PUNEMI" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CODIGO" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="SERIE" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="NUMERO" Type="int" />
+        </EntityType>
+        <EntityType Name="numpos">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="PUNEMI" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="PUNEMI" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="NUMERO" Type="int" />
+        </EntityType>
+        <EntityType Name="parreg">
+          <Key>
+            <PropertyRef Name="IDCIA" />
+            <PropertyRef Name="FORM" />
+          </Key>
+          <Property Name="IDCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="FORM" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="COM_CTA_ISC" Type="char" MaxLength="12" />
+          <Property Name="COM_CTA_IGV" Type="char" MaxLength="12" />
+          <Property Name="COM_TASA_IGV" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="COM_CTA_DETRA" Type="char" MaxLength="12" />
+          <Property Name="COM_TD_DETRA" Type="char" MaxLength="4" />
+          <Property Name="COM_DH_DETRA" Type="char" MaxLength="4" />
+          <Property Name="COM_MONTO_DETRA" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="COM_SUBCOM_LOG" Type="char" MaxLength="2" />
+          <Property Name="MON_NAC" Type="char" MaxLength="2" />
+          <Property Name="COM_TD_INTERNO" Type="char" MaxLength="4" />
+          <Property Name="COM_CTA_PERCEP_PAGAR" Type="char" MaxLength="12" />
+          <Property Name="COM_CTA_PERCEP_APLICAR" Type="char" MaxLength="12" />
+          <Property Name="COM_CTA_RETEN_PAGAR" Type="char" MaxLength="12" />
+          <Property Name="COM_SUB_REC_EXISTENCIAS" Type="char" MaxLength="4" />
+          <Property Name="COM_TIPO_ANEXO" Type="char" MaxLength="4" />
+          <Property Name="MP_TRANSMP" Type="char" MaxLength="10" />
+          <Property Name="MP_PROCMP" Type="char" MaxLength="10" />
+          <Property Name="MP_TIPO_CAPTURA" Type="char" MaxLength="1" />
+          <Property Name="MP_CTA_RET_RENTA" Type="char" MaxLength="12" />
+          <Property Name="MP_CTA_RET_IGV" Type="char" MaxLength="12" />
+          <Property Name="MP_TASA_RENTA" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="MP_SUBCOM_LOG" Type="char" MaxLength="2" />
+          <Property Name="MP_FILAS_LIQ" Type="int" />
+          <Property Name="HON_TIPO_ANEXO" Type="char" MaxLength="4" />
+          <Property Name="HON_CTA_RET_RENTA" Type="char" MaxLength="12" />
+          <Property Name="PRO_ALM_DEFAULT" Type="char" MaxLength="2" />
+          <Property Name="PRO_FAM_MP" Type="char" MaxLength="4" />
+          <Property Name="PRO_FAM_SP" Type="char" MaxLength="4" />
+          <Property Name="PRO_FAM_PT" Type="char" MaxLength="4" />
+          <Property Name="PRO_FAM_PP" Type="char" MaxLength="4" />
+          <Property Name="PRO_FAM_DD" Type="char" MaxLength="4" />
+          <Property Name="COM_SUB_PERCEPCIONES" Type="char" MaxLength="4" />
+          <Property Name="COM_IGV_IMPORTACION" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="COM_IPM_IMPORTACION" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="COM_TD_PERCEPCION" Type="char" MaxLength="4" />
+          <Property Name="COM_SUBCOM_IMPORTACIONES" Type="char" MaxLength="2" />
+          <Property Name="COM_CTA_DER_ADU" Type="char" MaxLength="12" />
+          <Property Name="COM_CTA_FAC_PAGAR_IMP" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_CONSUMO_SP" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_CONSUMO_PP" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_CONSUMO_PT" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_CONSUMO_DD" Type="char" MaxLength="12" />
+          <Property Name="PRO_SUB_PE" Type="char" MaxLength="4" />
+          <Property Name="SUB_APERTURA" Type="char" MaxLength="4" />
+          <Property Name="COMPRO_APERTURA" Type="char" MaxLength="7" />
+          <Property Name="COM_TASA_ISC" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="COM_CTA_DESCUENTO" Type="char" MaxLength="12" />
+          <Property Name="COM_CTA_NOBASE" Type="char" MaxLength="12" />
+          <Property Name="COM_TASA_IVAP" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="COM_CTA_IVAP" Type="char" MaxLength="12" />
+          <Property Name="MAXFILABOL" Type="int" />
+          <Property Name="BETWEENBOL" Type="int" />
+          <Property Name="NROBOLPAG" Type="int" />
+          <Property Name="MAXFILABOLWIN" Type="int" />
+          <Property Name="PLA_TD_PLANILLA" Type="char" MaxLength="4" />
+          <Property Name="PLA_TIPO_ANEXO" Type="char" MaxLength="4" />
+          <Property Name="PLA_SUB_PLANILLA" Type="char" MaxLength="4" />
+          <Property Name="PRO_CTA_ACTIVACION_SP" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_ACTIVACION_PT" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_ACTIVACION_PP" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_ACTIVACION_DD" Type="char" MaxLength="12" />
+          <Property Name="TES_TD_PLAMOVI" Type="char" MaxLength="4" />
+          <Property Name="TES_SUB_PLAMOVI" Type="char" MaxLength="4" />
+          <Property Name="TES_CTA_MOVI" Type="char" MaxLength="12" />
+          <Property Name="TES_SUB_RENDICION" Type="char" MaxLength="4" />
+          <Property Name="VEN_CTA_DETRA_COBRAR" Type="char" MaxLength="12" />
+          <Property Name="VEN_TD_DETRA_COBRAR" Type="char" MaxLength="4" />
+          <Property Name="VEN_CTA_PERCEP_COBRAR" Type="char" MaxLength="12" />
+          <Property Name="VEN_TD_PERCEP_COBRAR" Type="char" MaxLength="4" />
+          <Property Name="COM_TD_RETEN" Type="char" MaxLength="4" />
+          <Property Name="VEN_CTA_PERCEP_APLICAR" Type="char" MaxLength="12" />
+          <Property Name="ADC_SUB" Type="char" MaxLength="4" />
+          <Property Name="ADC_CTA_GANANCIA" Type="char" MaxLength="12" />
+          <Property Name="ADC_CTA_PERDIDA" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_ACTIVACION_SP_SERVICIO" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_ACTIVACION_PT_SERVICIO" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_ACTIVACION_PP_SERVICIO" Type="char" MaxLength="12" />
+          <Property Name="PRO_CTA_ACTIVACION_DD_SERVICIO" Type="char" MaxLength="12" />
+          <Property Name="ADC_TIPCONV" Type="char" MaxLength="4" />
+          <Property Name="MP_GLOSA_DEFAULT" Type="char" MaxLength="60" />
+          <Property Name="MP_SUB_PROV_PAGO" Type="char" MaxLength="4" />
+          <Property Name="MP_CUADRIMP" Type="char" MaxLength="10" />
+          <Property Name="MP_IS_LIMITE_LIQ" Type="char" MaxLength="1" />
+          <Property Name="MP_LIMITE_LIQ_UIT" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="MP_PREIMPRESION" Type="char" MaxLength="1" />
+          <Property Name="MP_PRECOM" Type="char" MaxLength="1" />
+          <Property Name="MP_RACIMAS" Type="char" MaxLength="1" />
+          <Property Name="MP_AREA" Type="char" MaxLength="1" />
+          <Property Name="MP_DESCPARTE" Type="char" MaxLength="1" />
+          <Property Name="MP_DESCFINTRAM" Type="char" MaxLength="1" />
+          <Property Name="PRO_GENMPPR" Type="char" MaxLength="1" />
+          <Property Name="COLOR_SIN_TRAZA_PAL" Type="char" MaxLength="30" />
+          <Property Name="MP_PRIMER_DIA_SEM" Type="char" MaxLength="4" />
+          <Property Name="RET_CTA_RETENCION" Type="char" MaxLength="12" />
+          <Property Name="RET_CTA_NETO_PAGAR" Type="char" MaxLength="12" />
+          <Property Name="CTA_COSVEN_PRODTER_SP" Type="char" MaxLength="12" />
+          <Property Name="CTA_COSVEN_PRODTER_PP" Type="char" MaxLength="12" />
+          <Property Name="CTA_COSVEN_PRODTER_PT" Type="char" MaxLength="12" />
+          <Property Name="CTA_COSVEN_PRODTER_DD" Type="char" MaxLength="12" />
+          <Property Name="CTA_COSVEN_SERTER_SP" Type="char" MaxLength="12" />
+          <Property Name="CTA_COSVEN_SERTER_PP" Type="char" MaxLength="12" />
+          <Property Name="CTA_COSVEN_SERTER_PT" Type="char" MaxLength="12" />
+          <Property Name="CTA_COSVEN_SERTER_DD" Type="char" MaxLength="12" />
+          <Property Name="AVISO_PROD_SIN_CENCOS" Type="char" MaxLength="1" />
+          <Property Name="VEN_LIBERA_PRECIO_COTIZA" Type="char" MaxLength="1" />
+          <Property Name="VEN_LIBERA_DESC_COTIZA" Type="char" MaxLength="1" />
+          <Property Name="VEN_COMPRALE_PERU" Type="longblob" />
+          <Property Name="VEN_TASA_RENTA" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="VEN_TASA_SERVICIO" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="PRO_TRAZA_VINCULANTE" Type="char" MaxLength="1" />
+          <Property Name="MP_IMPRIME_PARTE" Type="char" MaxLength="1" />
+          <Property Name="MP_IMPRIME_LIQUI" Type="char" MaxLength="1" />
+          <Property Name="VEN_DESCRI_FINAL_EXPORTACION" Type="text" />
+          <Property Name="TES_IS_ENCABEZADO_CHEQUE" Type="char" MaxLength="1" />
+          <Property Name="PLA_HE25" Type="int" />
+          <Property Name="PLA_CALCULO_HE" Type="char" MaxLength="1" />
+          <Property Name="ALM_IS_PS_VALORIZADO" Type="char" MaxLength="1" />
+          <Property Name="TES_GERENCIA_VOUCHER" Type="char" MaxLength="4" />
+          <Property Name="MP_TD_REF" Type="char" MaxLength="4" />
+          <Property Name="AJR_SUB" Type="char" MaxLength="4" />
+          <Property Name="AJR_CTA_GANANCIA" Type="char" MaxLength="12" />
+          <Property Name="AJR_CTA_PERDIDA" Type="char" MaxLength="12" />
+          <Property Name="AJR_REDONDEOMN" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="AJR_REDONDEOUS" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="PLA_COLOR_CESE" Type="char" MaxLength="30" />
+          <Property Name="PLA_SUB_PROVISION" Type="char" MaxLength="4" />
+          <Property Name="PLA_TD_PROVISION" Type="char" MaxLength="4" />
+          <Property Name="VEN_IS_COMPRALE_PERU" Type="char" MaxLength="1" />
+          <Property Name="VEN_FORMATO_COTIZACION" Type="char" MaxLength="2" />
+          <Property Name="COM_TIPANE_SUNAT" Type="char" MaxLength="1" />
+          <Property Name="COM_CODANE_SUNAT" Type="char" MaxLength="20" />
+          <Property Name="MP_ACOPIADORMP" Type="char" MaxLength="10" />
+          <Property Name="MP_CONDUCTORMP" Type="char" MaxLength="10" />
+          <Property Name="MP_CTACOM" Type="char" MaxLength="2" />
+          <Property Name="MP_SUBPROCMP" Type="char" MaxLength="10" />
+          <Property Name="MP_MATERIA_PRIMA" Type="char" MaxLength="20" />
+          <Property Name="MP_TIPO_TRANSMP" Type="char" MaxLength="1" />
+          <Property Name="MP_BULTOS" Type="char" MaxLength="1" />
+          <Property Name="MP_EMPACAMP" Type="char" MaxLength="5" />
+          <Property Name="MP_HISTORIAL_METAS" Type="int" />
+          <Property Name="MP_COLOR_COMPRADO" Type="char" MaxLength="30" />
+          <Property Name="MP_COLOR_PROYECTADO" Type="char" MaxLength="30" />
+          <Property Name="MP_COLOR_CUMPLIMIENTO" Type="char" MaxLength="30" />
+          <Property Name="MP_COLOR_TOTALIZADOR" Type="char" MaxLength="30" />
+          <Property Name="MP_CODMOV" Type="char" MaxLength="2" />
+          <Property Name="MP_COLOR_RANGO1" Type="char" MaxLength="30" />
+          <Property Name="MP_COLOR_RANGO2" Type="char" MaxLength="30" />
+          <Property Name="MP_COLOR_RANGO3" Type="char" MaxLength="30" />
+          <Property Name="MP_COLOR_RANGO4" Type="char" MaxLength="30" />
+          <Property Name="MP_COLOR_RANGO5" Type="char" MaxLength="30" />
+          <Property Name="MP_COLOR_RANGO6" Type="char" MaxLength="30" />
+          <Property Name="MP_IS_VINCULA_EXPORTA" Type="char" MaxLength="1" />
+          <Property Name="MP_IS_CERTI_EXPORTA" Type="char" MaxLength="1" />
+          <Property Name="MP_IS_VINCULA_CONTABLE" Type="char" MaxLength="1" />
+          <Property Name="MP_IS_CERTI_CONTABLE" Type="char" MaxLength="1" />
+          <Property Name="MP_IS_VINCULA_EXPORTA_MN" Type="char" MaxLength="1" />
+          <Property Name="MP_IS_CERTI_EXPORTA_MN" Type="char" MaxLength="1" />
+          <Property Name="MP_IS_VINCULA_CONTABLE_MN" Type="char" MaxLength="1" />
+          <Property Name="MP_IS_CERTI_CONTABLE_MN" Type="char" MaxLength="1" />
+          <Property Name="COM_SUB_RETENCIONES" Type="char" MaxLength="4" />
+          <Property Name="MP_IS_CONTROL_ENFUNDE" Type="char" MaxLength="1" />
+          <Property Name="PRO_MOV_ENTRADA" Type="char" MaxLength="2" />
+          <Property Name="PRO_MOV_SALIDA" Type="char" MaxLength="2" />
+          <Property Name="PRO_MOV_SALIDA_VENTA" Type="char" MaxLength="2" />
+          <Property Name="VEN_INGRESO_VENTA" Type="char" MaxLength="1" />
+          <Property Name="PLA_UBIGEO_DEFAULT" Type="char" MaxLength="6" />
+          <Property Name="PLA_FECINI_CONTRATO" Type="char" MaxLength="10" />
+          <Property Name="PLA_FECFIN_CONTRATO" Type="char" MaxLength="10" />
+          <Property Name="PLA_FIRMA_FICHA_PERSONAL" Type="longblob" />
+          <Property Name="PLA_REMU_DEFAULT" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="ALM_CALC_PRECIOCOSTO" Type="char" MaxLength="1" />
+          <Property Name="POS_MON_REFERENCIA" Type="char" MaxLength="4" />
+          <Property Name="POS_IS_IMAGEN" Type="char" MaxLength="1" />
+          <Property Name="ALM_IS_REDONDEO" Type="char" MaxLength="1" />
+          <Property Name="ALM_TOPE_REDONDEO" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="POS_TIPDOC_DEFAULT" Type="char" MaxLength="4" />
+          <Property Name="POS_CODANE_DEFAULT" Type="char" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="peratencion">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="codigo" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="corto" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="situa" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="preconven">
+          <Key>
+            <PropertyRef Name="secue" />
+          </Key>
+          <Property Name="secue" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="sucursal" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="conventa" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="codmon" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="precio" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="cdate" Type="date" Nullable="false" />
+          <Property Name="chora" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="cuser" Type="char" MaxLength="6" Nullable="false" />
+          <Property Name="state" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="punemi">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="codigo" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="sucursal" Type="char" MaxLength="4" />
+          <Property Name="descripcion" Type="varchar" MaxLength="80" />
+          <Property Name="direccion" Type="varchar" MaxLength="120" />
+          <Property Name="alma_mp" Type="char" MaxLength="2" />
+          <Property Name="bascula" Type="char" MaxLength="2" />
+          <Property Name="is_mp" Type="char" MaxLength="1" />
+          <Property Name="situa" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="rolespv">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="rol" />
+            <PropertyRef Name="idusr" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="rol" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="idusr" Type="char" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sucperatencion">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="PERATENCION" />
+            <PropertyRef Name="SUCURSAL" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="PERATENCION" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="SUCURSAL" Type="char" MaxLength="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sucursal">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="codigo" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="direccion" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="nomcon" Type="varchar" MaxLength="120" Nullable="false" />
+          <Property Name="correocon" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="tel1con" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="tel2con" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="cargocon" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="comcon" Type="varchar" MaxLength="120" Nullable="false" />
+          <Property Name="situa" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="distrito" Type="char" MaxLength="80" Nullable="false" />
+          <Property Name="provincia" Type="char" MaxLength="80" Nullable="false" />
+          <Property Name="departamento" Type="char" MaxLength="80" Nullable="false" />
+          <Property Name="pais" Type="char" MaxLength="80" Nullable="false" />
+          <Property Name="isfundo" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="idestane" Type="char" MaxLength="4" />
+        </EntityType>
+        <EntityType Name="sucusr">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="sucursal" />
+            <PropertyRef Name="idusr" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="sucursal" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="idusr" Type="char" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tarjetas">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="codigo" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="foto" Type="longblob" />
+          <Property Name="foto64" Type="longblob" />
+          <Property Name="situa" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tdcom">
+          <Key>
+            <PropertyRef Name="IDCIA" />
+            <PropertyRef Name="FORM" />
+            <PropertyRef Name="TD" />
+          </Key>
+          <Property Name="IDCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="FORM" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="TD" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="DH" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="FECVEN" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="PREDETERMINADO" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="AFECTO_IGV" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="AUTONUM" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="AFECTO_RENTA" Type="char" MaxLength="1" />
+          <Property Name="AFECTO_IMP_RENTA" Type="char" MaxLength="1" />
+          <Property Name="IS_MP" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="tdprgven">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="prg" />
+            <PropertyRef Name="tipdoc" />
+          </Key>
+          <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="prg" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="tipdoc" Type="char" MaxLength="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="undatencion">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="SUCURSAL" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="SUCURSAL" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="CODIGO" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="DIVATENCION" Type="char" MaxLength="2" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="80" />
+          <Property Name="ESTADO" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="usrfile">
+          <Key>
+            <PropertyRef Name="idusr" />
+          </Key>
+          <Property Name="idusr" Type="char" MaxLength="6" Nullable="false" />
+          <Property Name="desusr" Type="varchar" MaxLength="60" />
+          <Property Name="passusr" Type="varchar" MaxLength="256" />
+          <Property Name="typeusr" Type="char" MaxLength="1" />
+          <Property Name="stateusr" Type="char" MaxLength="1" />
+          <Property Name="mail" Type="varchar" MaxLength="120" />
+          <Property Name="firma_digital" Type="longblob" />
+          <Property Name="nombre_firma" Type="char" MaxLength="30" />
+          <Property Name="cargo_firma" Type="char" MaxLength="30" />
+          <Property Name="dni_firma" Type="char" MaxLength="8" />
+          <Property Name="msn" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="venc">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CODIGO" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="SUCURSAL" Type="char" MaxLength="4" />
+          <Property Name="PUNEMI" Type="char" MaxLength="2" />
+          <Property Name="PROC_VENTA" Type="char" MaxLength="8" />
+          <Property Name="TIPO" Type="char" MaxLength="1" />
+          <Property Name="PRG" Type="char" MaxLength="5" />
+          <Property Name="PRGPS" Type="char" MaxLength="5" />
+          <Property Name="PERIODO" Type="char" MaxLength="4" />
+          <Property Name="FECMOV" Type="date" />
+          <Property Name="MES" Type="char" MaxLength="4" />
+          <Property Name="CTAVEN" Type="char" MaxLength="2" />
+          <Property Name="SUBVEN" Type="char" MaxLength="2" />
+          <Property Name="TIPOMOV" Type="char" MaxLength="2" />
+          <Property Name="CODMOV" Type="char" MaxLength="2" />
+          <Property Name="TIPANE" Type="char" MaxLength="4" />
+          <Property Name="CODANE" Type="varchar" MaxLength="20" />
+          <Property Name="DIRECCION" Type="varchar" MaxLength="200" />
+          <Property Name="TIPDOC" Type="char" MaxLength="4" />
+          <Property Name="NUMDOC" Type="varchar" MaxLength="30" />
+          <Property Name="FECDOC" Type="char" MaxLength="10" />
+          <Property Name="FECVEN" Type="char" MaxLength="10" />
+          <Property Name="TIPOVENTA" Type="char" MaxLength="2" />
+          <Property Name="FORVENTA" Type="char" MaxLength="3" />
+          <Property Name="GLOSA" Type="text" />
+          <Property Name="CTIPCONV" Type="char" MaxLength="1" />
+          <Property Name="CTIPCAM" Type="decimal" Precision="11" Scale="6" />
+          <Property Name="CFECCAM" Type="char" MaxLength="10" />
+          <Property Name="CDATE" Type="date" />
+          <Property Name="CHORA" Type="char" MaxLength="8" />
+          <Property Name="CUSER" Type="char" MaxLength="6" />
+          <Property Name="CSIT" Type="char" MaxLength="4" />
+          <Property Name="IS_GR_REMITENTE" Type="char" MaxLength="1" />
+          <Property Name="GR_REMITENTE" Type="char" MaxLength="20" />
+          <Property Name="TIPDOC_GR_REMITENTE" Type="char" MaxLength="4" />
+          <Property Name="GR_TRANS" Type="char" MaxLength="20" />
+          <Property Name="RAZON_TRANS" Type="varchar" MaxLength="120" />
+          <Property Name="RUC_TRANS" Type="char" MaxLength="11" />
+          <Property Name="NOM_TRANS" Type="varchar" MaxLength="120" />
+          <Property Name="LIC_TRANS" Type="char" MaxLength="20" />
+          <Property Name="PLACA_TRANS" Type="char" MaxLength="10" />
+          <Property Name="PARTIDA" Type="varchar" MaxLength="200" />
+          <Property Name="LLEGADA" Type="varchar" MaxLength="200" />
+          <Property Name="FECEMI_GR_REMI" Type="char" MaxLength="10" />
+          <Property Name="FECTRAS" Type="char" MaxLength="10" />
+          <Property Name="TIPO_TRAS" Type="char" MaxLength="4" />
+          <Property Name="ALBARAN" Type="char" MaxLength="10" />
+          <Property Name="OC_CLIENTE" Type="char" MaxLength="20" />
+          <Property Name="FEC_OC_CLIENTE" Type="char" MaxLength="10" />
+          <Property Name="TIPTAS_DETRA" Type="char" MaxLength="5" />
+          <Property Name="IMPTAS_DETRA" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="BASE_DETRA" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="TIPTAS_PERCEP" Type="char" MaxLength="5" />
+          <Property Name="IMPTAS_PERCEP" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="BASE_PERCEP" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="CSUBDIA" Type="char" MaxLength="4" />
+          <Property Name="CCOMPRO" Type="char" MaxLength="7" />
+          <Property Name="PORC_DETRA" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="PORC_PERCEP" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="CODMON" Type="char" MaxLength="2" />
+          <Property Name="FECHA_EMBARQUE" Type="char" MaxLength="10" />
+          <Property Name="ANEXO_PAGO_EXPORTACION" Type="char" MaxLength="20" />
+          <Property Name="EMBARQUE" Type="char" MaxLength="30" />
+          <Property Name="MARCAS" Type="char" MaxLength="30" />
+          <Property Name="PUERTO_ORIGEN" Type="char" MaxLength="4" />
+          <Property Name="PUERTO_DESTINO" Type="char" MaxLength="4" />
+          <Property Name="PESO_BRUTO" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="PESO_NETO" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="CONTENEDORES" Type="char" MaxLength="40" />
+          <Property Name="DESCRI_FINAL_EXPORTACION" Type="text" />
+        </EntityType>
+        <EntityType Name="vend">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+            <PropertyRef Name="ITEM" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CODIGO" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="ITEM" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="ALMA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CODARTI" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="IS_LOTE" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="LOTE" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="DESARTI" Type="varchar" MaxLength="300" Nullable="false" />
+          <Property Name="UNIDAD" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="TIPOPRECIO" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="PREUNI" Type="decimal" Precision="15" Scale="3" Nullable="false" />
+          <Property Name="CANTIDAD" Type="decimal" Precision="15" Scale="3" Nullable="false" />
+          <Property Name="SUBTOTAL" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="PORCDESC" Type="decimal" Precision="15" Scale="3" Nullable="false" />
+          <Property Name="DESCUENTO" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="TOTAL" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="IGV" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="ISC" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="IVAP" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="SERVICIO" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="NETO" Type="decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="GLOSA" Type="text" Nullable="false" />
+          <Property Name="TIPSERVEN" Type="char" MaxLength="3" />
+          <Property Name="PARTE_ALMA" Type="char" MaxLength="18" />
+          <Property Name="DTIPCAM" Type="decimal" Precision="11" Scale="4" />
+          <Property Name="NETO_MN" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="SUBTOTAL_MN" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="DESCUENTO_MN" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="TOTAL_MN" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="NETO_US" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="SUBTOTAL_US" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="DESCUENTO_US" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="TOTAL_US" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="ORDEN_VENTA" Type="char" MaxLength="11" />
+          <Property Name="ITEM_ORDEN_VENTA" Type="char" MaxLength="3" />
+          <Property Name="CONVENTA" Type="char" MaxLength="4" />
+          <Property Name="TIPOVALORVENTA" Type="char" MaxLength="4" />
+          <Property Name="GRAVADO" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="EXONERADO" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="INAFECTO" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="EXPORTACION" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="GRATUITA" Type="decimal" Precision="15" Scale="2" />
+        </EntityType>
+        <EntityType Name="venpag">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+            <PropertyRef Name="ITEM" />
+          </Key>
+          <Property Name="CODCIA" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CODIGO" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="ITEM" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="FORVENTA" Type="char" MaxLength="3" />
+          <Property Name="FORPAGO" Type="char" MaxLength="3" />
+          <Property Name="TARJETA" Type="char" MaxLength="3" />
+          <Property Name="REFERENCIA" Type="varchar" MaxLength="30" />
+          <Property Name="IMPORTE" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="RECIBIDO" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="VUELTO" Type="decimal" Precision="15" Scale="2" />
+        </EntityType>
+        <EntityContainer Name="ModeloAplicacionStoreContainer">
+          <EntitySet Name="anexos" EntityType="Self.anexos" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="ciafile" EntityType="Self.ciafile" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="ciausrfile" EntityType="Self.ciausrfile" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="claserv" EntityType="Self.claserv" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="conc" EntityType="Self.conc" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="cond" EntityType="Self.cond" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="convensuc" EntityType="Self.convensuc" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="conventa" EntityType="Self.conventa" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="divatencion" EntityType="Self.divatencion" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="forpago" EntityType="Self.forpago" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="forventa" EntityType="Self.forventa" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="maesgen" EntityType="Self.maesgen" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="numcia" EntityType="Self.numcia" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="numpemi" EntityType="Self.numpemi" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="numpos" EntityType="Self.numpos" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="parreg" EntityType="Self.parreg" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="peratencion" EntityType="Self.peratencion" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="preconven" EntityType="Self.preconven" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="punemi" EntityType="Self.punemi" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="rolespv" EntityType="Self.rolespv" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="sucperatencion" EntityType="Self.sucperatencion" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="sucursal" EntityType="Self.sucursal" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="sucusr" EntityType="Self.sucusr" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="tarjetas" EntityType="Self.tarjetas" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="tdcom" EntityType="Self.tdcom" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="tdprgven" EntityType="Self.tdprgven" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="undatencion" EntityType="Self.undatencion" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="usrfile" EntityType="Self.usrfile" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="venc" EntityType="Self.venc" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="vend" EntityType="Self.vend" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="venpag" EntityType="Self.venpag" Schema="appbosa" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ModeloAplicacion" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ciafile">
+          <Key>
+            <PropertyRef Name="idcia" />
+          </Key>
+          <Property Name="idcia" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="descia" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ruccia" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="repcia" Type="String" MaxLength="120" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="shortcia" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="typecia" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="statecia" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="regpatcia" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="dircia" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="desSi" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="desNo" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="actividad" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="reglab" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="codaux" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ispresupuesto" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="tipdoc" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="nrodoc" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="floid" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="plancuentas" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="regtributario" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="telefonos" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="website" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="cargorep" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="kcatalogo" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="kmetval" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="ubigeo" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="divatencion">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="SUCURSAL" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SUCURSAL" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CODIGO" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sucursal">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="codigo" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="descripcion" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="direccion" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nomcon" Type="String" MaxLength="120" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="correocon" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tel1con" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tel2con" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="cargocon" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="comcon" Type="String" MaxLength="120" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="situa" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="distrito" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="provincia" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="departamento" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="pais" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="isfundo" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="idestane" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="undatencion">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+            <PropertyRef Name="SUCURSAL" />
+          </Key>
+          <Property Name="CODCIA" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SUCURSAL" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DIVATENCION" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CODIGO" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="ESTADO" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="usrfile">
+          <Key>
+            <PropertyRef Name="idusr" />
+          </Key>
+          <Property Name="idusr" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="desusr" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="passusr" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="typeusr" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="stateusr" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="mail" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="firma_digital" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="nombre_firma" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="cargo_firma" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="dni_firma" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="msn" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="appbosaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ciafile" EntityType="Self.ciafile" />
+          <EntitySet Name="divatencion" EntityType="Self.divatencion" />
+          <EntitySet Name="sucursal" EntityType="Self.sucursal" />
+          <EntitySet Name="undatencion" EntityType="Self.undatencion" />
+          <EntitySet Name="usrfile" EntityType="Self.usrfile" />
+          <EntitySet Name="sucusr" EntityType="ModeloAplicacion.sucusr" />
+          <EntitySet Name="claserv" EntityType="ModeloAplicacion.claserv" />
+          <EntitySet Name="peratencion" EntityType="ModeloAplicacion.peratencion" />
+          <EntitySet Name="sucperatencion" EntityType="ModeloAplicacion.sucperatencion" />
+          <EntitySet Name="conventa" EntityType="ModeloAplicacion.conventa" />
+          <EntitySet Name="anexos" EntityType="ModeloAplicacion.anexos" />
+          <EntitySet Name="conc" EntityType="ModeloAplicacion.conc" />
+          <EntitySet Name="cond" EntityType="ModeloAplicacion.cond" />
+          <EntitySet Name="punemi" EntityType="ModeloAplicacion.punemi" />
+          <EntitySet Name="convensuc" EntityType="ModeloAplicacion.convensuc" />
+          <EntitySet Name="preconven" EntityType="ModeloAplicacion.preconven" />
+          <EntitySet Name="maesgen" EntityType="ModeloAplicacion.maesgen" />
+          <EntitySet Name="rolespv" EntityType="ModeloAplicacion.rolespv" />
+          <EntitySet Name="ciausrfile" EntityType="ModeloAplicacion.ciausrfile" />
+          <EntitySet Name="parreg" EntityType="ModeloAplicacion.parreg" />
+          <EntitySet Name="tdcom" EntityType="ModeloAplicacion.tdcom" />
+          <EntitySet Name="forventa" EntityType="ModeloAplicacion.forventa" />
+          <EntitySet Name="forpago" EntityType="ModeloAplicacion.forpago" />
+          <EntitySet Name="tarjetas" EntityType="ModeloAplicacion.tarjetas" />
+          <EntitySet Name="venc" EntityType="ModeloAplicacion.venc" />
+          <EntitySet Name="numpos" EntityType="ModeloAplicacion.numpos" />
+          <EntitySet Name="venpag" EntityType="ModeloAplicacion.venpag" />
+          <EntitySet Name="numcia" EntityType="ModeloAplicacion.numcia" />
+          <EntitySet Name="numpemi" EntityType="ModeloAplicacion.numpemi" />
+          <EntitySet Name="tdprgven" EntityType="ModeloAplicacion.tdprgven" />
+          <EntitySet Name="vend" EntityType="ModeloAplicacion.vend" />
+        </EntityContainer>
+        <EntityType Name="sucusr">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="sucursal" />
+            <PropertyRef Name="idusr" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="sucursal" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="idusr" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="claserv">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="cuenta" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="situa" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="peratencion">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="corto" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="situa" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sucperatencion">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="PERATENCION" />
+            <PropertyRef Name="SUCURSAL" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PERATENCION" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="SUCURSAL" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="conventa">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="claserv" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="is_equialm" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="equivalencia" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="cuenta" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="foto" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="situa" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="foto64" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="tipovalorventa" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="anexos">
+          <Key>
+            <PropertyRef Name="idcia" />
+            <PropertyRef Name="tipane" />
+            <PropertyRef Name="codane" />
+          </Key>
+          <Property Name="idcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="tipane" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="codane" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="desane" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="refane" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="rucane" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="tipdoc" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="nrodoc" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="repane" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="carane" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="provane" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="depane" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="paisane" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="posane" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="telane" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="situane" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="fcrea" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="fmod" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="usuario" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="is_renigv" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="entfin" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="nrocta" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="mon" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="tipcta" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="ctaane" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="alma_mp" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="is_mp" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="tipo_caja" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="is_servicio" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="alma_pt" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="tipper" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="apepat" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="apemat" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="nombre1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="nombre2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="foto" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="is_domiciliado" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="apliconve" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="convenio" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="corto" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="procmp" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="subprocmp" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="codaux" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="conc">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CODIGO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SUCURSAL" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="UNDATENCION" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PERATENCION" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="FECHA" Type="DateTime" />
+          <Property Name="HORA" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="SITUACION" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="USER" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="cond">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+            <PropertyRef Name="ITEM" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CODIGO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ITEM" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="CONVENTA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="CANTIDAD" Type="Decimal" />
+          <Property Name="PREUNI" Type="Decimal" />
+          <Property Name="TOTAL" Type="Decimal" />
+        </EntityType>
+        <EntityType Name="punemi">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="direccion" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="situa" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="alma_mp" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="bascula" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="is_mp" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="sucursal" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="convensuc">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="sucursal" />
+            <PropertyRef Name="conventa" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="sucursal" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="conventa" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="preconven">
+          <Key>
+            <PropertyRef Name="secue" />
+          </Key>
+          <Property Name="secue" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="sucursal" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="conventa" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="codmon" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="precio" Type="Decimal" />
+          <Property Name="cdate" Type="DateTime" Nullable="false" />
+          <Property Name="chora" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="cuser" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="state" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="maesgen">
+          <Key>
+            <PropertyRef Name="idmaesgen" />
+            <PropertyRef Name="clavemaesgen" />
+          </Key>
+          <Property Name="idmaesgen" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="clavemaesgen" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="desmaesgen" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="abrevia" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="parm1maesgen" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="parm2maesgen" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="parm3maesgen" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="parm4maesgen" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="parm5maesgen" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="parm6maesgen" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="einvoice" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="statemaesgen" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="tipomaesgen" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="rolespv">
+          <Key>
+            <PropertyRef Name="rol" />
+            <PropertyRef Name="idusr" />
+            <PropertyRef Name="codcia" />
+          </Key>
+          <Property Name="rol" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="idusr" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ciausrfile">
+          <Key>
+            <PropertyRef Name="idcia" />
+            <PropertyRef Name="idusr" />
+          </Key>
+          <Property Name="idcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="idusr" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="parreg">
+          <Key>
+            <PropertyRef Name="IDCIA" />
+            <PropertyRef Name="FORM" />
+          </Key>
+          <Property Name="IDCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="FORM" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CTA_ISC" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CTA_IGV" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_TASA_IGV" Type="Decimal" />
+          <Property Name="COM_CTA_DETRA" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_TD_DETRA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COM_DH_DETRA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COM_MONTO_DETRA" Type="Decimal" />
+          <Property Name="COM_SUBCOM_LOG" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="MON_NAC" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="COM_TD_INTERNO" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CTA_PERCEP_PAGAR" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CTA_PERCEP_APLICAR" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CTA_RETEN_PAGAR" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_SUB_REC_EXISTENCIAS" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COM_TIPO_ANEXO" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="MP_TRANSMP" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="MP_PROCMP" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="MP_TIPO_CAPTURA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_CTA_RET_RENTA" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="MP_CTA_RET_IGV" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="MP_TASA_RENTA" Type="Decimal" />
+          <Property Name="MP_SUBCOM_LOG" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="MP_FILAS_LIQ" Type="Int32" />
+          <Property Name="HON_TIPO_ANEXO" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="HON_CTA_RET_RENTA" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_ALM_DEFAULT" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_FAM_MP" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_FAM_SP" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_FAM_PT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_FAM_PP" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_FAM_DD" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COM_SUB_PERCEPCIONES" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COM_IGV_IMPORTACION" Type="Decimal" />
+          <Property Name="COM_IPM_IMPORTACION" Type="Decimal" />
+          <Property Name="COM_TD_PERCEPCION" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COM_SUBCOM_IMPORTACIONES" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CTA_DER_ADU" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CTA_FAC_PAGAR_IMP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_CONSUMO_SP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_CONSUMO_PP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_CONSUMO_PT" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_CONSUMO_DD" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_SUB_PE" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="SUB_APERTURA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COMPRO_APERTURA" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="COM_TASA_ISC" Type="Decimal" />
+          <Property Name="COM_CTA_DESCUENTO" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CTA_NOBASE" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="COM_TASA_IVAP" Type="Decimal" />
+          <Property Name="COM_CTA_IVAP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="MAXFILABOL" Type="Int32" />
+          <Property Name="BETWEENBOL" Type="Int32" />
+          <Property Name="NROBOLPAG" Type="Int32" />
+          <Property Name="MAXFILABOLWIN" Type="Int32" />
+          <Property Name="PLA_TD_PLANILLA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_TIPO_ANEXO" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_SUB_PLANILLA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_ACTIVACION_SP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_ACTIVACION_PT" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_ACTIVACION_PP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_ACTIVACION_DD" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="TES_TD_PLAMOVI" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="TES_SUB_PLAMOVI" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="TES_CTA_MOVI" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="TES_SUB_RENDICION" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_CTA_DETRA_COBRAR" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_TD_DETRA_COBRAR" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_CTA_PERCEP_COBRAR" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_TD_PERCEP_COBRAR" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="COM_TD_RETEN" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_CTA_PERCEP_APLICAR" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="ADC_SUB" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="ADC_CTA_GANANCIA" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="ADC_CTA_PERDIDA" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_ACTIVACION_SP_SERVICIO" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_ACTIVACION_PT_SERVICIO" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_ACTIVACION_PP_SERVICIO" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_CTA_ACTIVACION_DD_SERVICIO" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="ADC_TIPCONV" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="MP_GLOSA_DEFAULT" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="MP_SUB_PROV_PAGO" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="MP_CUADRIMP" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_LIMITE_LIQ" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_LIMITE_LIQ_UIT" Type="Decimal" />
+          <Property Name="MP_PREIMPRESION" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_PRECOM" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_RACIMAS" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_AREA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_DESCPARTE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_DESCFINTRAM" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_GENMPPR" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="COLOR_SIN_TRAZA_PAL" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_PRIMER_DIA_SEM" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="RET_CTA_RETENCION" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="RET_CTA_NETO_PAGAR" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="CTA_COSVEN_PRODTER_SP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="CTA_COSVEN_PRODTER_PP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="CTA_COSVEN_PRODTER_PT" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="CTA_COSVEN_PRODTER_DD" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="CTA_COSVEN_SERTER_SP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="CTA_COSVEN_SERTER_PP" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="CTA_COSVEN_SERTER_PT" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="CTA_COSVEN_SERTER_DD" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="AVISO_PROD_SIN_CENCOS" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_LIBERA_PRECIO_COTIZA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_LIBERA_DESC_COTIZA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_COMPRALE_PERU" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="VEN_TASA_RENTA" Type="Decimal" />
+          <Property Name="VEN_TASA_SERVICIO" Type="Decimal" />
+          <Property Name="PRO_TRAZA_VINCULANTE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IMPRIME_PARTE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IMPRIME_LIQUI" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_DESCRI_FINAL_EXPORTACION" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="TES_IS_ENCABEZADO_CHEQUE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_HE25" Type="Int32" />
+          <Property Name="PLA_CALCULO_HE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="ALM_IS_PS_VALORIZADO" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="TES_GERENCIA_VOUCHER" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="MP_TD_REF" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="AJR_SUB" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="AJR_CTA_GANANCIA" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="AJR_CTA_PERDIDA" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="AJR_REDONDEOMN" Type="Decimal" />
+          <Property Name="AJR_REDONDEOUS" Type="Decimal" />
+          <Property Name="PLA_COLOR_CESE" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_SUB_PROVISION" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_TD_PROVISION" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_IS_COMPRALE_PERU" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_FORMATO_COTIZACION" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="COM_TIPANE_SUNAT" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="COM_CODANE_SUNAT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MP_ACOPIADORMP" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="MP_CONDUCTORMP" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="MP_CTACOM" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="MP_SUBPROCMP" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="MP_MATERIA_PRIMA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MP_TIPO_TRANSMP" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_BULTOS" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_EMPACAMP" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="MP_HISTORIAL_METAS" Type="Int32" />
+          <Property Name="MP_COLOR_COMPRADO" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_PROYECTADO" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_CUMPLIMIENTO" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_TOTALIZADOR" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_CODMOV" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_RANGO1" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_RANGO2" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_RANGO3" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_RANGO4" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_RANGO5" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_COLOR_RANGO6" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_VINCULA_EXPORTA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_CERTI_EXPORTA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_VINCULA_CONTABLE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_CERTI_CONTABLE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_VINCULA_EXPORTA_MN" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_CERTI_EXPORTA_MN" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_VINCULA_CONTABLE_MN" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_CERTI_CONTABLE_MN" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="COM_SUB_RETENCIONES" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="MP_IS_CONTROL_ENFUNDE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_MOV_ENTRADA" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_MOV_SALIDA" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PRO_MOV_SALIDA_VENTA" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="VEN_INGRESO_VENTA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_UBIGEO_DEFAULT" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_FECINI_CONTRATO" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_FECFIN_CONTRATO" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PLA_FIRMA_FICHA_PERSONAL" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="PLA_REMU_DEFAULT" Type="Decimal" />
+          <Property Name="ALM_CALC_PRECIOCOSTO" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="POS_MON_REFERENCIA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="POS_IS_IMAGEN" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="ALM_IS_REDONDEO" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="ALM_TOPE_REDONDEO" Type="Decimal" />
+          <Property Name="POS_TIPDOC_DEFAULT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="POS_CODANE_DEFAULT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tdcom">
+          <Key>
+            <PropertyRef Name="IDCIA" />
+            <PropertyRef Name="FORM" />
+            <PropertyRef Name="TD" />
+          </Key>
+          <Property Name="IDCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="FORM" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="TD" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="DH" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="FECVEN" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="PREDETERMINADO" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="AFECTO_IGV" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="AUTONUM" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="AFECTO_RENTA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="AFECTO_IMP_RENTA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="IS_MP" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="forventa">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="dessunat" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="naturaleza" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="dias" Type="Int32" Nullable="false" />
+          <Property Name="situa" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="forpago">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="is_tarjeta" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="situa" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tarjetas">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="situa" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="foto" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="foto64" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="venc">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CODIGO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SUCURSAL" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PUNEMI" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PROC_VENTA" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="TIPO" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="PRG" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="PRGPS" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="PERIODO" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="FECMOV" Type="DateTime" />
+          <Property Name="MES" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="CTAVEN" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="SUBVEN" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="TIPOMOV" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CODMOV" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="TIPANE" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="CODANE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DIRECCION" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TIPDOC" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="NUMDOC" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="FECDOC" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="FECVEN" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TIPOVENTA" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="FORVENTA" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="GLOSA" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="CTIPCONV" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="CTIPCAM" Type="Decimal" />
+          <Property Name="CFECCAM" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CDATE" Type="DateTime" />
+          <Property Name="CHORA" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="CUSER" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="CSIT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="IS_GR_REMITENTE" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="GR_REMITENTE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TIPDOC_GR_REMITENTE" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="GR_TRANS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="RAZON_TRANS" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="RUC_TRANS" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="NOM_TRANS" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="LIC_TRANS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PLACA_TRANS" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PARTIDA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LLEGADA" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FECEMI_GR_REMI" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="FECTRAS" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TIPO_TRAS" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="ALBARAN" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="OC_CLIENTE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FEC_OC_CLIENTE" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TIPTAS_DETRA" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="IMPTAS_DETRA" Type="Decimal" />
+          <Property Name="BASE_DETRA" Type="Decimal" />
+          <Property Name="TIPTAS_PERCEP" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="IMPTAS_PERCEP" Type="Decimal" />
+          <Property Name="BASE_PERCEP" Type="Decimal" />
+          <Property Name="CSUBDIA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="CCOMPRO" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="PORC_DETRA" Type="Decimal" />
+          <Property Name="PORC_PERCEP" Type="Decimal" />
+          <Property Name="CODMON" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="FECHA_EMBARQUE" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ANEXO_PAGO_EXPORTACION" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EMBARQUE" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MARCAS" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="PUERTO_ORIGEN" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PUERTO_DESTINO" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PESO_BRUTO" Type="Decimal" />
+          <Property Name="PESO_NETO" Type="Decimal" />
+          <Property Name="CONTENEDORES" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="DESCRI_FINAL_EXPORTACION" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="numpos">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="PUNEMI" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PUNEMI" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="NUMERO" Type="Int32" />
+        </EntityType>
+        <EntityType Name="venpag">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+            <PropertyRef Name="ITEM" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CODIGO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ITEM" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FORVENTA" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FORPAGO" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="TARJETA" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="REFERENCIA" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="IMPORTE" Type="Decimal" />
+          <Property Name="RECIBIDO" Type="Decimal" />
+          <Property Name="VUELTO" Type="Decimal" />
+        </EntityType>
+        <EntityType Name="numcia">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="PROCESO" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PROCESO" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="NUMERO" Type="Int32" />
+        </EntityType>
+        <EntityType Name="numpemi">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="PUNEMI" />
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PUNEMI" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CODIGO" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="SERIE" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="NUMERO" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tdprgven">
+          <Key>
+            <PropertyRef Name="codcia" />
+            <PropertyRef Name="prg" />
+            <PropertyRef Name="tipdoc" />
+          </Key>
+          <Property Name="codcia" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="prg" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="tipdoc" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="vend">
+          <Key>
+            <PropertyRef Name="CODCIA" />
+            <PropertyRef Name="CODIGO" />
+            <PropertyRef Name="ITEM" />
+          </Key>
+          <Property Name="CODCIA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CODIGO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ITEM" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="ALMA" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CODARTI" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IS_LOTE" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="LOTE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DESARTI" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="UNIDAD" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="TIPOPRECIO" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PREUNI" Type="Decimal" Nullable="false" />
+          <Property Name="CANTIDAD" Type="Decimal" Nullable="false" />
+          <Property Name="SUBTOTAL" Type="Decimal" Nullable="false" />
+          <Property Name="PORCDESC" Type="Decimal" Nullable="false" />
+          <Property Name="DESCUENTO" Type="Decimal" Nullable="false" />
+          <Property Name="TOTAL" Type="Decimal" Nullable="false" />
+          <Property Name="IGV" Type="Decimal" Nullable="false" />
+          <Property Name="ISC" Type="Decimal" Nullable="false" />
+          <Property Name="IVAP" Type="Decimal" Nullable="false" />
+          <Property Name="SERVICIO" Type="Decimal" Nullable="false" />
+          <Property Name="NETO" Type="Decimal" Nullable="false" />
+          <Property Name="GLOSA" Type="String" Nullable="false" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <Property Name="TIPSERVEN" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="PARTE_ALMA" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="DTIPCAM" Type="Decimal" />
+          <Property Name="NETO_MN" Type="Decimal" />
+          <Property Name="SUBTOTAL_MN" Type="Decimal" />
+          <Property Name="DESCUENTO_MN" Type="Decimal" />
+          <Property Name="TOTAL_MN" Type="Decimal" />
+          <Property Name="NETO_US" Type="Decimal" />
+          <Property Name="SUBTOTAL_US" Type="Decimal" />
+          <Property Name="DESCUENTO_US" Type="Decimal" />
+          <Property Name="TOTAL_US" Type="Decimal" />
+          <Property Name="ORDEN_VENTA" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="ITEM_ORDEN_VENTA" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="CONVENTA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="TIPOVALORVENTA" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="GRAVADO" Type="Decimal" />
+          <Property Name="EXONERADO" Type="Decimal" />
+          <Property Name="INAFECTO" Type="Decimal" />
+          <Property Name="EXPORTACION" Type="Decimal" />
+          <Property Name="GRATUITA" Type="Decimal" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModeloAplicacionStoreContainer" CdmEntityContainer="appbosaEntities">
+          <EntitySetMapping Name="ciafile">
+            <EntityTypeMapping TypeName="ModeloAplicacion.ciafile">
+              <MappingFragment StoreEntitySet="ciafile">
+                <ScalarProperty Name="ubigeo" ColumnName="ubigeo" />
+                <ScalarProperty Name="idcia" ColumnName="idcia" />
+                <ScalarProperty Name="descia" ColumnName="descia" />
+                <ScalarProperty Name="ruccia" ColumnName="ruccia" />
+                <ScalarProperty Name="repcia" ColumnName="repcia" />
+                <ScalarProperty Name="shortcia" ColumnName="shortcia" />
+                <ScalarProperty Name="typecia" ColumnName="typecia" />
+                <ScalarProperty Name="statecia" ColumnName="statecia" />
+                <ScalarProperty Name="regpatcia" ColumnName="regpatcia" />
+                <ScalarProperty Name="dircia" ColumnName="dircia" />
+                <ScalarProperty Name="desSi" ColumnName="desSi" />
+                <ScalarProperty Name="desNo" ColumnName="desNo" />
+                <ScalarProperty Name="actividad" ColumnName="actividad" />
+                <ScalarProperty Name="reglab" ColumnName="reglab" />
+                <ScalarProperty Name="codaux" ColumnName="codaux" />
+                <ScalarProperty Name="logo" ColumnName="logo" />
+                <ScalarProperty Name="ispresupuesto" ColumnName="ispresupuesto" />
+                <ScalarProperty Name="tipdoc" ColumnName="tipdoc" />
+                <ScalarProperty Name="nrodoc" ColumnName="nrodoc" />
+                <ScalarProperty Name="floid" ColumnName="floid" />
+                <ScalarProperty Name="plancuentas" ColumnName="plancuentas" />
+                <ScalarProperty Name="regtributario" ColumnName="regtributario" />
+                <ScalarProperty Name="telefonos" ColumnName="telefonos" />
+                <ScalarProperty Name="website" ColumnName="website" />
+                <ScalarProperty Name="cargorep" ColumnName="cargorep" />
+                <ScalarProperty Name="kcatalogo" ColumnName="kcatalogo" />
+                <ScalarProperty Name="kmetval" ColumnName="kmetval" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="divatencion">
+            <EntityTypeMapping TypeName="ModeloAplicacion.divatencion">
+              <MappingFragment StoreEntitySet="divatencion">
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+                <ScalarProperty Name="SUCURSAL" ColumnName="SUCURSAL" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sucursal">
+            <EntityTypeMapping TypeName="ModeloAplicacion.sucursal">
+              <MappingFragment StoreEntitySet="sucursal">
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="nomcon" ColumnName="nomcon" />
+                <ScalarProperty Name="correocon" ColumnName="correocon" />
+                <ScalarProperty Name="tel1con" ColumnName="tel1con" />
+                <ScalarProperty Name="tel2con" ColumnName="tel2con" />
+                <ScalarProperty Name="cargocon" ColumnName="cargocon" />
+                <ScalarProperty Name="comcon" ColumnName="comcon" />
+                <ScalarProperty Name="situa" ColumnName="situa" />
+                <ScalarProperty Name="distrito" ColumnName="distrito" />
+                <ScalarProperty Name="provincia" ColumnName="provincia" />
+                <ScalarProperty Name="departamento" ColumnName="departamento" />
+                <ScalarProperty Name="pais" ColumnName="pais" />
+                <ScalarProperty Name="isfundo" ColumnName="isfundo" />
+                <ScalarProperty Name="idestane" ColumnName="idestane" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="undatencion">
+            <EntityTypeMapping TypeName="ModeloAplicacion.undatencion">
+              <MappingFragment StoreEntitySet="undatencion">
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+                <ScalarProperty Name="SUCURSAL" ColumnName="SUCURSAL" />
+                <ScalarProperty Name="DIVATENCION" ColumnName="DIVATENCION" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usrfile">
+            <EntityTypeMapping TypeName="ModeloAplicacion.usrfile">
+              <MappingFragment StoreEntitySet="usrfile">
+                <ScalarProperty Name="idusr" ColumnName="idusr" />
+                <ScalarProperty Name="desusr" ColumnName="desusr" />
+                <ScalarProperty Name="passusr" ColumnName="passusr" />
+                <ScalarProperty Name="typeusr" ColumnName="typeusr" />
+                <ScalarProperty Name="stateusr" ColumnName="stateusr" />
+                <ScalarProperty Name="mail" ColumnName="mail" />
+                <ScalarProperty Name="firma_digital" ColumnName="firma_digital" />
+                <ScalarProperty Name="nombre_firma" ColumnName="nombre_firma" />
+                <ScalarProperty Name="cargo_firma" ColumnName="cargo_firma" />
+                <ScalarProperty Name="dni_firma" ColumnName="dni_firma" />
+                <ScalarProperty Name="msn" ColumnName="msn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sucusr">
+            <EntityTypeMapping TypeName="ModeloAplicacion.sucusr">
+              <MappingFragment StoreEntitySet="sucusr">
+                <ScalarProperty Name="idusr" ColumnName="idusr" />
+                <ScalarProperty Name="sucursal" ColumnName="sucursal" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="claserv">
+            <EntityTypeMapping TypeName="ModeloAplicacion.claserv">
+              <MappingFragment StoreEntitySet="claserv">
+                <ScalarProperty Name="situa" ColumnName="situa" />
+                <ScalarProperty Name="cuenta" ColumnName="cuenta" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="peratencion">
+            <EntityTypeMapping TypeName="ModeloAplicacion.peratencion">
+              <MappingFragment StoreEntitySet="peratencion">
+                <ScalarProperty Name="situa" ColumnName="situa" />
+                <ScalarProperty Name="corto" ColumnName="corto" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sucperatencion">
+            <EntityTypeMapping TypeName="ModeloAplicacion.sucperatencion">
+              <MappingFragment StoreEntitySet="sucperatencion">
+                <ScalarProperty Name="SUCURSAL" ColumnName="SUCURSAL" />
+                <ScalarProperty Name="PERATENCION" ColumnName="PERATENCION" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="conventa">
+            <EntityTypeMapping TypeName="ModeloAplicacion.conventa">
+              <MappingFragment StoreEntitySet="conventa">
+                <ScalarProperty Name="tipovalorventa" ColumnName="tipovalorventa" />
+                <ScalarProperty Name="foto64" ColumnName="foto64" />
+                <ScalarProperty Name="situa" ColumnName="situa" />
+                <ScalarProperty Name="foto" ColumnName="foto" />
+                <ScalarProperty Name="cuenta" ColumnName="cuenta" />
+                <ScalarProperty Name="equivalencia" ColumnName="equivalencia" />
+                <ScalarProperty Name="is_equialm" ColumnName="is_equialm" />
+                <ScalarProperty Name="claserv" ColumnName="claserv" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="conc">
+            <EntityTypeMapping TypeName="ModeloAplicacion.conc">
+              <MappingFragment StoreEntitySet="conc">
+                <ScalarProperty Name="USER" ColumnName="USER" />
+                <ScalarProperty Name="SITUACION" ColumnName="SITUACION" />
+                <ScalarProperty Name="HORA" ColumnName="HORA" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="PERATENCION" ColumnName="PERATENCION" />
+                <ScalarProperty Name="UNDATENCION" ColumnName="UNDATENCION" />
+                <ScalarProperty Name="SUCURSAL" ColumnName="SUCURSAL" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cond">
+            <EntityTypeMapping TypeName="ModeloAplicacion.cond">
+              <MappingFragment StoreEntitySet="cond">
+                <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
+                <ScalarProperty Name="PREUNI" ColumnName="PREUNI" />
+                <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+                <ScalarProperty Name="CONVENTA" ColumnName="CONVENTA" />
+                <ScalarProperty Name="ITEM" ColumnName="ITEM" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="punemi">
+            <EntityTypeMapping TypeName="ModeloAplicacion.punemi">
+              <MappingFragment StoreEntitySet="punemi">
+                <ScalarProperty Name="sucursal" ColumnName="sucursal" />
+                <ScalarProperty Name="is_mp" ColumnName="is_mp" />
+                <ScalarProperty Name="bascula" ColumnName="bascula" />
+                <ScalarProperty Name="alma_mp" ColumnName="alma_mp" />
+                <ScalarProperty Name="situa" ColumnName="situa" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="convensuc">
+            <EntityTypeMapping TypeName="ModeloAplicacion.convensuc">
+              <MappingFragment StoreEntitySet="convensuc">
+                <ScalarProperty Name="conventa" ColumnName="conventa" />
+                <ScalarProperty Name="sucursal" ColumnName="sucursal" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="preconven">
+            <EntityTypeMapping TypeName="ModeloAplicacion.preconven">
+              <MappingFragment StoreEntitySet="preconven">
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="cuser" ColumnName="cuser" />
+                <ScalarProperty Name="chora" ColumnName="chora" />
+                <ScalarProperty Name="cdate" ColumnName="cdate" />
+                <ScalarProperty Name="precio" ColumnName="precio" />
+                <ScalarProperty Name="codmon" ColumnName="codmon" />
+                <ScalarProperty Name="conventa" ColumnName="conventa" />
+                <ScalarProperty Name="sucursal" ColumnName="sucursal" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+                <ScalarProperty Name="secue" ColumnName="secue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="anexos">
+            <EntityTypeMapping TypeName="IsTypeOf(ModeloAplicacion.anexos)">
+              <MappingFragment StoreEntitySet="anexos">
+                <ScalarProperty Name="codaux" ColumnName="codaux" />
+                <ScalarProperty Name="subprocmp" ColumnName="subprocmp" />
+                <ScalarProperty Name="procmp" ColumnName="procmp" />
+                <ScalarProperty Name="corto" ColumnName="corto" />
+                <ScalarProperty Name="convenio" ColumnName="convenio" />
+                <ScalarProperty Name="apliconve" ColumnName="apliconve" />
+                <ScalarProperty Name="is_domiciliado" ColumnName="is_domiciliado" />
+                <ScalarProperty Name="foto" ColumnName="foto" />
+                <ScalarProperty Name="nombre2" ColumnName="nombre2" />
+                <ScalarProperty Name="nombre1" ColumnName="nombre1" />
+                <ScalarProperty Name="apemat" ColumnName="apemat" />
+                <ScalarProperty Name="apepat" ColumnName="apepat" />
+                <ScalarProperty Name="tipper" ColumnName="tipper" />
+                <ScalarProperty Name="alma_pt" ColumnName="alma_pt" />
+                <ScalarProperty Name="is_servicio" ColumnName="is_servicio" />
+                <ScalarProperty Name="tipo_caja" ColumnName="tipo_caja" />
+                <ScalarProperty Name="is_mp" ColumnName="is_mp" />
+                <ScalarProperty Name="alma_mp" ColumnName="alma_mp" />
+                <ScalarProperty Name="ctaane" ColumnName="ctaane" />
+                <ScalarProperty Name="tipcta" ColumnName="tipcta" />
+                <ScalarProperty Name="mon" ColumnName="mon" />
+                <ScalarProperty Name="nrocta" ColumnName="nrocta" />
+                <ScalarProperty Name="entfin" ColumnName="entfin" />
+                <ScalarProperty Name="is_renigv" ColumnName="is_renigv" />
+                <ScalarProperty Name="usuario" ColumnName="usuario" />
+                <ScalarProperty Name="fmod" ColumnName="fmod" />
+                <ScalarProperty Name="fcrea" ColumnName="fcrea" />
+                <ScalarProperty Name="situane" ColumnName="situane" />
+                <ScalarProperty Name="telane" ColumnName="telane" />
+                <ScalarProperty Name="posane" ColumnName="posane" />
+                <ScalarProperty Name="paisane" ColumnName="paisane" />
+                <ScalarProperty Name="depane" ColumnName="depane" />
+                <ScalarProperty Name="provane" ColumnName="provane" />
+                <ScalarProperty Name="carane" ColumnName="carane" />
+                <ScalarProperty Name="repane" ColumnName="repane" />
+                <ScalarProperty Name="nrodoc" ColumnName="nrodoc" />
+                <ScalarProperty Name="tipdoc" ColumnName="tipdoc" />
+                <ScalarProperty Name="rucane" ColumnName="rucane" />
+                <ScalarProperty Name="refane" ColumnName="refane" />
+                <ScalarProperty Name="desane" ColumnName="desane" />
+                <ScalarProperty Name="codane" ColumnName="codane" />
+                <ScalarProperty Name="tipane" ColumnName="tipane" />
+                <ScalarProperty Name="idcia" ColumnName="idcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="maesgen">
+            <EntityTypeMapping TypeName="ModeloAplicacion.maesgen">
+              <MappingFragment StoreEntitySet="maesgen">
+                <ScalarProperty Name="tipomaesgen" ColumnName="tipomaesgen" />
+                <ScalarProperty Name="statemaesgen" ColumnName="statemaesgen" />
+                <ScalarProperty Name="einvoice" ColumnName="einvoice" />
+                <ScalarProperty Name="parm6maesgen" ColumnName="parm6maesgen" />
+                <ScalarProperty Name="parm5maesgen" ColumnName="parm5maesgen" />
+                <ScalarProperty Name="parm4maesgen" ColumnName="parm4maesgen" />
+                <ScalarProperty Name="parm3maesgen" ColumnName="parm3maesgen" />
+                <ScalarProperty Name="parm2maesgen" ColumnName="parm2maesgen" />
+                <ScalarProperty Name="parm1maesgen" ColumnName="parm1maesgen" />
+                <ScalarProperty Name="abrevia" ColumnName="abrevia" />
+                <ScalarProperty Name="desmaesgen" ColumnName="desmaesgen" />
+                <ScalarProperty Name="clavemaesgen" ColumnName="clavemaesgen" />
+                <ScalarProperty Name="idmaesgen" ColumnName="idmaesgen" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="rolespv">
+            <EntityTypeMapping TypeName="ModeloAplicacion.rolespv">
+              <MappingFragment StoreEntitySet="rolespv">
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+                <ScalarProperty Name="idusr" ColumnName="idusr" />
+                <ScalarProperty Name="rol" ColumnName="rol" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ciausrfile">
+            <EntityTypeMapping TypeName="ModeloAplicacion.ciausrfile">
+              <MappingFragment StoreEntitySet="ciausrfile">
+                <ScalarProperty Name="idusr" ColumnName="idusr" />
+                <ScalarProperty Name="idcia" ColumnName="idcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="parreg">
+            <EntityTypeMapping TypeName="ModeloAplicacion.parreg">
+              <MappingFragment StoreEntitySet="parreg">
+                <ScalarProperty Name="POS_CODANE_DEFAULT" ColumnName="POS_CODANE_DEFAULT" />
+                <ScalarProperty Name="POS_TIPDOC_DEFAULT" ColumnName="POS_TIPDOC_DEFAULT" />
+                <ScalarProperty Name="ALM_TOPE_REDONDEO" ColumnName="ALM_TOPE_REDONDEO" />
+                <ScalarProperty Name="ALM_IS_REDONDEO" ColumnName="ALM_IS_REDONDEO" />
+                <ScalarProperty Name="POS_IS_IMAGEN" ColumnName="POS_IS_IMAGEN" />
+                <ScalarProperty Name="POS_MON_REFERENCIA" ColumnName="POS_MON_REFERENCIA" />
+                <ScalarProperty Name="ALM_CALC_PRECIOCOSTO" ColumnName="ALM_CALC_PRECIOCOSTO" />
+                <ScalarProperty Name="PLA_REMU_DEFAULT" ColumnName="PLA_REMU_DEFAULT" />
+                <ScalarProperty Name="PLA_FIRMA_FICHA_PERSONAL" ColumnName="PLA_FIRMA_FICHA_PERSONAL" />
+                <ScalarProperty Name="PLA_FECFIN_CONTRATO" ColumnName="PLA_FECFIN_CONTRATO" />
+                <ScalarProperty Name="PLA_FECINI_CONTRATO" ColumnName="PLA_FECINI_CONTRATO" />
+                <ScalarProperty Name="PLA_UBIGEO_DEFAULT" ColumnName="PLA_UBIGEO_DEFAULT" />
+                <ScalarProperty Name="VEN_INGRESO_VENTA" ColumnName="VEN_INGRESO_VENTA" />
+                <ScalarProperty Name="PRO_MOV_SALIDA_VENTA" ColumnName="PRO_MOV_SALIDA_VENTA" />
+                <ScalarProperty Name="PRO_MOV_SALIDA" ColumnName="PRO_MOV_SALIDA" />
+                <ScalarProperty Name="PRO_MOV_ENTRADA" ColumnName="PRO_MOV_ENTRADA" />
+                <ScalarProperty Name="MP_IS_CONTROL_ENFUNDE" ColumnName="MP_IS_CONTROL_ENFUNDE" />
+                <ScalarProperty Name="COM_SUB_RETENCIONES" ColumnName="COM_SUB_RETENCIONES" />
+                <ScalarProperty Name="MP_IS_CERTI_CONTABLE_MN" ColumnName="MP_IS_CERTI_CONTABLE_MN" />
+                <ScalarProperty Name="MP_IS_VINCULA_CONTABLE_MN" ColumnName="MP_IS_VINCULA_CONTABLE_MN" />
+                <ScalarProperty Name="MP_IS_CERTI_EXPORTA_MN" ColumnName="MP_IS_CERTI_EXPORTA_MN" />
+                <ScalarProperty Name="MP_IS_VINCULA_EXPORTA_MN" ColumnName="MP_IS_VINCULA_EXPORTA_MN" />
+                <ScalarProperty Name="MP_IS_CERTI_CONTABLE" ColumnName="MP_IS_CERTI_CONTABLE" />
+                <ScalarProperty Name="MP_IS_VINCULA_CONTABLE" ColumnName="MP_IS_VINCULA_CONTABLE" />
+                <ScalarProperty Name="MP_IS_CERTI_EXPORTA" ColumnName="MP_IS_CERTI_EXPORTA" />
+                <ScalarProperty Name="MP_IS_VINCULA_EXPORTA" ColumnName="MP_IS_VINCULA_EXPORTA" />
+                <ScalarProperty Name="MP_COLOR_RANGO6" ColumnName="MP_COLOR_RANGO6" />
+                <ScalarProperty Name="MP_COLOR_RANGO5" ColumnName="MP_COLOR_RANGO5" />
+                <ScalarProperty Name="MP_COLOR_RANGO4" ColumnName="MP_COLOR_RANGO4" />
+                <ScalarProperty Name="MP_COLOR_RANGO3" ColumnName="MP_COLOR_RANGO3" />
+                <ScalarProperty Name="MP_COLOR_RANGO2" ColumnName="MP_COLOR_RANGO2" />
+                <ScalarProperty Name="MP_COLOR_RANGO1" ColumnName="MP_COLOR_RANGO1" />
+                <ScalarProperty Name="MP_CODMOV" ColumnName="MP_CODMOV" />
+                <ScalarProperty Name="MP_COLOR_TOTALIZADOR" ColumnName="MP_COLOR_TOTALIZADOR" />
+                <ScalarProperty Name="MP_COLOR_CUMPLIMIENTO" ColumnName="MP_COLOR_CUMPLIMIENTO" />
+                <ScalarProperty Name="MP_COLOR_PROYECTADO" ColumnName="MP_COLOR_PROYECTADO" />
+                <ScalarProperty Name="MP_COLOR_COMPRADO" ColumnName="MP_COLOR_COMPRADO" />
+                <ScalarProperty Name="MP_HISTORIAL_METAS" ColumnName="MP_HISTORIAL_METAS" />
+                <ScalarProperty Name="MP_EMPACAMP" ColumnName="MP_EMPACAMP" />
+                <ScalarProperty Name="MP_BULTOS" ColumnName="MP_BULTOS" />
+                <ScalarProperty Name="MP_TIPO_TRANSMP" ColumnName="MP_TIPO_TRANSMP" />
+                <ScalarProperty Name="MP_MATERIA_PRIMA" ColumnName="MP_MATERIA_PRIMA" />
+                <ScalarProperty Name="MP_SUBPROCMP" ColumnName="MP_SUBPROCMP" />
+                <ScalarProperty Name="MP_CTACOM" ColumnName="MP_CTACOM" />
+                <ScalarProperty Name="MP_CONDUCTORMP" ColumnName="MP_CONDUCTORMP" />
+                <ScalarProperty Name="MP_ACOPIADORMP" ColumnName="MP_ACOPIADORMP" />
+                <ScalarProperty Name="COM_CODANE_SUNAT" ColumnName="COM_CODANE_SUNAT" />
+                <ScalarProperty Name="COM_TIPANE_SUNAT" ColumnName="COM_TIPANE_SUNAT" />
+                <ScalarProperty Name="VEN_FORMATO_COTIZACION" ColumnName="VEN_FORMATO_COTIZACION" />
+                <ScalarProperty Name="VEN_IS_COMPRALE_PERU" ColumnName="VEN_IS_COMPRALE_PERU" />
+                <ScalarProperty Name="PLA_TD_PROVISION" ColumnName="PLA_TD_PROVISION" />
+                <ScalarProperty Name="PLA_SUB_PROVISION" ColumnName="PLA_SUB_PROVISION" />
+                <ScalarProperty Name="PLA_COLOR_CESE" ColumnName="PLA_COLOR_CESE" />
+                <ScalarProperty Name="AJR_REDONDEOUS" ColumnName="AJR_REDONDEOUS" />
+                <ScalarProperty Name="AJR_REDONDEOMN" ColumnName="AJR_REDONDEOMN" />
+                <ScalarProperty Name="AJR_CTA_PERDIDA" ColumnName="AJR_CTA_PERDIDA" />
+                <ScalarProperty Name="AJR_CTA_GANANCIA" ColumnName="AJR_CTA_GANANCIA" />
+                <ScalarProperty Name="AJR_SUB" ColumnName="AJR_SUB" />
+                <ScalarProperty Name="MP_TD_REF" ColumnName="MP_TD_REF" />
+                <ScalarProperty Name="TES_GERENCIA_VOUCHER" ColumnName="TES_GERENCIA_VOUCHER" />
+                <ScalarProperty Name="ALM_IS_PS_VALORIZADO" ColumnName="ALM_IS_PS_VALORIZADO" />
+                <ScalarProperty Name="PLA_CALCULO_HE" ColumnName="PLA_CALCULO_HE" />
+                <ScalarProperty Name="PLA_HE25" ColumnName="PLA_HE25" />
+                <ScalarProperty Name="TES_IS_ENCABEZADO_CHEQUE" ColumnName="TES_IS_ENCABEZADO_CHEQUE" />
+                <ScalarProperty Name="VEN_DESCRI_FINAL_EXPORTACION" ColumnName="VEN_DESCRI_FINAL_EXPORTACION" />
+                <ScalarProperty Name="MP_IMPRIME_LIQUI" ColumnName="MP_IMPRIME_LIQUI" />
+                <ScalarProperty Name="MP_IMPRIME_PARTE" ColumnName="MP_IMPRIME_PARTE" />
+                <ScalarProperty Name="PRO_TRAZA_VINCULANTE" ColumnName="PRO_TRAZA_VINCULANTE" />
+                <ScalarProperty Name="VEN_TASA_SERVICIO" ColumnName="VEN_TASA_SERVICIO" />
+                <ScalarProperty Name="VEN_TASA_RENTA" ColumnName="VEN_TASA_RENTA" />
+                <ScalarProperty Name="VEN_COMPRALE_PERU" ColumnName="VEN_COMPRALE_PERU" />
+                <ScalarProperty Name="VEN_LIBERA_DESC_COTIZA" ColumnName="VEN_LIBERA_DESC_COTIZA" />
+                <ScalarProperty Name="VEN_LIBERA_PRECIO_COTIZA" ColumnName="VEN_LIBERA_PRECIO_COTIZA" />
+                <ScalarProperty Name="AVISO_PROD_SIN_CENCOS" ColumnName="AVISO_PROD_SIN_CENCOS" />
+                <ScalarProperty Name="CTA_COSVEN_SERTER_DD" ColumnName="CTA_COSVEN_SERTER_DD" />
+                <ScalarProperty Name="CTA_COSVEN_SERTER_PT" ColumnName="CTA_COSVEN_SERTER_PT" />
+                <ScalarProperty Name="CTA_COSVEN_SERTER_PP" ColumnName="CTA_COSVEN_SERTER_PP" />
+                <ScalarProperty Name="CTA_COSVEN_SERTER_SP" ColumnName="CTA_COSVEN_SERTER_SP" />
+                <ScalarProperty Name="CTA_COSVEN_PRODTER_DD" ColumnName="CTA_COSVEN_PRODTER_DD" />
+                <ScalarProperty Name="CTA_COSVEN_PRODTER_PT" ColumnName="CTA_COSVEN_PRODTER_PT" />
+                <ScalarProperty Name="CTA_COSVEN_PRODTER_PP" ColumnName="CTA_COSVEN_PRODTER_PP" />
+                <ScalarProperty Name="CTA_COSVEN_PRODTER_SP" ColumnName="CTA_COSVEN_PRODTER_SP" />
+                <ScalarProperty Name="RET_CTA_NETO_PAGAR" ColumnName="RET_CTA_NETO_PAGAR" />
+                <ScalarProperty Name="RET_CTA_RETENCION" ColumnName="RET_CTA_RETENCION" />
+                <ScalarProperty Name="MP_PRIMER_DIA_SEM" ColumnName="MP_PRIMER_DIA_SEM" />
+                <ScalarProperty Name="COLOR_SIN_TRAZA_PAL" ColumnName="COLOR_SIN_TRAZA_PAL" />
+                <ScalarProperty Name="PRO_GENMPPR" ColumnName="PRO_GENMPPR" />
+                <ScalarProperty Name="MP_DESCFINTRAM" ColumnName="MP_DESCFINTRAM" />
+                <ScalarProperty Name="MP_DESCPARTE" ColumnName="MP_DESCPARTE" />
+                <ScalarProperty Name="MP_AREA" ColumnName="MP_AREA" />
+                <ScalarProperty Name="MP_RACIMAS" ColumnName="MP_RACIMAS" />
+                <ScalarProperty Name="MP_PRECOM" ColumnName="MP_PRECOM" />
+                <ScalarProperty Name="MP_PREIMPRESION" ColumnName="MP_PREIMPRESION" />
+                <ScalarProperty Name="MP_LIMITE_LIQ_UIT" ColumnName="MP_LIMITE_LIQ_UIT" />
+                <ScalarProperty Name="MP_IS_LIMITE_LIQ" ColumnName="MP_IS_LIMITE_LIQ" />
+                <ScalarProperty Name="MP_CUADRIMP" ColumnName="MP_CUADRIMP" />
+                <ScalarProperty Name="MP_SUB_PROV_PAGO" ColumnName="MP_SUB_PROV_PAGO" />
+                <ScalarProperty Name="MP_GLOSA_DEFAULT" ColumnName="MP_GLOSA_DEFAULT" />
+                <ScalarProperty Name="ADC_TIPCONV" ColumnName="ADC_TIPCONV" />
+                <ScalarProperty Name="PRO_CTA_ACTIVACION_DD_SERVICIO" ColumnName="PRO_CTA_ACTIVACION_DD_SERVICIO" />
+                <ScalarProperty Name="PRO_CTA_ACTIVACION_PP_SERVICIO" ColumnName="PRO_CTA_ACTIVACION_PP_SERVICIO" />
+                <ScalarProperty Name="PRO_CTA_ACTIVACION_PT_SERVICIO" ColumnName="PRO_CTA_ACTIVACION_PT_SERVICIO" />
+                <ScalarProperty Name="PRO_CTA_ACTIVACION_SP_SERVICIO" ColumnName="PRO_CTA_ACTIVACION_SP_SERVICIO" />
+                <ScalarProperty Name="ADC_CTA_PERDIDA" ColumnName="ADC_CTA_PERDIDA" />
+                <ScalarProperty Name="ADC_CTA_GANANCIA" ColumnName="ADC_CTA_GANANCIA" />
+                <ScalarProperty Name="ADC_SUB" ColumnName="ADC_SUB" />
+                <ScalarProperty Name="VEN_CTA_PERCEP_APLICAR" ColumnName="VEN_CTA_PERCEP_APLICAR" />
+                <ScalarProperty Name="COM_TD_RETEN" ColumnName="COM_TD_RETEN" />
+                <ScalarProperty Name="VEN_TD_PERCEP_COBRAR" ColumnName="VEN_TD_PERCEP_COBRAR" />
+                <ScalarProperty Name="VEN_CTA_PERCEP_COBRAR" ColumnName="VEN_CTA_PERCEP_COBRAR" />
+                <ScalarProperty Name="VEN_TD_DETRA_COBRAR" ColumnName="VEN_TD_DETRA_COBRAR" />
+                <ScalarProperty Name="VEN_CTA_DETRA_COBRAR" ColumnName="VEN_CTA_DETRA_COBRAR" />
+                <ScalarProperty Name="TES_SUB_RENDICION" ColumnName="TES_SUB_RENDICION" />
+                <ScalarProperty Name="TES_CTA_MOVI" ColumnName="TES_CTA_MOVI" />
+                <ScalarProperty Name="TES_SUB_PLAMOVI" ColumnName="TES_SUB_PLAMOVI" />
+                <ScalarProperty Name="TES_TD_PLAMOVI" ColumnName="TES_TD_PLAMOVI" />
+                <ScalarProperty Name="PRO_CTA_ACTIVACION_DD" ColumnName="PRO_CTA_ACTIVACION_DD" />
+                <ScalarProperty Name="PRO_CTA_ACTIVACION_PP" ColumnName="PRO_CTA_ACTIVACION_PP" />
+                <ScalarProperty Name="PRO_CTA_ACTIVACION_PT" ColumnName="PRO_CTA_ACTIVACION_PT" />
+                <ScalarProperty Name="PRO_CTA_ACTIVACION_SP" ColumnName="PRO_CTA_ACTIVACION_SP" />
+                <ScalarProperty Name="PLA_SUB_PLANILLA" ColumnName="PLA_SUB_PLANILLA" />
+                <ScalarProperty Name="PLA_TIPO_ANEXO" ColumnName="PLA_TIPO_ANEXO" />
+                <ScalarProperty Name="PLA_TD_PLANILLA" ColumnName="PLA_TD_PLANILLA" />
+                <ScalarProperty Name="MAXFILABOLWIN" ColumnName="MAXFILABOLWIN" />
+                <ScalarProperty Name="NROBOLPAG" ColumnName="NROBOLPAG" />
+                <ScalarProperty Name="BETWEENBOL" ColumnName="BETWEENBOL" />
+                <ScalarProperty Name="MAXFILABOL" ColumnName="MAXFILABOL" />
+                <ScalarProperty Name="COM_CTA_IVAP" ColumnName="COM_CTA_IVAP" />
+                <ScalarProperty Name="COM_TASA_IVAP" ColumnName="COM_TASA_IVAP" />
+                <ScalarProperty Name="COM_CTA_NOBASE" ColumnName="COM_CTA_NOBASE" />
+                <ScalarProperty Name="COM_CTA_DESCUENTO" ColumnName="COM_CTA_DESCUENTO" />
+                <ScalarProperty Name="COM_TASA_ISC" ColumnName="COM_TASA_ISC" />
+                <ScalarProperty Name="COMPRO_APERTURA" ColumnName="COMPRO_APERTURA" />
+                <ScalarProperty Name="SUB_APERTURA" ColumnName="SUB_APERTURA" />
+                <ScalarProperty Name="PRO_SUB_PE" ColumnName="PRO_SUB_PE" />
+                <ScalarProperty Name="PRO_CTA_CONSUMO_DD" ColumnName="PRO_CTA_CONSUMO_DD" />
+                <ScalarProperty Name="PRO_CTA_CONSUMO_PT" ColumnName="PRO_CTA_CONSUMO_PT" />
+                <ScalarProperty Name="PRO_CTA_CONSUMO_PP" ColumnName="PRO_CTA_CONSUMO_PP" />
+                <ScalarProperty Name="PRO_CTA_CONSUMO_SP" ColumnName="PRO_CTA_CONSUMO_SP" />
+                <ScalarProperty Name="COM_CTA_FAC_PAGAR_IMP" ColumnName="COM_CTA_FAC_PAGAR_IMP" />
+                <ScalarProperty Name="COM_CTA_DER_ADU" ColumnName="COM_CTA_DER_ADU" />
+                <ScalarProperty Name="COM_SUBCOM_IMPORTACIONES" ColumnName="COM_SUBCOM_IMPORTACIONES" />
+                <ScalarProperty Name="COM_TD_PERCEPCION" ColumnName="COM_TD_PERCEPCION" />
+                <ScalarProperty Name="COM_IPM_IMPORTACION" ColumnName="COM_IPM_IMPORTACION" />
+                <ScalarProperty Name="COM_IGV_IMPORTACION" ColumnName="COM_IGV_IMPORTACION" />
+                <ScalarProperty Name="COM_SUB_PERCEPCIONES" ColumnName="COM_SUB_PERCEPCIONES" />
+                <ScalarProperty Name="PRO_FAM_DD" ColumnName="PRO_FAM_DD" />
+                <ScalarProperty Name="PRO_FAM_PP" ColumnName="PRO_FAM_PP" />
+                <ScalarProperty Name="PRO_FAM_PT" ColumnName="PRO_FAM_PT" />
+                <ScalarProperty Name="PRO_FAM_SP" ColumnName="PRO_FAM_SP" />
+                <ScalarProperty Name="PRO_FAM_MP" ColumnName="PRO_FAM_MP" />
+                <ScalarProperty Name="PRO_ALM_DEFAULT" ColumnName="PRO_ALM_DEFAULT" />
+                <ScalarProperty Name="HON_CTA_RET_RENTA" ColumnName="HON_CTA_RET_RENTA" />
+                <ScalarProperty Name="HON_TIPO_ANEXO" ColumnName="HON_TIPO_ANEXO" />
+                <ScalarProperty Name="MP_FILAS_LIQ" ColumnName="MP_FILAS_LIQ" />
+                <ScalarProperty Name="MP_SUBCOM_LOG" ColumnName="MP_SUBCOM_LOG" />
+                <ScalarProperty Name="MP_TASA_RENTA" ColumnName="MP_TASA_RENTA" />
+                <ScalarProperty Name="MP_CTA_RET_IGV" ColumnName="MP_CTA_RET_IGV" />
+                <ScalarProperty Name="MP_CTA_RET_RENTA" ColumnName="MP_CTA_RET_RENTA" />
+                <ScalarProperty Name="MP_TIPO_CAPTURA" ColumnName="MP_TIPO_CAPTURA" />
+                <ScalarProperty Name="MP_PROCMP" ColumnName="MP_PROCMP" />
+                <ScalarProperty Name="MP_TRANSMP" ColumnName="MP_TRANSMP" />
+                <ScalarProperty Name="COM_TIPO_ANEXO" ColumnName="COM_TIPO_ANEXO" />
+                <ScalarProperty Name="COM_SUB_REC_EXISTENCIAS" ColumnName="COM_SUB_REC_EXISTENCIAS" />
+                <ScalarProperty Name="COM_CTA_RETEN_PAGAR" ColumnName="COM_CTA_RETEN_PAGAR" />
+                <ScalarProperty Name="COM_CTA_PERCEP_APLICAR" ColumnName="COM_CTA_PERCEP_APLICAR" />
+                <ScalarProperty Name="COM_CTA_PERCEP_PAGAR" ColumnName="COM_CTA_PERCEP_PAGAR" />
+                <ScalarProperty Name="COM_TD_INTERNO" ColumnName="COM_TD_INTERNO" />
+                <ScalarProperty Name="MON_NAC" ColumnName="MON_NAC" />
+                <ScalarProperty Name="COM_SUBCOM_LOG" ColumnName="COM_SUBCOM_LOG" />
+                <ScalarProperty Name="COM_MONTO_DETRA" ColumnName="COM_MONTO_DETRA" />
+                <ScalarProperty Name="COM_DH_DETRA" ColumnName="COM_DH_DETRA" />
+                <ScalarProperty Name="COM_TD_DETRA" ColumnName="COM_TD_DETRA" />
+                <ScalarProperty Name="COM_CTA_DETRA" ColumnName="COM_CTA_DETRA" />
+                <ScalarProperty Name="COM_TASA_IGV" ColumnName="COM_TASA_IGV" />
+                <ScalarProperty Name="COM_CTA_IGV" ColumnName="COM_CTA_IGV" />
+                <ScalarProperty Name="COM_CTA_ISC" ColumnName="COM_CTA_ISC" />
+                <ScalarProperty Name="FORM" ColumnName="FORM" />
+                <ScalarProperty Name="IDCIA" ColumnName="IDCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tdcom">
+            <EntityTypeMapping TypeName="ModeloAplicacion.tdcom">
+              <MappingFragment StoreEntitySet="tdcom">
+                <ScalarProperty Name="IS_MP" ColumnName="IS_MP" />
+                <ScalarProperty Name="AFECTO_IMP_RENTA" ColumnName="AFECTO_IMP_RENTA" />
+                <ScalarProperty Name="AFECTO_RENTA" ColumnName="AFECTO_RENTA" />
+                <ScalarProperty Name="AUTONUM" ColumnName="AUTONUM" />
+                <ScalarProperty Name="AFECTO_IGV" ColumnName="AFECTO_IGV" />
+                <ScalarProperty Name="PREDETERMINADO" ColumnName="PREDETERMINADO" />
+                <ScalarProperty Name="FECVEN" ColumnName="FECVEN" />
+                <ScalarProperty Name="DH" ColumnName="DH" />
+                <ScalarProperty Name="TD" ColumnName="TD" />
+                <ScalarProperty Name="FORM" ColumnName="FORM" />
+                <ScalarProperty Name="IDCIA" ColumnName="IDCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="forventa">
+            <EntityTypeMapping TypeName="ModeloAplicacion.forventa">
+              <MappingFragment StoreEntitySet="forventa">
+                <ScalarProperty Name="situa" ColumnName="situa" />
+                <ScalarProperty Name="dias" ColumnName="dias" />
+                <ScalarProperty Name="naturaleza" ColumnName="naturaleza" />
+                <ScalarProperty Name="dessunat" ColumnName="dessunat" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="forpago">
+            <EntityTypeMapping TypeName="ModeloAplicacion.forpago">
+              <MappingFragment StoreEntitySet="forpago">
+                <ScalarProperty Name="situa" ColumnName="situa" />
+                <ScalarProperty Name="is_tarjeta" ColumnName="is_tarjeta" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tarjetas">
+            <EntityTypeMapping TypeName="ModeloAplicacion.tarjetas">
+              <MappingFragment StoreEntitySet="tarjetas">
+                <ScalarProperty Name="foto64" ColumnName="foto64" />
+                <ScalarProperty Name="foto" ColumnName="foto" />
+                <ScalarProperty Name="situa" ColumnName="situa" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="venc">
+            <EntityTypeMapping TypeName="ModeloAplicacion.venc">
+              <MappingFragment StoreEntitySet="venc">
+                <ScalarProperty Name="DESCRI_FINAL_EXPORTACION" ColumnName="DESCRI_FINAL_EXPORTACION" />
+                <ScalarProperty Name="CONTENEDORES" ColumnName="CONTENEDORES" />
+                <ScalarProperty Name="PESO_NETO" ColumnName="PESO_NETO" />
+                <ScalarProperty Name="PESO_BRUTO" ColumnName="PESO_BRUTO" />
+                <ScalarProperty Name="PUERTO_DESTINO" ColumnName="PUERTO_DESTINO" />
+                <ScalarProperty Name="PUERTO_ORIGEN" ColumnName="PUERTO_ORIGEN" />
+                <ScalarProperty Name="MARCAS" ColumnName="MARCAS" />
+                <ScalarProperty Name="EMBARQUE" ColumnName="EMBARQUE" />
+                <ScalarProperty Name="ANEXO_PAGO_EXPORTACION" ColumnName="ANEXO_PAGO_EXPORTACION" />
+                <ScalarProperty Name="FECHA_EMBARQUE" ColumnName="FECHA_EMBARQUE" />
+                <ScalarProperty Name="CODMON" ColumnName="CODMON" />
+                <ScalarProperty Name="PORC_PERCEP" ColumnName="PORC_PERCEP" />
+                <ScalarProperty Name="PORC_DETRA" ColumnName="PORC_DETRA" />
+                <ScalarProperty Name="CCOMPRO" ColumnName="CCOMPRO" />
+                <ScalarProperty Name="CSUBDIA" ColumnName="CSUBDIA" />
+                <ScalarProperty Name="BASE_PERCEP" ColumnName="BASE_PERCEP" />
+                <ScalarProperty Name="IMPTAS_PERCEP" ColumnName="IMPTAS_PERCEP" />
+                <ScalarProperty Name="TIPTAS_PERCEP" ColumnName="TIPTAS_PERCEP" />
+                <ScalarProperty Name="BASE_DETRA" ColumnName="BASE_DETRA" />
+                <ScalarProperty Name="IMPTAS_DETRA" ColumnName="IMPTAS_DETRA" />
+                <ScalarProperty Name="TIPTAS_DETRA" ColumnName="TIPTAS_DETRA" />
+                <ScalarProperty Name="FEC_OC_CLIENTE" ColumnName="FEC_OC_CLIENTE" />
+                <ScalarProperty Name="OC_CLIENTE" ColumnName="OC_CLIENTE" />
+                <ScalarProperty Name="ALBARAN" ColumnName="ALBARAN" />
+                <ScalarProperty Name="TIPO_TRAS" ColumnName="TIPO_TRAS" />
+                <ScalarProperty Name="FECTRAS" ColumnName="FECTRAS" />
+                <ScalarProperty Name="FECEMI_GR_REMI" ColumnName="FECEMI_GR_REMI" />
+                <ScalarProperty Name="LLEGADA" ColumnName="LLEGADA" />
+                <ScalarProperty Name="PARTIDA" ColumnName="PARTIDA" />
+                <ScalarProperty Name="PLACA_TRANS" ColumnName="PLACA_TRANS" />
+                <ScalarProperty Name="LIC_TRANS" ColumnName="LIC_TRANS" />
+                <ScalarProperty Name="NOM_TRANS" ColumnName="NOM_TRANS" />
+                <ScalarProperty Name="RUC_TRANS" ColumnName="RUC_TRANS" />
+                <ScalarProperty Name="RAZON_TRANS" ColumnName="RAZON_TRANS" />
+                <ScalarProperty Name="GR_TRANS" ColumnName="GR_TRANS" />
+                <ScalarProperty Name="TIPDOC_GR_REMITENTE" ColumnName="TIPDOC_GR_REMITENTE" />
+                <ScalarProperty Name="GR_REMITENTE" ColumnName="GR_REMITENTE" />
+                <ScalarProperty Name="IS_GR_REMITENTE" ColumnName="IS_GR_REMITENTE" />
+                <ScalarProperty Name="CSIT" ColumnName="CSIT" />
+                <ScalarProperty Name="CUSER" ColumnName="CUSER" />
+                <ScalarProperty Name="CHORA" ColumnName="CHORA" />
+                <ScalarProperty Name="CDATE" ColumnName="CDATE" />
+                <ScalarProperty Name="CFECCAM" ColumnName="CFECCAM" />
+                <ScalarProperty Name="CTIPCAM" ColumnName="CTIPCAM" />
+                <ScalarProperty Name="CTIPCONV" ColumnName="CTIPCONV" />
+                <ScalarProperty Name="GLOSA" ColumnName="GLOSA" />
+                <ScalarProperty Name="FORVENTA" ColumnName="FORVENTA" />
+                <ScalarProperty Name="TIPOVENTA" ColumnName="TIPOVENTA" />
+                <ScalarProperty Name="FECVEN" ColumnName="FECVEN" />
+                <ScalarProperty Name="FECDOC" ColumnName="FECDOC" />
+                <ScalarProperty Name="NUMDOC" ColumnName="NUMDOC" />
+                <ScalarProperty Name="TIPDOC" ColumnName="TIPDOC" />
+                <ScalarProperty Name="DIRECCION" ColumnName="DIRECCION" />
+                <ScalarProperty Name="CODANE" ColumnName="CODANE" />
+                <ScalarProperty Name="TIPANE" ColumnName="TIPANE" />
+                <ScalarProperty Name="CODMOV" ColumnName="CODMOV" />
+                <ScalarProperty Name="TIPOMOV" ColumnName="TIPOMOV" />
+                <ScalarProperty Name="SUBVEN" ColumnName="SUBVEN" />
+                <ScalarProperty Name="CTAVEN" ColumnName="CTAVEN" />
+                <ScalarProperty Name="MES" ColumnName="MES" />
+                <ScalarProperty Name="FECMOV" ColumnName="FECMOV" />
+                <ScalarProperty Name="PERIODO" ColumnName="PERIODO" />
+                <ScalarProperty Name="PRGPS" ColumnName="PRGPS" />
+                <ScalarProperty Name="PRG" ColumnName="PRG" />
+                <ScalarProperty Name="TIPO" ColumnName="TIPO" />
+                <ScalarProperty Name="PROC_VENTA" ColumnName="PROC_VENTA" />
+                <ScalarProperty Name="PUNEMI" ColumnName="PUNEMI" />
+                <ScalarProperty Name="SUCURSAL" ColumnName="SUCURSAL" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="numpos">
+            <EntityTypeMapping TypeName="ModeloAplicacion.numpos">
+              <MappingFragment StoreEntitySet="numpos">
+                <ScalarProperty Name="NUMERO" ColumnName="NUMERO" />
+                <ScalarProperty Name="PUNEMI" ColumnName="PUNEMI" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="venpag">
+            <EntityTypeMapping TypeName="ModeloAplicacion.venpag">
+              <MappingFragment StoreEntitySet="venpag">
+                <ScalarProperty Name="VUELTO" ColumnName="VUELTO" />
+                <ScalarProperty Name="RECIBIDO" ColumnName="RECIBIDO" />
+                <ScalarProperty Name="IMPORTE" ColumnName="IMPORTE" />
+                <ScalarProperty Name="REFERENCIA" ColumnName="REFERENCIA" />
+                <ScalarProperty Name="TARJETA" ColumnName="TARJETA" />
+                <ScalarProperty Name="FORPAGO" ColumnName="FORPAGO" />
+                <ScalarProperty Name="FORVENTA" ColumnName="FORVENTA" />
+                <ScalarProperty Name="ITEM" ColumnName="ITEM" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="numcia">
+            <EntityTypeMapping TypeName="ModeloAplicacion.numcia">
+              <MappingFragment StoreEntitySet="numcia">
+                <ScalarProperty Name="NUMERO" ColumnName="NUMERO" />
+                <ScalarProperty Name="PROCESO" ColumnName="PROCESO" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="numpemi">
+            <EntityTypeMapping TypeName="ModeloAplicacion.numpemi">
+              <MappingFragment StoreEntitySet="numpemi">
+                <ScalarProperty Name="NUMERO" ColumnName="NUMERO" />
+                <ScalarProperty Name="SERIE" ColumnName="SERIE" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+                <ScalarProperty Name="PUNEMI" ColumnName="PUNEMI" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tdprgven">
+            <EntityTypeMapping TypeName="ModeloAplicacion.tdprgven">
+              <MappingFragment StoreEntitySet="tdprgven">
+                <ScalarProperty Name="tipdoc" ColumnName="tipdoc" />
+                <ScalarProperty Name="prg" ColumnName="prg" />
+                <ScalarProperty Name="codcia" ColumnName="codcia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vend">
+            <EntityTypeMapping TypeName="ModeloAplicacion.vend">
+              <MappingFragment StoreEntitySet="vend">
+                <ScalarProperty Name="GRATUITA" ColumnName="GRATUITA" />
+                <ScalarProperty Name="EXPORTACION" ColumnName="EXPORTACION" />
+                <ScalarProperty Name="INAFECTO" ColumnName="INAFECTO" />
+                <ScalarProperty Name="EXONERADO" ColumnName="EXONERADO" />
+                <ScalarProperty Name="GRAVADO" ColumnName="GRAVADO" />
+                <ScalarProperty Name="TIPOVALORVENTA" ColumnName="TIPOVALORVENTA" />
+                <ScalarProperty Name="CONVENTA" ColumnName="CONVENTA" />
+                <ScalarProperty Name="ITEM_ORDEN_VENTA" ColumnName="ITEM_ORDEN_VENTA" />
+                <ScalarProperty Name="ORDEN_VENTA" ColumnName="ORDEN_VENTA" />
+                <ScalarProperty Name="TOTAL_US" ColumnName="TOTAL_US" />
+                <ScalarProperty Name="DESCUENTO_US" ColumnName="DESCUENTO_US" />
+                <ScalarProperty Name="SUBTOTAL_US" ColumnName="SUBTOTAL_US" />
+                <ScalarProperty Name="NETO_US" ColumnName="NETO_US" />
+                <ScalarProperty Name="TOTAL_MN" ColumnName="TOTAL_MN" />
+                <ScalarProperty Name="DESCUENTO_MN" ColumnName="DESCUENTO_MN" />
+                <ScalarProperty Name="SUBTOTAL_MN" ColumnName="SUBTOTAL_MN" />
+                <ScalarProperty Name="NETO_MN" ColumnName="NETO_MN" />
+                <ScalarProperty Name="DTIPCAM" ColumnName="DTIPCAM" />
+                <ScalarProperty Name="PARTE_ALMA" ColumnName="PARTE_ALMA" />
+                <ScalarProperty Name="TIPSERVEN" ColumnName="TIPSERVEN" />
+                <ScalarProperty Name="GLOSA" ColumnName="GLOSA" />
+                <ScalarProperty Name="NETO" ColumnName="NETO" />
+                <ScalarProperty Name="SERVICIO" ColumnName="SERVICIO" />
+                <ScalarProperty Name="IVAP" ColumnName="IVAP" />
+                <ScalarProperty Name="ISC" ColumnName="ISC" />
+                <ScalarProperty Name="IGV" ColumnName="IGV" />
+                <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
+                <ScalarProperty Name="DESCUENTO" ColumnName="DESCUENTO" />
+                <ScalarProperty Name="PORCDESC" ColumnName="PORCDESC" />
+                <ScalarProperty Name="SUBTOTAL" ColumnName="SUBTOTAL" />
+                <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+                <ScalarProperty Name="PREUNI" ColumnName="PREUNI" />
+                <ScalarProperty Name="TIPOPRECIO" ColumnName="TIPOPRECIO" />
+                <ScalarProperty Name="UNIDAD" ColumnName="UNIDAD" />
+                <ScalarProperty Name="DESARTI" ColumnName="DESARTI" />
+                <ScalarProperty Name="LOTE" ColumnName="LOTE" />
+                <ScalarProperty Name="IS_LOTE" ColumnName="IS_LOTE" />
+                <ScalarProperty Name="CODARTI" ColumnName="CODARTI" />
+                <ScalarProperty Name="ALMA" ColumnName="ALMA" />
+                <ScalarProperty Name="ITEM" ColumnName="ITEM" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+                <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

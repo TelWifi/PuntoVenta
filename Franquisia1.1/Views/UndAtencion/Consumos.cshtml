@@ -1,0 +1,163 @@
+﻿@{ViewBag.Title = "Consumos";}
+<div class="container-fluid" style="margin:0;height:100%;">
+    <div id="central" class="row">
+        <div class="col-sm-5 col-md-4">
+            <div class="row ">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Division:
+                        <select id="divatencion" class="col-sm-6 form-control input-sm">
+                            @if (ViewBag.divisiones.Count == 0){<option value="">Sin Elementos</option>}
+                            @foreach (var div in ViewBag.divisiones){<option value="@div.CODIGO">@div.DESCRIPCION</option>}
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        Nº Und. de Atención:
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="undatencion" data-valant="" placeholder="Ingrese Nº de Unidad de Atención" class="form-control input-sm" />
+                            <span class="input-group-btn">
+                                <button id="btn-update" class="btn btn-xs"><span class="glyphicon glyphicon-refresh"></span></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row div-scroll-lg">
+                <div class="">
+                    <table id="tabla-factura" class='table small table-striped table-condensed' data-codigo="">
+                        <thead>
+                            <tr><th>Item</th><th>Producto</th><th>Precio</th><th>Cant.</th><th>Subtotal</th><th></th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="row text-center" style="font-size:medium;">
+                    <div class="col-xs-6">Items:<label id="tabla-factura-items">-</label></div>
+                    <div class="col-xs-6">Total:<label id="tabla-factura-total">-</label></div>
+                </div>
+                <div class="btn-group btn-group-sm btn-group-justified">
+                    <a id="factura-pre-factura" class="btn btn-default"><i class="glyphicon glyphicon-print"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7 col-md-8">
+            <div class="row">
+                <div class="navbar-info-user">
+                    <label class="info-divider">Usuario: @Session["Loged_usrfile_idusr"].ToString()</label>
+                    <label class="info-divider">Suc: @ViewBag.sucursal.descripcion </label>
+                    <label class="info-divider hidden-xs hidden-sm ">Cia: @ViewBag.cia.descia</label>
+                    <label class="info-divider">Rol: @Session["Loged_usrfile_rol"].ToString()</label>
+                </div>
+            </div>
+            <div class="row panel panel-default text-center" style="margin-bottom:0px;">
+                <div class="panel-heading" style="padding-bottom: 0px; padding-top: 0px;">
+                    <label id="undatencion-desc" data-codigo="" class="panel-title"></label><label class="panel-title"> - </label><label id="peratencion-desc" data-codigo="" class="panel-title"></label>
+                </div>
+                <div class="panel-body" style="padding:0;">
+                    <ul class="nav nav-tabs" style="font-size:small;">
+                        <li class="small"><a data-toggle="tab" href="#tab-buscar">BUSCAR</a></li>
+                        @foreach (var categoria in ViewBag.categorias)
+                        {
+                            <li class="seleccion-categoria small" data-codigo="@categoria.codigo"><a data-toggle="tab" href="#tab-@categoria.codigo">@categoria.descripcion</a></li>
+                        }
+                    </ul>
+                    <div class="tab-content div-scroll-sevicios">
+                        <div id="tab-buscar" class="tab-pane fade in">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-btn">
+                                            <button id="conventa-btn-buscar" class="btn btn-default" type="button">Buscar</button>
+                                        </span>
+                                        <input id="conventa-texto" type="text" class="form-control" placeholder="Ingrese el valor a buscar">
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 -->
+                            </div>
+                            <div id="panel-buscar" class="row panel panel-body" style="padding-top:0px;padding-bottom: 0px;margin-bottom: 0px;"></div>
+                        </div>
+                        @foreach (var categoria in ViewBag.categorias)
+                        {
+                            <div id="tab-@categoria.codigo" class="tab-pane fade in"><div id="panel-productos-@categoria.codigo" class="row panel panel-body" style="padding-top:0px;"></div></div>
+                        }
+                    </div>
+                </div>
+                <div class="btn-group btn-group-justified pull-right">
+                    <div id="control-teclado" class="btn-group btn-group-xs btn-group-vertical">
+                        <div class="btn btn-default active">
+                            <input type="radio" name="control-teclado-opciones" value="ACT" class="hide" checked />Act.Teclado
+                        </div>
+                        <div class="btn btn-default ">
+                            <input type="radio" name="control-teclado-opciones" value="DESACT" class="hide" />Desact.Teclado
+                        </div>
+                    </div>
+                    @if (ViewBag.accesofacturacion)
+                    {
+                        <div class="btn-group btn-group-xs btn-group-vertical ">
+                            <a id="cambiar-undatencion" class="btn btn-secundario btn-secundario-bordes">Cambiar Und. Atención</a>
+                            <a href="/UndAtencion/Facturacion" class="btn btn-secundario btn-secundario-bordes">M. Facturación</a>
+                        </div>
+                    }
+                    else
+                    {<a id="cambiar-undatencion" class="btn btn-secundario btn-secundario-bordes" style="font-size:0.9em;">Cambiar Und. Atención</a>}
+                    <a class="btn btn-danger" href="/Home/OffLogin">Salir</a>
+                </div>
+                <div class="pull-right">
+                    <img class="img-responsive logo" src="/Content/images/logo.png" alt="Neinco">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-cambiar-undatencion">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                Libres<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Division:
+                        <select id="modal-cambiar-divatencion" class="col-sm-6 form-control input-sm">
+                            @if (ViewBag.divisiones.Count == 0){<option value="">Sin Elementos</option>}
+                            @foreach (var div in ViewBag.divisiones){<option value="@div.CODIGO">@div.DESCRIPCION</option>}
+                        </select>
+                    </div>
+                </div>
+                <div class="panel div-scroll">
+                    <table id="tabla-cambiar-undatencion" class='table table-hover'>
+                        <thead><tr><th>Código</th><th>Descripción</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-seleccionar-peratencion">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Asignar Empleado</h4>
+            </div>
+            <div class="modal-body">
+                <div class="div-scroll">
+                    <ul id="empleados" class="list-group">
+                        @foreach (var persona in ViewBag.personal){
+                            <li class="list-group-item element-selected" data-codigo="@persona.codigo" data-desc="@persona.descripcion"><a style="text-decoration:none;">@persona.descripcion</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/aplicacion")
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/cons")
+}

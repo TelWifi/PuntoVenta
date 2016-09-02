@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c84a8bc23dd54baa8842264f1bfa9777" Name="Diagram1" ZoomLevel="51">
+        <EntityTypeShape EntityType="ModeloAplicacion.ciafile" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloAplicacion.divatencion" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloAplicacion.sucursal" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloAplicacion.undatencion" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloAplicacion.usrfile" Width="1.5" PointX="4.75" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloAplicacion.sucusr" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.claserv" Width="1.5" PointX="6.75" PointY="2.625" />
+        <EntityTypeShape EntityType="ModeloAplicacion.peratencion" Width="1.5" PointX="6.75" PointY="4.875" />
+        <EntityTypeShape EntityType="ModeloAplicacion.sucperatencion" Width="1.5" PointX="8.625" PointY="3.875" />
+        <EntityTypeShape EntityType="ModeloAplicacion.conventa" Width="1.5" PointX="8.625" PointY="0.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.anexos" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.conc" Width="1.5" PointX="3.375" PointY="7.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.cond" Width="1.5" PointX="5.375" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloAplicacion.punemi" Width="1.5" PointX="7.375" PointY="7.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.convensuc" Width="1.5" PointX="9.375" PointY="6.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.preconven" Width="1.5" PointX="9.375" PointY="9.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.maesgen" Width="1.5" PointX="11.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.rolespv" Width="1.5" PointX="3.375" PointY="11.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.ciausrfile" Width="1.5" PointX="11.375" PointY="5.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.parreg" Width="1.5" PointX="5.375" PointY="11.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.tdcom" Width="1.5" PointX="11.375" PointY="8.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.forventa" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.forpago" Width="1.5" PointX="13.375" PointY="4.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.tarjetas" Width="1.5" PointX="13.375" PointY="7.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.venc" Width="1.5" PointX="7.375" PointY="13.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.numpos" Width="1.5" PointX="9.375" PointY="13.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.venpag" Width="1.5" PointX="11.375" PointY="13.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.numcia" Width="1.5" PointX="13.375" PointY="10.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.numpemi" Width="1.5" PointX="13.375" PointY="13.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.tdprgven" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.vend" Width="1.5" PointX="15.375" PointY="3.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

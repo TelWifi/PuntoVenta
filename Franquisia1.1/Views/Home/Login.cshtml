@@ -1,0 +1,168 @@
+﻿@model Franquisia1._1.usrfile
+@{ViewBag.Title = "Ingresar";}
+<div>
+    <div id="mycarousel" style="height:30%;" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#mycarousel" data-slide-to="0" class="active"></li>
+            @for (int i = 1; i < ViewBag.cantimagenes; i++)
+            {
+                <li data-target="#mycarousel" data-slide-to="@i"></li>
+            }
+        </ol>
+        <div class="carousel-inner text-center" role="listbox">
+            <div class="item active">
+                <img src="/Content/imagenes/@String.Concat("1", ".png")" alt="..." class="img-responsive img-rounded no-float center-block ">
+            </div>
+            @for (int i = 2; i <= ViewBag.cantimagenes; i++)
+            {
+                <div class="item">
+                    <img src="/Content/imagenes/@String.Concat(@i, ".png")" alt=" ..." class="img-responsive img-rounded no-float center-block">
+                </div>
+            }
+        </div>
+    </div>
+    <div id="form-login">
+        @Html.AntiForgeryToken()
+        <div class="col-xs-9 col-sm-7 col-md-4 center-block no-float ">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="panel-title text-center">Inicio de Sesión</div>
+                </div>
+                <div class="panel-body">
+                    <div id="control-teclado" class="btn-group btn-group-xs btn-group-justified">
+                        <div class="btn btn-default active">
+                            <input type="radio" name="control-teclado-opciones" value="ACT" class="hide" checked />Act.Teclado
+                        </div>
+                        <div class="btn btn-default ">
+                            <input type="radio" name="control-teclado-opciones" value="DESACT" class="hide" />Desact.Teclado
+                        </div>
+                    </div>
+                    @if (Session["msg_error"] != null)
+                    {
+                        <div id="msg-error" class="alert alert-danger">
+                            <ul id="lista-error">
+                                <li>@Session["msg_error"].ToString()</li>
+                                @{Session["msg_error"] = null;}
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="msg-error" class="alert alert-danger hide"><ul id="lista-error"></ul></div>
+                    }
+                    <div class="form-group form-group-sm">
+                        <label for="idusr">Usuario</label>
+                        <input class="form-control" data-val="true" data-val-required="Ingrese Usuario" id="idusr" name="idusr" type="text" value="" />
+                        <span class="field-validation-valid" data-valmsg-for="idusr" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label for="passusr">Contrase&#241;a</label>
+                        <input class="form-control" data-val="true" data-val-required="Ingrese Contraseña" id="passusr" name="passusr" type="password" />
+                        <span class="field-validation-valid" data-valmsg-for="passusr" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group form-group-sm"><select id="lista-cia" class="form-control hide"></select></div>
+                    <div class="form-group form-group-sm"><select id="lista-suc" class="form-control hide"></select></div>
+                    <div class="form-group"><select id="lista-roles" class="form-control hide"></select></div>
+                    <button id="btn-submit" class="btn btn-primary">Ingresar</button>
+                    <div class="pull-right"><img src="/Content/images/logo.png" alt="Neinco" class="img-responsive center-block" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/bootstrap-js")
+    @Scripts.Render("~/bundles/jquery-keyboard")
+    <script>
+        $("input").keyboard();
+        $("#control-teclado .btn").on("click", function () {
+            $(this).siblings('.btn').removeClass("active");
+            $(this).addClass("active");
+            $(this).children("input[type=radio]").prop('checked', true);
+            if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$("input").keyboard();}
+            else { $("input").keyboard().each(function () { var t = $(this).keyboard().getkeyboard(); t.destroy(); }); }
+        });
+        function errorAjax(xhr, status) { alert("ERROR: Error mientras se ejecutaba la petici\u00F3n\nVerifique su conexi\u00F3n a internet\n C\u00F3digo de estado: " + status); }
+        function obtenerSucursales(codcia, idusr) {
+            selectsuc = $("#lista-suc");
+            $.ajax({
+                url: "/Sucursal/Obtener",type: 'POST',data: { "codcia": codcia,"idusr":idusr },
+                success: function (response) {
+                    if (response.respuesta.split(":")[0] == "EXITO") {
+                        selectsuc.empty();
+                        $.each(response.lista, function (idx, obj) {selectsuc.append($("<option value=\"" + obj["codigo"] + "\">" + obj["descripcion"] + "</option>"));});
+                        selectsuc.removeClass("hide");
+                    } else { alert(response.respuesta); }
+                }, error: function (xhr, status) { errorAjax(xhr, status); }
+            });
+        }
+        var control = false; var ctrl2 = true;
+        function reset() {
+            control = false;
+            $("#lista-cia").addClass("hide");
+            $("#lista-suc").addClass("hide");
+            $("#lista-roles").addClass("hide");
+            $("#lista-cia").empty();
+            $("#lista-suc").empty();
+            $("#lista-roles").empty();
+        }
+        $("#idusr").on("change", function () { reset(); });
+        $("#passusr").on("change", function () { reset(); });
+        $("#idusr, #passusr").on("focusout", function () {
+            if ($(this).val() == "") {
+                var s = $(this).siblings("span"); s.addClass("field-validation-error"); s.text("Campo vacío"); s.removeClass("field-validation-valid");ctrl2 = false;
+            } else {
+                var s = $(this).siblings("span"); s.addClass("field-validation-valid"); s.text(""); s.removeClass("field-validation-error");ctrl2 = true;
+            }
+        });
+        $("#btn-submit").on("click", function () {
+            var selectcia = $("#lista-cia");
+            var selectrol = $("#lista-roles");
+            var selectsuc = $("#lista-suc");
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            $("#lista-error").empty();
+            $("#msg-error").addClass("hide");
+            if (!ctrl2) {return;}
+            if (control ) {
+                $.ajax({
+                    url: "/Home/Login",type: 'POST',
+                    data: {
+                        __RequestVerificationToken: token,"idusr": $("#idusr").val(),"passusr": $("#passusr").val(),"rol": selectrol.val(),"idcia": selectcia.val(),"sucur":selectsuc.val(),
+                    },
+                    success: function (response) {
+                        if (response.respuesta.split(":")[0] == "ERROR") {
+                            selectrol.addClass("hide");selectcia.addClass("hide");selectsuc.addClass("hide");
+                            $("#lista-error").empty();
+                            alert(response.respuesta);
+                            control = false;
+                        } else { location.href = response.respuesta;}
+                    },error:function (xhr, status) { errorAjax(xhr, status); }
+                });
+            } else {
+                $.ajax({
+                    url: "/Home/LoginAjax", type: 'POST',
+                    data: {__RequestVerificationToken: token,"idusr": $("#idusr").val(),"passusr": $("#passusr").val(),},
+                    success: function (response) {
+                        if (response.respuesta.toString().split(":")[0] == "EXITO") {
+                            selectrol.empty();
+                            $.each(response.lista, function (idx, obj) {selectrol.append($("<option value=\"" + obj["rol"] + "\">" + obj["rol"] + "</option>"));});
+                            selectrol.removeClass("hide");
+                            selectcia.empty();
+                            $.each(response.listacia, function (idx, obj) {selectcia.append($("<option value=\"" + obj["idcia"] + "\">" + obj["descia"] + "</option>"));});
+                            selectcia.removeClass("hide");
+                            selectcia.change();
+                            control = true;
+                        } else {
+                            selectrol.addClass("hide");
+                            $("#msg-error").removeClass("hide");
+                            $("#lista-error").empty();
+                            $("#lista-error").append("<li>" + response.respuesta + "</li>")
+                        }
+                    }, error: function (xhr, status) { errorAjax(xhr, status); }
+                });
+            }
+        });
+        $("#lista-cia").on("change", function () {obtenerSucursales($(this).val(), $("#idusr").val());});
+    </script>
+
+}

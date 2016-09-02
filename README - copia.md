@@ -1,2 +1,0 @@
-"# PuntoVenta" 
-"# PuntoV" 

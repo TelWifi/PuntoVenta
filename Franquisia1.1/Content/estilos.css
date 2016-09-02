@@ -1,0 +1,131 @@
+* {
+  margin:0px;
+ }
+html,body{
+    margin:0px;
+    height:100%;
+}
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+    color: #f00;
+}
+.field-validation-valid {
+    display: none;
+}
+.input-validation-error {
+    border: 1px solid #f00;
+    background-color: #fee;
+}
+.validation-summary-errors {
+    font-weight: bold;
+    color: #f00;
+}
+.validation-summary-valid {
+    display: none;
+}
+/*app css*/
+input[type=radio] {
+    width:1.4em;
+    height:1.4em;
+}
+input[type=checkbox] {
+    width:1.4em;
+    height:1.4em;
+}
+.btn-secundario{
+	background-color: #2196F3;
+	color: white;
+	border-right: 2px solid #0D47A1;
+	font-size: 1.1em;
+}
+.btn-secundario-bordes{
+    border-top: 1px solid #0D47A1;
+    border-left: 1px solid #0D47A1;
+    border-right: 1px solid #0D47A1;
+    border-bottom: 1px solid #0D47A1;
+}
+.btn-secundario:active, .btn-secundario:hover{
+	background-color: #1565C0;
+	color: white;
+}
+.no-float{
+  float: none;
+}
+.div-scroll{
+  overflow:auto;
+  overflow-x: hidden;
+  height: 400px;
+  width: auto;
+}
+.div-scroll-sevicios{
+  overflow:auto;
+  overflow-x: hidden;
+  height: 427px;
+  width: auto;
+  padding-top:0px;
+}
+.div-scroll-lg{
+  overflow:auto;
+  overflow-x: hidden;
+  height: 530px;
+  width: auto;
+}
+.numero{
+  width: 40px;
+}
+.element-selected:hover, .element-selected:active{
+    background-color: #FFB34D;
+    color: white ;
+}
+.panel-servicio{
+   word-wrap:break-word;
+   padding-top: 0;
+   padding-left: 0;
+   padding-right:0;
+   border-bottom: 1px solid #C00; 
+   border-left: 1px solid #C00;
+   border-right: 1px solid #C00;
+   border-top: 1px solid #C00;
+   text-align:center;
+}
+.img-servicio{
+    height:100px;
+    margin:auto;
+}
+.nombre{
+    font-weight: bold;
+    font-size: 0.65em;
+    height:2.8em;
+}
+.remove-producto{
+   transform:scale(1.5,1.5);
+    height:100%;
+    width:100%;
+}
+.navbar-info-user{
+    font-size: 0.9em;
+    text-align:center;
+    height: auto;
+    background-color: #3498db;
+    color: white;
+    margin-bottom:0px;
+    border-bottom: 1px solid #f1c40f; 
+    line-height: 1.2;
+}
+.info-divider{
+    border-bottom: 1px solid white;
+    margin-right:10px;
+}
+.info-divider-inverse{
+    background-color:white;
+    color:#2980b9;
+}
+#central{
+    padding-bottom:0px;
+    margin-bottom:0px;
+}
+.logo{
+    padding-top:5px;
+    padding-bottom:5px;
+}
