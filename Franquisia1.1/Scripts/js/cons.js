@@ -107,19 +107,29 @@ function changeUndAtencion(txt) {
         } else { $(this).val(""); alert(MSG_SELECCIONE_DIVATENCION); $("#divatencion").focus(); }
     }
 }
+function verificarUndAperturada() {
+    var div = $("#divate").text();
+    var und = $("#undate").text();
+    var per = $("#perate").text();
+    if (!isNullOrWhiteSpace(div) && !isNullOrWhiteSpace(und) && !isNullOrWhiteSpace(per)) {
+        aperturarUndAtencion(div, und, per);
+        $("#undatencion").val(und);
+        $("#divatencion").val(div);
+    }
+    console.log("aqui");
+}
+function undAperturada() {
+    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc");
+}
 $(document).ready(function () {
     $("#divatencion").on("change", function () {
         $("#undatencion").val("");
         resetTabla("#tabla-factura");
         clearDesc("#peratencion-desc", "#undatencion-desc");
     });
-    $("#undatencion").keypress(function (e) {
-        if (e.which == 13) {changeUndAtencion($(this));}
-    });
-    $('#undatencion').bind('accepted', function (e, keyboard, el) {
-        changeUndAtencion($(this));
-    });
-
+    $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this));}});
+    $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
+    verificarUndAperturada();
     if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$("input[type='text']").keyboard();$("input[type='number']").keyboard();}
     $("#cambiar-undatencion").on("click", function () {
         if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }

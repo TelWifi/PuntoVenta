@@ -69,5 +69,6 @@ namespace Franquisia1._1
         public Nullable<decimal> INAFECTO { get; set; }
         public Nullable<decimal> EXPORTACION { get; set; }
         public Nullable<decimal> GRATUITA { get; set; }
+        public string ROL { get; set; }
     }
 }

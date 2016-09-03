@@ -68,7 +68,7 @@ namespace Franquisia1._1.Controllers
            catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
            catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
        }
-       public ActionResult Facturacion(string estado, string div, string und, string per){
+       public ActionResult Facturacion(string div, string und, string per){
            try
            {
                string rol = Session["Loged_usrfile_rol"].ToString();
@@ -78,7 +78,6 @@ namespace Franquisia1._1.Controllers
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                    string idusr = Session["Loged_usrfile_idusr"].ToString();
 
-                   ViewBag.estado = estado;
                    ViewBag.div = div;
                    ViewBag.und = und;
                    ViewBag.per = per;
@@ -107,7 +106,7 @@ namespace Franquisia1._1.Controllers
            catch (System.Data.EntityException ex) { return RedirectToAction("ErroBD", "Error", ex.Message); }
            catch (Exception ex) { return RedirectToAction("Error", "Error", ex.Message); }  
        }
-       public ActionResult Consumos()
+       public ActionResult Consumos(string div, string und, string per)
        {
            try
            {
@@ -117,6 +116,11 @@ namespace Franquisia1._1.Controllers
                    string codcia = Session["Loged_usrfile_ciafile"].ToString();
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                    string idusr = Session["Loged_usrfile_idusr"].ToString();
+
+                   ViewBag.div = div;
+                   ViewBag.und = und;
+                   ViewBag.per = per;
+
                    ViewBag.categorias = db.claserv.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
                    ViewBag.divisiones = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
                    ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
@@ -166,6 +170,12 @@ namespace Franquisia1._1.Controllers
                {
                    usrfile u = new usrfile();
                    string newpwd = u.Encripta(pass);
+                   string codcia = Session["Loged_usrfile_ciafile"].ToString();
+                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
+                   if (p==null || !p.clave.Equals(newpwd))
+                   {
+                       return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet);
+                   }
                    switch (rol)
                    {
                        case "M":

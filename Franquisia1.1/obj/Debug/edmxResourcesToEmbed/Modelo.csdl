@@ -159,6 +159,7 @@
     <Property Name="descripcion" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
     <Property Name="corto" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
     <Property Name="situa" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="clave" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="sucperatencion">
     <Key>
@@ -527,6 +528,8 @@
     <Property Name="ALM_TOPE_REDONDEO" Type="Decimal" />
     <Property Name="POS_TIPDOC_DEFAULT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
     <Property Name="POS_CODANE_DEFAULT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="POS_IS_CLAVE_PERATENCION" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="POS_TIEMPO_REFRESCO_PANEL" Type="Int32" />
   </EntityType>
   <EntityType Name="tdcom">
     <Key>
@@ -763,5 +766,6 @@
     <Property Name="INAFECTO" Type="Decimal" />
     <Property Name="EXPORTACION" Type="Decimal" />
     <Property Name="GRATUITA" Type="Decimal" />
+    <Property Name="ROL" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
   </EntityType>
 </Schema>

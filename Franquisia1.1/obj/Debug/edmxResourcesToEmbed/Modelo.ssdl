@@ -425,6 +425,8 @@
     <Property Name="ALM_TOPE_REDONDEO" Type="decimal" Precision="15" Scale="4" />
     <Property Name="POS_TIPDOC_DEFAULT" Type="char" MaxLength="4" />
     <Property Name="POS_CODANE_DEFAULT" Type="char" MaxLength="20" />
+    <Property Name="POS_IS_CLAVE_PERATENCION" Type="char" MaxLength="1" />
+    <Property Name="POS_TIEMPO_REFRESCO_PANEL" Type="int" />
   </EntityType>
   <EntityType Name="peratencion">
     <Key>
@@ -435,6 +437,7 @@
     <Property Name="codigo" Type="char" MaxLength="4" Nullable="false" />
     <Property Name="descripcion" Type="varchar" MaxLength="80" Nullable="false" />
     <Property Name="corto" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="clave" Type="varchar" MaxLength="256" />
     <Property Name="situa" Type="char" MaxLength="1" Nullable="false" />
   </EntityType>
   <EntityType Name="preconven">
@@ -713,6 +716,7 @@
     <Property Name="INAFECTO" Type="decimal" Precision="15" Scale="2" />
     <Property Name="EXPORTACION" Type="decimal" Precision="15" Scale="2" />
     <Property Name="GRATUITA" Type="decimal" Precision="15" Scale="2" />
+    <Property Name="ROL" Type="char" MaxLength="1" />
   </EntityType>
   <EntityType Name="venpag">
     <Key>

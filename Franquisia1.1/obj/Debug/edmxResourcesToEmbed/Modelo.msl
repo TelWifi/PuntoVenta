@@ -119,6 +119,7 @@
     <EntitySetMapping Name="peratencion">
       <EntityTypeMapping TypeName="ModeloAplicacion.peratencion">
         <MappingFragment StoreEntitySet="peratencion">
+          <ScalarProperty Name="clave" ColumnName="clave" />
           <ScalarProperty Name="situa" ColumnName="situa" />
           <ScalarProperty Name="corto" ColumnName="corto" />
           <ScalarProperty Name="descripcion" ColumnName="descripcion" />
@@ -309,6 +310,8 @@
     <EntitySetMapping Name="parreg">
       <EntityTypeMapping TypeName="ModeloAplicacion.parreg">
         <MappingFragment StoreEntitySet="parreg">
+          <ScalarProperty Name="POS_TIEMPO_REFRESCO_PANEL" ColumnName="POS_TIEMPO_REFRESCO_PANEL" />
+          <ScalarProperty Name="POS_IS_CLAVE_PERATENCION" ColumnName="POS_IS_CLAVE_PERATENCION" />
           <ScalarProperty Name="POS_CODANE_DEFAULT" ColumnName="POS_CODANE_DEFAULT" />
           <ScalarProperty Name="POS_TIPDOC_DEFAULT" ColumnName="POS_TIPDOC_DEFAULT" />
           <ScalarProperty Name="ALM_TOPE_REDONDEO" ColumnName="ALM_TOPE_REDONDEO" />
@@ -677,6 +680,7 @@
     <EntitySetMapping Name="vend">
       <EntityTypeMapping TypeName="ModeloAplicacion.vend">
         <MappingFragment StoreEntitySet="vend">
+          <ScalarProperty Name="ROL" ColumnName="ROL" />
           <ScalarProperty Name="GRATUITA" ColumnName="GRATUITA" />
           <ScalarProperty Name="EXPORTACION" ColumnName="EXPORTACION" />
           <ScalarProperty Name="INAFECTO" ColumnName="INAFECTO" />

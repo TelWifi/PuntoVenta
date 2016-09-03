@@ -15,10 +15,17 @@ function getUndAtencion(p, c) {
             });
 
             $.each(response.ocupadas, function (idx, obj) {
-                var pu = $("<div class='col-xs-2 panel undatencion-ocupada' data-codigo='" + obj["CODUND"] + "'>" + obj["UNDDES"] + "<br/></div>");
+                var pu = $("<div class='col-xs-2 panel undatencion-ocupada'>" + obj["UNDDES"] + "<br/></div>");
+                pu.data("codund", obj["CODUND"]);
+                pu.data("coddiv", obj["CODDIV"]);
+                pu.data("codper", obj["CODPER"]);
                 pu.append(obj["PERCORTO"]);
                 pu.on("click", function () {
-                    window.location = "/UndAtencion/Selector?div="+obj["CODDIV"]+"&und="+obj["CODUND"]+"&per="+obj["CODPER"];
+                    var m = $("#modal-ingresar");
+                    m.modal("show");
+                    m.data("codund", obj["CODUND"]);
+                    m.data("coddiv", obj["CODDIV"]);
+                    m.data("codper", obj["CODPER"]);
                 });
                 p.append(pu);
             });
@@ -41,17 +48,28 @@ $(document).ready(function () {
     });
 
     $("#btn-ingresar").on("click", function () {
-        var pass = $("#per-pass").val();
-        if (!isNullOrWhiteSpac(pass)) {
+        var pass = $("#perate-pass").val();
+        if (!isNullOrWhiteSpace(pass)) {
             var div = $("#div-sel").text();
             var und = $("#und-sel").text();
             var per = $("#per-sel").text();
-            window.location = "/UndAtencion/Selector?div=" + div + "&und=" + und + "&per=" + per+"&pwd="+pass;
+            window.location = "/UndAtencion/Selector?div=" + div + "&und=" + und + "&per=" + per + "&pass=" + pass;
             $("#modal-seleccionar-peratencion").modal("hide");
         } else {
             alert("Ingrese contraseña");
         }
-
-
+    });
+    $("#btn-ingresar-2").on("click", function () {
+        var pass = $("#perate-pass-2").val();
+        if (!isNullOrWhiteSpace(pass)) {
+            var m = $("#modal-ingresar");
+            var und = m.data("codund");
+            var div = m.data("coddiv");
+            var per = m.data("codper");
+            window.location = "/UndAtencion/Selector?div=" + div + "&und=" + und + "&per=" + per + "&pass=" + pass;
+            m.modal("hide");
+        } else {
+            alert("Ingrese contraseña");
+        }
     });
 });

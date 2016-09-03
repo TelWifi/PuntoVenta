@@ -19,5 +19,6 @@ namespace Franquisia1._1
         public string descripcion { get; set; }
         public string corto { get; set; }
         public string situa { get; set; }
+        public string clave { get; set; }
     }
 }

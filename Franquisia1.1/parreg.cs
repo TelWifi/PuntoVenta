@@ -193,5 +193,7 @@ namespace Franquisia1._1
         public Nullable<decimal> ALM_TOPE_REDONDEO { get; set; }
         public string POS_TIPDOC_DEFAULT { get; set; }
         public string POS_CODANE_DEFAULT { get; set; }
+        public string POS_IS_CLAVE_PERATENCION { get; set; }
+        public Nullable<int> POS_TIEMPO_REFRESCO_PANEL { get; set; }
     }
 }
