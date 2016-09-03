@@ -52,6 +52,12 @@ input[type=checkbox] {
 .no-float{
   float: none;
 }
+.div-scroll-empleados{
+  overflow:auto;
+  overflow-x: hidden;
+  height: 250px;
+  width: auto;
+}
 .div-scroll{
   overflow:auto;
   overflow-x: hidden;
@@ -77,6 +83,24 @@ input[type=checkbox] {
 .element-selected:hover, .element-selected:active{
     background-color: #FFB34D;
     color: white ;
+}
+.element-active{
+    background-color: #FFB34D;
+    color: white ;
+}
+.undatencion{
+    background-color:#ecf0f1;
+    border: 1px solid #000; 
+    height:100px;
+    text-align:center;
+    cursor: pointer
+}
+.undatencion-ocupada{
+    background-color:#f39c12;
+    border: 1px solid #000; 
+    height:100px;
+    text-align:center;
+    cursor: pointer
 }
 .panel-servicio{
    word-wrap:break-word;

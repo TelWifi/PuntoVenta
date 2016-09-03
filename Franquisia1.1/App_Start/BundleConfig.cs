@@ -10,10 +10,12 @@ namespace Franquisia1._1
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/js/jquery-latest.js"));
             bundles.Add(new ScriptBundle("~/bundles/jquery.validate").Include("~/Scripts/js/jquery.validate.js"));
-            bundles.Add(new ScriptBundle("~/bundles/app").Include("~/Scripts/js/app.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/app").Include("~/Scripts/js/app.js"));
+            bundles.Add(new ScriptBundle("~/bundles/ind").Include("~/Scripts/js/ind.js"));
             bundles.Add(new ScriptBundle("~/bundles/fact").Include("~/Scripts/js/fact.js"));
             bundles.Add(new ScriptBundle("~/bundles/cons").Include("~/Scripts/js/cons.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-js").Include("~/Scripts/js/bootstrap.js"));
             bundles.Add(new ScriptBundle("~/bundles/jquery-keyboard").Include("~/Scripts/js/jquery.keyboard.js"));
 

@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Punto de Venta";
+}
+
+<h2 class="text-center">Seleccione</h2>
+
+
+<ul id="divisiones" class="nav nav-tabs" style="font-size:small;">
+    @foreach (var div in ViewBag.divs)
+    {
+        <li data-codigo="@div.CODIGO"><a data-toggle="tab" href="#tab-@div.CODIGO">@div.DESCRIPCION</a></li>
+    }
+</ul>
+<div class="tab-content ">
+    @foreach (var div in ViewBag.divs)
+    {
+        <div id="tab-@div.CODIGO" class="tab-pane fade in">
+            <div id="divatencion-@div.CODIGO" class="panel">
+
+            </div>
+        </div>
+    }
+</div>
+<label id="und-sel" class="hide"></label><label id="per-sel" class="hide"></label><label id="div-sel" class="hide"></label>
+<div class="modal fade" id="modal-seleccionar-peratencion">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Asignar Empleado</h4>
+            </div>
+            <div class="modal-body">
+                <div class="div-scroll-empleados">
+                    <ul id="empleados" class="list-group">
+                        @foreach (var persona in ViewBag.personal)
+                        {
+                            <li class="list-group-item element-selected" data-codigo="@persona.codigo" data-desc="@persona.descripcion"><a style="text-decoration:none;">@persona.descripcion</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="panel">
+                    Ingrese clave:
+                    <div class="input-group input-group-sm">
+                        <input type="password" id="perate-pass" data-valant="" placeholder="Ingrese clave" class="form-control input-lg" />
+                        <span class="input-group-btn">
+                            <button id="btn-ingresar" class="btn btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/aplicacion")
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/ind")
+}

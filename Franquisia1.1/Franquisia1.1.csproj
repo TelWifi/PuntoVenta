@@ -413,6 +413,7 @@
       <LastGenOutput>Modelo.cs</LastGenOutput>
     </Content>
     <None Include="Properties\PublishProfiles\NeincoSAC.pubxml" />
+    <Content Include="Scripts\js\ind.js" />
     <Content Include="Scripts\js\fact.js" />
     <Content Include="Scripts\js\cons.js" />
     <Content Include="Scripts\js\app.js" />
@@ -437,6 +438,7 @@
     <Content Include="Views\Error\Error.cshtml" />
     <Content Include="Views\Error\ErrorBD.cshtml" />
     <Content Include="Views\Error\ErrorPermiso.cshtml" />
+    <Content Include="Views\UndAtencion\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

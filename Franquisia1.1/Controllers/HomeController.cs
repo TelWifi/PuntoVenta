@@ -52,7 +52,7 @@ namespace Franquisia1._1.Controllers
                         Session["Loged_usrfile_rol"] = rol;
                         punemi punemi = ae.punemi.Where(a => a.codcia.Equals(idcia) && a.sucursal.Equals(sucur) && a.situa.Equals("V")).FirstOrDefault();
                         if (punemi != null) { Session["Loged_usrfile_punemi"] = punemi.codigo; }
-                        string redir = RedireccionTiposUuario();
+                        string redir = "/UndAtencion/Index";//RedireccionTiposUuario();
                         return Json(new { respuesta = redir }, JsonRequestBehavior.AllowGet);
 
                     }

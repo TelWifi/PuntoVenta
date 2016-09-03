@@ -146,6 +146,9 @@
                     </div>
                     <a class="btn btn-danger" href="/Home/OffLogin">Salir </a>
                 </div>
+                <div class="pull-left">
+                    <a class="btn btn-sm btn-danger" href="/UndAtencion/Index">Regresar</a>
+                </div>
                 <div class="pull-right">
                     <img class="img-responsive logo" src="/Content/images/logo.png" alt="Neinco">
                 </div>
@@ -320,7 +323,11 @@
         </div>
     </div>
 </div>
-
+<div class="hide">
+    <label id="divate">@ViewBag.div</label>
+    <label id="undate">@ViewBag.und</label>
+    <label id="perate">@ViewBag.per</label>
+</div>
 @section Scripts{
     @Scripts.Render("~/bundles/aplicacion")
     @Scripts.Render("~/bundles/app")
