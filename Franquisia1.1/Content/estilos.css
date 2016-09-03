@@ -89,18 +89,35 @@ input[type=checkbox] {
     color: white ;
 }
 .undatencion{
+    padding-top:30px;
     background-color:#ecf0f1;
-    border: 1px solid #000; 
+    border: 1px solid #95a5a6; 
     height:100px;
     text-align:center;
-    cursor: pointer
+    font-size:1.2em;
+    font-weight:700;
+    cursor: pointer;
+    color:#000;
+    -webkit-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
+    -moz-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
+    box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
 }
 .undatencion-ocupada{
+    padding-top:20px;
     background-color:#f39c12;
     border: 1px solid #000; 
     height:100px;
     text-align:center;
-    cursor: pointer
+    font-size:1.2em;
+    font-weight:700;
+    cursor: pointer;
+    -webkit-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
+    -moz-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
+    box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
+}
+.percorto{
+    font-size:0.7em;
+    color:#ecf0f1;
 }
 .panel-servicio{
    word-wrap:break-word;

@@ -95,8 +95,8 @@ namespace Franquisia1._1.Controllers
         [HttpPost]
         public JsonResult Obtener(string codund, string coddiv){
             try {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     if (!String.IsNullOrWhiteSpace(codund))
                     {

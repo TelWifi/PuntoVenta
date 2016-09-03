@@ -4,9 +4,8 @@ function getUndAtencion(p, c) {
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.split(":")[0] == "ERROR") { return alert(response.respuesta); }
             p.empty();
-            //p.append($("<div class='row'></div>"))
             $.each(response.libres, function (idx, obj) {
-                var pu = $("<div class='col-xs-2 panel undatencion' data-codigo='"+obj["CODIGO"]+"'>" + obj["DESCRIPCION"] + "</div>");
+                var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion' data-codigo='" + obj["CODIGO"] + "'>" + obj["DESCRIPCION"] + "</div>");
                 p.append(pu);
                 pu.on("click", function () {
                     $("#und-sel").text($(this).data("codigo"));
@@ -15,11 +14,11 @@ function getUndAtencion(p, c) {
             });
 
             $.each(response.ocupadas, function (idx, obj) {
-                var pu = $("<div class='col-xs-2 panel undatencion-ocupada'>" + obj["UNDDES"] + "<br/></div>");
+                var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion-ocupada'>" + obj["UNDDES"] + "<br/></div>");
                 pu.data("codund", obj["CODUND"]);
                 pu.data("coddiv", obj["CODDIV"]);
                 pu.data("codper", obj["CODPER"]);
-                pu.append(obj["PERCORTO"]);
+                pu.append($("<div class='percorto'>" + obj["PERCORTO"] + "</div>"));
                 pu.on("click", function () {
                     var m = $("#modal-ingresar");
                     m.modal("show");

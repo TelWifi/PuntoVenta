@@ -81,7 +81,11 @@ namespace Franquisia1._1.Controllers
                    ViewBag.div = div;
                    ViewBag.und = und;
                    ViewBag.per = per;
-
+                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
+                   if (p == null || !p.codigo.Equals(per))
+                   {
+                       return RedirectToAction("ErrorPermiso", "Error");
+                   }
                    ViewBag.categorias = db.claserv.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
                    ViewBag.divisiones = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
                    ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
@@ -174,7 +178,8 @@ namespace Franquisia1._1.Controllers
                    peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
                    if (p==null || !p.clave.Equals(newpwd))
                    {
-                       return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet);
+                       return JavaScript ("ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n");
+                       //return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet);
                    }
                    switch (rol)
                    {
