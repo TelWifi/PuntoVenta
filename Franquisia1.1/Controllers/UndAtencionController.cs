@@ -21,7 +21,6 @@ namespace Franquisia1._1.Controllers
                 ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
                 List<divatencion> divs = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
                 ViewBag.divs = divs;
-
                 return View();
             }
             else { return RedirectToAction("ErrorPermiso", "Error"); }

@@ -5,14 +5,14 @@ function getUndAtencion(p, c) {
             if (response.respuesta.split(":")[0] == "ERROR") { return alert(response.respuesta); }
             p.empty();
             $.each(response.libres, function (idx, obj) {
-                var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion' data-codigo='" + obj["CODIGO"] + "'>" + obj["DESCRIPCION"] + "</div>");
+                var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion'>" + obj["DESCRIPCION"] + "</div>");
+                pu.data("codigo", obj["CODIGO"]);
                 p.append(pu);
                 pu.on("click", function () {
                     $("#und-sel").text($(this).data("codigo"));
                     $("#modal-seleccionar-peratencion").modal("show");
                 });
             });
-
             $.each(response.ocupadas, function (idx, obj) {
                 var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion-ocupada'>" + obj["UNDDES"] + "<br/></div>");
                 pu.data("codund", obj["CODUND"]);
@@ -21,16 +21,13 @@ function getUndAtencion(p, c) {
                 pu.append($("<div class='percorto'>" + obj["PERCORTO"] + "</div>"));
                 pu.on("click", function () {
                     var m = $("#modal-ingresar");
+                    m.data("codund", obj["CODUND"]); m.data("coddiv", obj["CODDIV"]); m.data("codper", obj["CODPER"]);
                     m.modal("show");
-                    m.data("codund", obj["CODUND"]);
-                    m.data("coddiv", obj["CODDIV"]);
-                    m.data("codper", obj["CODPER"]);
                 });
                 p.append(pu);
             });
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
-
 }
 
 $(document).ready(function () {
@@ -65,8 +62,11 @@ $(document).ready(function () {
             var und = m.data("codund");
             var div = m.data("coddiv");
             var per = m.data("codper");
-            window.location = "/UndAtencion/Selector?div=" + div + "&und=" + und + "&per=" + per + "&pass=" + pass;
             m.modal("hide");
+
+            window.location = "/UndAtencion/Selector?div=" + div + "&und=" + und + "&per=" + per + "&pass=" + pass;
+
+
         } else {
             alert("Ingrese contraseña");
         }

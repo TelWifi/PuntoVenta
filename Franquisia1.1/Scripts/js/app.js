@@ -109,7 +109,6 @@ function buscarConventaClaserv(c, p) {
     });
 }
 function aperturarUndAtencion(divate, codund, codper) {
-    console.log("wadawd");
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/UndAtencion/Aperturar",
         data: { codigo: codund, idperatencion: codper, divate: divate },
