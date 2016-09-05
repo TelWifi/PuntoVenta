@@ -20,7 +20,7 @@ namespace Franquisia1._1.Controllers
                     string codcia = Session["Loged_usrfile_ciafile"].ToString();
                     string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                     string punemi = Session["Loged_usrfile_punemi"].ToString();
-                    parreg prg = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
+                    parreg prg = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("COM")).FirstOrDefault();
                     if (prg == null) { return Json(new { respuesta = "ERROR: El par\u00E1metro IGV no existe" }, JsonRequestBehavior.AllowGet); }
                     return Json(new { respuesta = "EXITO: ", igv = prg.COM_TASA_IGV }, JsonRequestBehavior.AllowGet);
                 }

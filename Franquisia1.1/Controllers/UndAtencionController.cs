@@ -27,13 +27,24 @@ namespace Franquisia1._1.Controllers
             
         }
        [HttpPost]
-       public JsonResult Aperturar(string codigo, string idperatencion, string divate)
+       public JsonResult Aperturar(string codigo, string idperatencion, string divate, string pwd)
        {
            try
            {
+               string codcia = Session["Loged_usrfile_ciafile"].ToString();
+               if (true)
+               {
+                   usrfile u = new usrfile();
+                   string newpwd = u.Encripta(pwd);
+                   
+                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(idperatencion)).FirstOrDefault();
+                   if (p == null || !p.clave.Equals(newpwd))
+                   {
+                       return Json(new { respuesta = "ERROR: Contrase\u00F1a incorrecta" }, JsonRequestBehavior.AllowGet);
+                   }
+               }
                string rol = Session["Loged_usrfile_rol"].ToString();
                if (rol.Equals("C") || rol.Equals("M")){
-                   string codcia = Session["Loged_usrfile_ciafile"].ToString();
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                    string codpunemi = Session["Loged_usrfile_punemi"].ToString();
                    string idusr = Session["Loged_usrfile_idusr"].ToString();
@@ -45,7 +56,7 @@ namespace Franquisia1._1.Controllers
 
                    conc cc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.UNDATENCION.Equals(undatencion.CODIGO)
                        && a.SITUACION.Equals("A")).FirstOrDefault();
-                   if (cc != null) { return Json(new { respuesta = "EXITO: La unidad de atenci\u00F3n est\u00E1 aperturada", cabecera = cc, undatencion = undatencion, peraten=per }, JsonRequestBehavior.AllowGet); }
+                   if (cc != null) { return Json(new { respuesta = "EXITO: La unidad de atenci\u00F3n est\u00E1 aperturada", div = undatencion.DIVATENCION, und = undatencion.CODIGO, per=per.codigo, rol=rol }, JsonRequestBehavior.AllowGet); }
 
                    int? tmp = this.generar(codcia);
                    if (tmp == null) { return Json(new { respuesta = "ERROR: Error al generar el c\u00F3digo del consumo" }, JsonRequestBehavior.AllowGet); }
@@ -61,12 +72,13 @@ namespace Franquisia1._1.Controllers
                    conc.SITUACION = "A";
                    db.conc.Add(conc);
                    db.SaveChanges();
-                   return Json(new { respuesta = "EXITO: Unidad de atenci\u00F3n aperturada", cabecera = conc, undatencion = undatencion, peraten=per }, JsonRequestBehavior.AllowGet);
+                   return Json(new { respuesta = "EXITO: Unidad de atenci\u00F3n aperturada", div = undatencion.DIVATENCION, und = undatencion.CODIGO, per = per.codigo, rol=rol }, JsonRequestBehavior.AllowGet);
                }else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }                
            }
            catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
            catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
        }
+
        public ActionResult Facturacion(string div, string und, string per){
            try
            {

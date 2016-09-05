@@ -1,3 +1,5 @@
+var parpwd = $("#parpwd").text();
+var rol = $("#rol").text();
 function getUndAtencion(p, c) {
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: "/UndAtencion/Obtener", data: { divatencion: c },
@@ -10,19 +12,28 @@ function getUndAtencion(p, c) {
                 p.append(pu);
                 pu.on("click", function () {
                     $("#und-sel").text($(this).data("codigo"));
-                    $("#modal-seleccionar-peratencion").modal("show");
+                        var m = $("#modal-seleccionar-peratencion");
+                        m.find("input").val("");
+                        m.modal("show");
                 });
             });
             $.each(response.ocupadas, function (idx, obj) {
                 var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion-ocupada'>" + obj["UNDDES"] + "<br/></div>");
-                pu.data("codund", obj["CODUND"]);
-                pu.data("coddiv", obj["CODDIV"]);
-                pu.data("codper", obj["CODPER"]);
+                pu.data("codund", obj["CODUND"]); pu.data("coddiv", obj["CODDIV"]); pu.data("codper", obj["CODPER"]);
                 pu.append($("<div class='percorto'>" + obj["PERCORTO"] + "</div>"));
                 pu.on("click", function () {
-                    var m = $("#modal-ingresar");
-                    m.data("codund", obj["CODUND"]); m.data("coddiv", obj["CODDIV"]); m.data("codper", obj["CODPER"]);
-                    m.modal("show");
+                    if (parpwd == "S") {
+                        var m = $("#modal-ingresar");
+                        m.find("input").val("");
+                        m.data("codund", obj["CODUND"]); m.data("coddiv", obj["CODDIV"]); m.data("codper", obj["CODPER"]); m.modal("show");
+                    } else {
+                        var div = obj["CODDIV"]; var und = obj["CODUND"]; var per = obj["CODPER"];
+                        if (rol == "M") {
+                            window.location = "/UndAtencion/Consumos?div=" + div + "&und=" + und + "&per=" + per;
+                        } else if (rol == "C") {
+                            window.location = "/UndAtencion/Facturacion?div=" + div + "&und=" + und + "&per=" + per;
+                        }
+                    }
                 });
                 p.append(pu);
             });
@@ -44,31 +55,48 @@ $(document).ready(function () {
     });
 
     $("#btn-ingresar").on("click", function () {
-        var pass = $("#perate-pass").val();
-        if (!isNullOrWhiteSpace(pass)) {
-            var div = $("#div-sel").text();
-            var und = $("#und-sel").text();
-            var per = $("#per-sel").text();
-            window.location = "/UndAtencion/Selector?div=" + div + "&und=" + und + "&per=" + per + "&pass=" + pass;
-            $("#modal-seleccionar-peratencion").modal("hide");
+        
+        if (parpwd == "S") {
+            var pass = $("#perate-pass").val();
+            if (!isNullOrWhiteSpace(pass)) {
+                $("#modal-seleccionar-peratencion").modal("hide");
+                var div = $("#div-sel").text(); var und = $("#und-sel").text(); var per = $("#per-sel").text();
+                aperturarUndAtencion(div, und, per, pass, function (response) {
+                    if (response.rol == "M") {
+                        window.location = "/UndAtencion/Consumos?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
+                    } else if (response.rol = "C") {
+                        window.location = "/UndAtencion/Facturacion?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
+                    }
+                });
+            } else { alert("Ingrese contrase\u00f1a"); }
         } else {
-            alert("Ingrese contraseña");
+            $("#modal-seleccionar-peratencion").modal("hide");
+            var div = $("#div-sel").text(); var und = $("#und-sel").text(); var per = $("#per-sel").text();
+            aperturarUndAtencion(div, und, per, "", function (response) {
+                if (response.rol == "M") {
+                    window.location = "/UndAtencion/Consumos?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
+                } else if (response.rol = "C") {
+                    window.location = "/UndAtencion/Facturacion?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
+                }
+            });
         }
+
+
     });
     $("#btn-ingresar-2").on("click", function () {
         var pass = $("#perate-pass-2").val();
         if (!isNullOrWhiteSpace(pass)) {
             var m = $("#modal-ingresar");
-            var und = m.data("codund");
-            var div = m.data("coddiv");
-            var per = m.data("codper");
             m.modal("hide");
+            var und = m.data("codund"); var div = m.data("coddiv"); var per = m.data("codper");
+            aperturarUndAtencion(div, und, per, pass, function (response) {
+                if (response.rol == "M") {
+                    window.location = "/UndAtencion/Consumos?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
+                } else if (response.rol = "C") {
 
-            window.location = "/UndAtencion/Selector?div=" + div + "&und=" + und + "&per=" + per + "&pass=" + pass;
-
-
-        } else {
-            alert("Ingrese contraseña");
-        }
+                    window.location = "/UndAtencion/Facturacion?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
+                }
+            });
+        } else {alert("Ingrese contrase\u00f1a");}
     });
 });

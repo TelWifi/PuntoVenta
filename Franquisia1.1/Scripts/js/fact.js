@@ -263,6 +263,7 @@ function undAperturada() {
 $(document).ready(function () {
     IGV = obtenerIGV();
     initTipDoc("tipo-documentos");
+    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) { console.log("sdsa"); });
     var grnt = $("input[name=naturaleza-opcion]:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("active");
     
     $("#divatencion").on("change", function () {
@@ -270,7 +271,6 @@ $(document).ready(function () {
     });
     $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
-    verificarUndAperturada();
     if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$("input[type='text']").keyboard();$("input[type='number']").keyboard();}
     $(".anexo").find(".anexo-nrodoc").on("change", function () { getBDAnexo($(this).parent()); });
     $(".anexo").find(".anexo-desane, .anexo-refane").on("change", function () {
@@ -376,7 +376,7 @@ $(document).ready(function () {
                 type: "post", dataType: 'json', cache: false, url: '/Conc/Anular', data: { codigo: cod },
                 success: function (response, textStatus, jqXHR) {
                     if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
-                    else { resetTabla("#tabla-factura"); $("#undatencion").val(""); clearDesc("#peratencion-desc", "#undatencion-desc"); }
+                    else { resetTabla("#tabla-factura"); $("#undatencion").val(""); clearDesc("#peratencion-desc", "#undatencion-desc"); window.location = "/UndAtencion/Index";}
                 }, error: function (xhr, status) { errorAjax(xhr, status); }
             });
         }

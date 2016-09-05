@@ -21,7 +21,11 @@
         </div>
     }
 </div>
-<label id="und-sel" class="hide"></label><label id="per-sel" class="hide"></label><label id="div-sel" class="hide"></label>
+<div class="hide">
+    <label id="und-sel"></label><label id="per-sel"></label><label id="div-sel"></label>
+    <label id="parpwd">S</label> <label id="rol">@Session["Loged_usrfile_rol"]</label>
+</div>
+
 <div class="modal fade" id="modal-seleccionar-peratencion">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -40,10 +44,10 @@
                 </div>
                 <div class="panel">
                     Ingrese clave:
-                    <div class="input-group input-group-sm">
-                        <input type="password" id="perate-pass" data-valant="" placeholder="Ingrese clave" class="form-control input-lg" />
+                    <div class="input-group input-group">
+                        <input type="password" id="perate-pass" data-valant="" placeholder="Ingrese clave" class="form-control"/>
                         <span class="input-group-btn">
-                            <button id="btn-ingresar" class="btn btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                            <button id="btn-ingresar" class="btn btn"><span class="glyphicon glyphicon-ok"></span></button>
                         </span>
                     </div>
                 </div>
@@ -51,6 +55,8 @@
         </div>
     </div>
 </div>
+
+
 <div class="modal fade" id="modal-ingresar">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -61,10 +67,10 @@
             <div class="modal-body">
                 <div class="panel">
                     Ingrese clave:
-                    <div class="input-group input-group-sm">
-                        <input type="password" id="perate-pass-2" data-valant="" placeholder="Ingrese clave" class="form-control input-lg" />
+                    <div class="input-group input-group">
+                        <input type="password" id="perate-pass-2" data-valant="" placeholder="Ingrese clave" class="form-control"/>
                         <span class="input-group-btn">
-                            <button id="btn-ingresar-2" class="btn btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                            <button id="btn-ingresar-2" class="btn"><span class="glyphicon glyphicon-ok"></span></button>
                         </span>
                     </div>
                 </div>

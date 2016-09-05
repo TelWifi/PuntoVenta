@@ -14,7 +14,7 @@
                     <div class="col-sm-6">
                         Nº Und. de Atención:
                         <div class="input-group input-group-sm">
-                            <input type="text" id="undatencion" data-valant="" placeholder="Ingrese Nº de Unidad de Atención" class="form-control input-sm" />
+                            <input type="text" id="undatencion" data-valant="" placeholder="Ingrese Nº de Unidad de Atención" class="form-control input-sm" value="@ViewBag.und" />
                             <span class="input-group-btn">
                                 <button id="btn-update" class="btn btn-xs"><span class="glyphicon glyphicon-refresh"></span></button>
                             </span>
@@ -97,7 +97,7 @@
                     {
                         <div class="btn-group btn-group-xs btn-group-vertical ">
                             <a id="cambiar-undatencion" class="btn btn-secundario btn-secundario-bordes">Cambiar Und. Atención</a>
-                            <a href="/UndAtencion/Facturacion" class="btn btn-secundario btn-secundario-bordes">M. Facturación</a>
+                            <a href="/UndAtencion/Facturacion?div=@ViewBag.div&und=@ViewBag.und&per=@ViewBag.per" class="btn btn-secundario btn-secundario-bordes">M. Facturación</a>
                         </div>
                     }
                     else
@@ -165,4 +165,7 @@
     @Scripts.Render("~/bundles/aplicacion")
     @Scripts.Render("~/bundles/app")
     @Scripts.Render("~/bundles/cons")
+<script>
+        $("#divatencion").val(@ViewBag.div);
+</script>
 }

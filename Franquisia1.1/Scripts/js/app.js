@@ -108,21 +108,13 @@ function buscarConventaClaserv(c, p) {
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function aperturarUndAtencion(divate, codund, codper) {
+function aperturarUndAtencion(d, u, p, c, f) {
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/UndAtencion/Aperturar",
-        data: { codigo: codund, idperatencion: codper, divate: divate },
+        data: { codigo: u, idperatencion: p, divate: d, pwd:c },
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-            else {
-                $("#tabla-factura").data("codigo", response.cabecera.CODIGO);
-                $("#undatencion-desc").text(response.undatencion.DESCRIPCION);
-                $("#undatencion-desc").data("codigo", response.undatencion.CODIGO);
-                $("#peratencion-desc").data("codigo", response.peraten.codigo);
-                $("#peratencion-desc").text(response.peraten.descripcion);
-                undAperturada();
-            }
-            
+            else { f(response); }
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }

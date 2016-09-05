@@ -129,7 +129,9 @@ $(document).ready(function () {
     });
     $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this));}});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
-    verificarUndAperturada();
+    //verificarUndAperturada();
+    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) { console.log("sdsa"); });
+
     if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$("input[type='text']").keyboard();$("input[type='number']").keyboard();}
     $("#cambiar-undatencion").on("click", function () {
         if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
