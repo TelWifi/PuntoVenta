@@ -17,7 +17,9 @@ function obtenerIGV() {
         type: "post", dataType: 'json', cache: false, url: "/Parreg/ObtenerIGV", data: {},
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-            else if (response.respuesta.toString().split(":")[0] == "EXITO") {IGV = parseFloat(response.igv);}
+            else if (response.respuesta.toString().split(":")[0] == "EXITO") {
+                parseFloat(response.igv)!=undefined?IGV = parseFloat(response.igv):IGV=18;
+            }
         },
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
@@ -272,7 +274,7 @@ $(document).ready(function () {
     $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
     if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$("input[type='text']").keyboard();$("input[type='number']").keyboard();}
-    $(".anexo").find(".anexo-nrodoc").on("change", function () { getBDAnexo($(this).parent()); });
+    $(".anexo").find(".anexo-nrodoc").on("change", function () { getBDAnexo($(this).parent().parent()); });
     $(".anexo").find(".anexo-desane, .anexo-refane").on("change", function () {
         anexo = obtenerAnexo($(this).parent());
         if (!isNullOrWhiteSpace(anexo.nrodoc)) {
@@ -522,6 +524,7 @@ $(document).ready(function () {
                     $("#undatencion").val("");
                     clearDesc("#peratencion-desc", "#undatencion-desc");
                     resetTabla("#tabla-factura");
+                    window.location = "/UndAtencion/Index";
                 }
             }, error: function (xhr, status) { errorAjax(xhr, status); }
         });

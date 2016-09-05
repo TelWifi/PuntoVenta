@@ -21,6 +21,8 @@ namespace Franquisia1._1.Controllers
                 ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
                 List<divatencion> divs = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
                 ViewBag.divs = divs;
+                parreg pr= db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
+                ViewBag.parpwd = pr.POS_IS_CLAVE_PERATENCION;
                 return View();
             }
             else { return RedirectToAction("ErrorPermiso", "Error"); }
@@ -32,7 +34,8 @@ namespace Franquisia1._1.Controllers
            try
            {
                string codcia = Session["Loged_usrfile_ciafile"].ToString();
-               if (true)
+               parreg pr = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
+               if (pr.POS_IS_CLAVE_PERATENCION.Equals("S"))
                {
                    usrfile u = new usrfile();
                    string newpwd = u.Encripta(pwd);

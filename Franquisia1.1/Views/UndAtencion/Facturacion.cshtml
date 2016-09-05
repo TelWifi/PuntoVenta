@@ -31,13 +31,15 @@
                     }
                 </div>
                 <div id="tabla-factura-anexo" class="anexo">
-                    <input type="text" placeholder="RUC/DNI" class="anexo-nrodoc form-control input-sm" />
-                    <input type="text" placeholder="Cliente" class="anexo-desane form-control input-sm" />
-                    <input type="text" placeholder="Dirección" class="anexo-refane form-control input-sm" />
-                </div>
-                <div class="btn-group btn-group-xs btn-group-justified">
-                    <a class="btn-seleccionar-anexo btn btn-xs btn-info" data-anexo="#tabla-factura-anexo">Clientes</a>
-                    <a class="btn-crear-anexo btn btn-xs btn-success" data-anexo="#tabla-factura-anexo">Agregar Cliente</a>
+                    <div class="input-group input-group-sm">
+                        <input type="text" placeholder="RUC/DNI" class="anexo-nrodoc form-control" />
+                        <span class="input-group-btn">
+                            <a class="btn-seleccionar-anexo btn btn-xs btn-info" data-anexo="#tabla-factura-anexo"><span class="glyphicon glyphicon-search"></span></a>
+                            <a class="btn-crear-anexo btn btn-xs btn-success" data-anexo="#tabla-factura-anexo"><span class="glyphicon glyphicon-plus"></span></a>
+                        </span>
+                    </div>
+                    <input type="text" placeholder="Cliente" class="anexo-desane form-control" />
+                    <input type="text" placeholder="Dirección" class="anexo-refane form-control" />
                 </div>
             </div>
             <div class="row div-scroll">
@@ -67,11 +69,14 @@
                     </tr>
                 </table>
                 <div class="btn-group btn-group-sm btn-group-justified">
-                    <a id="anular-factura" class="btn btn-danger">Anular</a>
-                    <a class="btn"></a>
-                    <a id="factura-btn-guardar" class="btn btn-success">Guardar</a>
-                    <a id="factura-btn-pagar" class="btn btn-warning">Facturar</a>
+                    <a id="factura-btn-guardar" class="btn btn-primary">Guardar</a>
+                    <a id="factura-btn-pagar" class="btn btn-success">Facturar</a>
                     <a id="factura-pre-factura" class="btn btn-default"><i class="glyphicon glyphicon-print"></i></a>
+                </div>
+                <div style="padding-top:5px;"></div>
+                <div class="btn-group btn-group-xs btn-group-justified">
+                    <a id="anular-factura" class="btn btn-danger">Anular</a>
+                    <a class="btn btn-sm btn-warning" href="/UndAtencion/Index">Regresar</a>
                 </div>
             </div>
         </div>
@@ -146,9 +151,6 @@
                     </div>
                     <a class="btn btn-danger" href="/Home/OffLogin">Salir </a>
                 </div>
-                <div class="pull-left">
-                    <a class="btn btn-sm btn-danger" href="/UndAtencion/Index">Regresar</a>
-                </div>
                 <div class="pull-right">
                     <img class="img-responsive logo" src="/Content/images/logo.png" alt="Neinco">
                 </div>
@@ -221,8 +223,10 @@
             <div class="modal-body">
                 <div class="panel">
                     <div class="form-group"><input id="txtBuscar" type="text" class="form-control " placeholder="Buscar" /></div>
-                    <button id="btn-buscar-razon" class="btn btn-warning">Por Razón Social/Apellido y Nombres</button>
-                    <button id="btn-buscar-ruc" class="btn btn-info">Por RUC/ DNI</button>
+                    <div class="btn-group btn-group-justified">
+                        <a id="btn-buscar-razon" class="btn btn-warning">Por Razón Social/Apellido y Nombres</a>
+                        <a id="btn-buscar-ruc" class="btn btn-info">Por RUC/ DNI</a>
+                    </div>
                 </div>
                 <div class="panel div-scroll">
                     <table id="tabla-seleccionar-anexo" class='table table-hover'>
