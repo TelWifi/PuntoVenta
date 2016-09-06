@@ -13,8 +13,8 @@ function getUndAtencion(p, c) {
                 pu.on("click", function () {
                     $("#und-sel").text($(this).data("codigo"));
                         var m = $("#modal-seleccionar-peratencion");
-                        m.find("input").val("");
                         m.modal("show");
+                        $("#perate-pass").focus();
                 });
             });
             $.each(response.ocupadas, function (idx, obj) {
@@ -26,6 +26,7 @@ function getUndAtencion(p, c) {
                         var m = $("#modal-ingresar");
                         m.find("input").val("");
                         m.data("codund", obj["CODUND"]); m.data("coddiv", obj["CODDIV"]); m.data("codper", obj["CODPER"]); m.modal("show");
+                        $("#perate-pass-2").focus();
                     } else {
                         var div = obj["CODDIV"]; var und = obj["CODUND"]; var per = obj["CODPER"];
                         if (rol == "M") {
@@ -40,6 +41,21 @@ function getUndAtencion(p, c) {
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
+function ingresarSoloClave() {
+    var pass = $("#perate-pass-2").val();
+    if (!isNullOrWhiteSpace(pass)) {
+        var m = $("#modal-ingresar");
+        m.modal("hide");
+        var und = m.data("codund"); var div = m.data("coddiv"); var per = m.data("codper");
+        aperturarUndAtencion(div, und, per, pass, function (response) {
+            if (response.rol == "M") {
+                window.location = "/UndAtencion/Consumos?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
+            } else if (response.rol = "C") {
+                window.location = "/UndAtencion/Facturacion?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
+            }
+        });
+    } else { alert("Ingrese contrase\u00f1a"); }
+}
 
 $(document).ready(function () {
     $("input").keyboard();
@@ -53,14 +69,13 @@ $(document).ready(function () {
         $(this).addClass("element-active");
         $("#per-sel").text($(this).data("codigo"));
     });
-
-    $("#btn-ingresar").on("click", function () {
-        
+    $("#empleados li").on("click", function () {
         if (parpwd == "S") {
             var pass = $("#perate-pass").val();
             if (!isNullOrWhiteSpace(pass)) {
-                $("#modal-seleccionar-peratencion").modal("hide");
                 var div = $("#div-sel").text(); var und = $("#und-sel").text(); var per = $("#per-sel").text();
+                if (isNullOrWhiteSpace(per)) { return alert("Seleccione una persona");}
+                $("#modal-seleccionar-peratencion").modal("hide");
                 aperturarUndAtencion(div, und, per, pass, function (response) {
                     if (response.rol == "M") {
                         window.location = "/UndAtencion/Consumos?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
@@ -68,9 +83,8 @@ $(document).ready(function () {
                         window.location = "/UndAtencion/Facturacion?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
                     }
                 });
-            } else { alert("Ingrese contrase\u00f1a"); }
+            } else { alert("Ingrese contrase\u00F1a"); }
         } else {
-            $("#modal-seleccionar-peratencion").modal("hide");
             var div = $("#div-sel").text(); var und = $("#und-sel").text(); var per = $("#per-sel").text();
             aperturarUndAtencion(div, und, per, "", function (response) {
                 if (response.rol == "M") {
@@ -80,23 +94,8 @@ $(document).ready(function () {
                 }
             });
         }
-
-
     });
-    $("#btn-ingresar-2").on("click", function () {
-        var pass = $("#perate-pass-2").val();
-        if (!isNullOrWhiteSpace(pass)) {
-            var m = $("#modal-ingresar");
-            m.modal("hide");
-            var und = m.data("codund"); var div = m.data("coddiv"); var per = m.data("codper");
-            aperturarUndAtencion(div, und, per, pass, function (response) {
-                if (response.rol == "M") {
-                    window.location = "/UndAtencion/Consumos?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
-                } else if (response.rol = "C") {
 
-                    window.location = "/UndAtencion/Facturacion?div=" + response.div + "&und=" + response.und + "&per=" + response.per;
-                }
-            });
-        } else {alert("Ingrese contrase\u00f1a");}
-    });
+    $("#btn-ingresar-2").on("click", function () { ingresarSoloClave();});
+    $("#perate-pass-2").bind('accepted', function (e, keyboard, el) { ingresarSoloClave(); });
 });

@@ -4,7 +4,6 @@
 
 <h2 class="text-center">Seleccione</h2>
 
-
 <ul id="divisiones" class="nav nav-tabs" style="font-size:small;">
     @foreach (var div in ViewBag.divs)
     {
@@ -16,7 +15,6 @@
     {
         <div id="tab-@div.CODIGO" class="tab-pane fade in">
             <div id="divatencion-@div.CODIGO" class="panel">
-
             </div>
         </div>
     }
@@ -26,7 +24,7 @@
     <label id="parpwd">@ViewBag.parpwd</label> <label id="rol">@Session["Loged_usrfile_rol"]</label>
 </div>
 
-<div class="modal fade" id="modal-seleccionar-peratencion">
+<div class="modal " id="modal-seleccionar-peratencion">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -34,7 +32,20 @@
                 <h4 class="modal-title">Asignar Empleado</h4>
             </div>
             <div class="modal-body">
+                @if (ViewBag.parpwd == "S")
+                {
+                    <div>
+                        <h4>Ingrese clave:</h4>
+                        <div class="input-group input-group">
+                            <span class="input-group-btn">
+                                <button class="btn"><span class="glyphicon glyphicon-user"></span></button>
+                            </span>
+                            <input type="password" id="perate-pass" placeholder="Ingrese clave" class="form-control" autofocus />
+                        </div>
+                    </div>
+                }
                 <div class="div-scroll-empleados">
+                    <h4>Seleccione un empleado:</h4>
                     <ul id="empleados" class="list-group">
                         @foreach (var persona in ViewBag.personal)
                         {
@@ -42,33 +53,21 @@
                         }
                     </ul>
                 </div>
-                <div class="panel">
-                    Ingrese clave:
-                    <div class="input-group input-group">
-                        <input type="password" id="perate-pass" data-valant="" placeholder="Ingrese clave" class="form-control"/>
-                        <span class="input-group-btn">
-                            <button id="btn-ingresar" class="btn btn"><span class="glyphicon glyphicon-ok"></span></button>
-                        </span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-<div class="modal fade" id="modal-ingresar">
+<div class="modal" id="modal-ingresar">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Ingresar</h4>
             </div>
             <div class="modal-body">
                 <div class="panel">
-                    Ingrese clave:
+                    <h4>Ingrese clave:</h4>
                     <div class="input-group input-group">
-                        <input type="password" id="perate-pass-2" data-valant="" placeholder="Ingrese clave" class="form-control"/>
+                        <input type="password" id="perate-pass-2" placeholder="Ingrese clave" class="form-control" autofocus/>
                         <span class="input-group-btn">
                             <button id="btn-ingresar-2" class="btn"><span class="glyphicon glyphicon-ok"></span></button>
                         </span>

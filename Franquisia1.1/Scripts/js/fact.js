@@ -273,7 +273,36 @@ $(document).ready(function () {
     });
     $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$("input[type='text']").keyboard();$("input[type='number']").keyboard();}
+    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
+        $("input[type='text']").keyboard();
+        $("input[type='number']").keyboard();
+        $('#hex')
+	    .keyboard({
+	        layout: 'custom',
+	        customLayout: {
+	            'normal': [
+				    '7 8 9',
+				    '4 5 6',
+				    '1 2 3 4',
+				    '0 {bksp} {a} {c}'
+	            ]
+	        },
+	        maxLength: 6,
+	        // Prevent keys not in the displayed keyboard from being typed in
+	        restrictInput: true,
+	        // include lower case characters (added v1.25.7)
+	        restrictInclude: 'a b c d e f',
+	        // don't use combos or A+E could become a ligature
+	        useCombos: false,
+	        // activate the "validate" callback function
+	        acceptValid: true,
+	        validate: function (keyboard, value, isClosing) {
+	            // only make valid if input is 6 characters in length
+	            return value.length === 6;
+	        }
+	    })
+	    .addTyping();
+    }
     $(".anexo").find(".anexo-nrodoc").on("change", function () { getBDAnexo($(this).parent().parent()); });
     $(".anexo").find(".anexo-desane, .anexo-refane").on("change", function () {
         anexo = obtenerAnexo($(this).parent());
