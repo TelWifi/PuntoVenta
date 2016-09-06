@@ -90,7 +90,7 @@ function printFactura(t, a) {
     if (!print(dp)) { alert("ERROR: Error al imprimir"); }
 }
 function guardarFactura(t) {
-    if (!Validar.DatoValido(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
+    if (!Validar.Dato(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
     var cod = t.data("codigo"); var ar = new Array(); var cond;
     t.find("tbody tr").each(function (index) {
         cond = {
@@ -105,8 +105,8 @@ function guardarFactura(t) {
     });
 }
 function obtenerDetalle(sl, cd, t, pa, ua, f) {
-    if (Validar.DatoValido(sl.val()) || Validar.DatoValido(cd) || Validar.DatoValido(t)) { return; }
-    if (!sl.val().match(/^[0-9]+$/)) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "La unidad de atenci\u00F3n")); }
+    if (!Validar.Dato(sl.val()) || !Validar.Dato(cd) || !Validar.Dato(t)) { return; }
+    if (!Validar.StrSoloNum(sl.val())) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "La unidad de atenci\u00F3n")); }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Obtener", data: { codund: sl.val(), coddiv: cd },
         success: function (response, textStatus, jqXHR) {
@@ -215,50 +215,32 @@ function getFormTarjeta(p, ist) {
     if (tp > 0) { ipI.val(tp.toFixed(2)); }if (ist == "S") { obtenerTarjetas(p.find("#divtarjetas")); }if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { p.find("input[type=text]").keyboard(); }
 }
 function changeUndAtencion(txt) {
-    if (isNullOrWhiteSpace(txt.val())) {
-        resetTabla("#tabla-factura"); clearDesc("#peratencion-desc", "#undatencion-desc");
-    } else {
-        if (!isNullOrWhiteSpace($("#divatencion").val())) {
-            if (!isNullOrWhiteSpace($("#undatencion").val())) {
-                obtenerDetalle(txt, $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc",
+    if (Validar.Dato($("#divatencion").val())) {
+        if(Validar.Dato(txt.val())){
+            obtenerDetalle(txt, $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc",
                 function (select) {
                     if (confirm(MSG_DESEA_APERTURAR)) { $("#modal-seleccionar-peratencion").modal('show'); }
                 });
-            } else { alert(MSG_SELECCIONE_UNDATENCION); }
-        } else { $(this).val(""); alert(MSG_SELECCIONE_DIVATENCION); $("#divatencion").focus(); }
-    }
+        } else { alert(MSG_SELECCIONE_UNDATENCION); }
+    } else { $(this).val(""); alert(MSG_SELECCIONE_DIVATENCION); }
 }
 function initTipDoc(n) {
-    var str = "input[name='" + n + "'";
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: '/Parreg/TipDocDefault', data: { },
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.split(":")[0]=="EXITO") {
-                var td = $(str+"][ value='"+response.codigo+"']");
+                var td = $("input[name='" + n + "'][ value='"+response.codigo+"']");
                 td.prop('checked', true); td.parent().addClass("active");
             }
         },
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function verificarUndAperturada() {
-    var div = $("#divate").text();
-    var und = $("#undate").text();
-    var per = $("#perate").text();
-    if (!isNullOrWhiteSpace(div) && !isNullOrWhiteSpace(und) && !isNullOrWhiteSpace(per)) {
-        aperturarUndAtencion(div, und, per);
-        $("#undatencion").val(und);
-        $("#divatencion").val(div);
-    }
-}
-function undAperturada() {
-    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc");
-}
 
 $(document).ready(function () {
     IGV = obtenerIGV();
     initTipDoc("tipo-documentos");
-    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) { console.log("sdsa"); });
+    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) {; });
     var grnt = $("input[name=naturaleza-opcion]:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("active");
     
     $("#divatencion").on("change", function () {
@@ -270,13 +252,12 @@ $(document).ready(function () {
         $("input[type='text']").keyboard();
         tecladoNumerico($("input[type='number']"));
     }
-    $(".anexo").find(".anexo-nrodoc").on("change", function () { getBDAnexo($(this).parent().parent()); });
-    $(".anexo").find(".anexo-desane, .anexo-refane").on("change", function () {
-        anexo = obtenerAnexo($(this).parent());
-        if (!isNullOrWhiteSpace(anexo.nrodoc)) {
-            if (!isNullOrWhiteSpace(anexo.desane) && !isNullOrWhiteSpace(anexo.refane)) {actualizarAnexo(anexo, $("tabla-factura-anexo"));}
-        }
-    });
+    $(".anexo").find(".anexo-nrodoc").bind('accepted', function (e, keyboard, el) { getBDAnexo($(this).parent().parent()); });
+    $(".anexo").find(".anexo-nrodoc").keypress(function (e) { if (e.which == 13) { getBDAnexo($(this).parent().parent()); } });
+
+    $(".anexo").find(".anexo-desane, .anexo-refane").bind('accepted', function (e, keyboard, el) { actualizarAnexo(obtenerAnexo($(this).parent()), $("tabla-factura-anexo")); });
+    $(".anexo").find(".anexo-desane, .anexo-refane").keypress(function (e) { if (e.which == 13) { actualizarAnexo(obtenerAnexo($(this).parent()), $("tabla-factura-anexo")); } });
+
     $(".btn-seleccionar-anexo").on("click", function () {
         $(".modal").modal("hide");
         var modal = $("#modal-seleccionar-anexo");
@@ -290,7 +271,7 @@ $(document).ready(function () {
         modal.modal('show');
     });
     $("#modal-crear-anexo").on("show.bs.modal", function () {
-        $("#form-anexo-desane").val(""); $("#form-anexo-nrodoc").val("");$("#form-anexo-refane").val("");
+        $(this).find('input[type=text]').val();
     });
     $("#form-anexo-btn-crear").on("click", function () {
         var modal = $("#modal-crear-anexo");var fa = "#form-anexo";
@@ -322,13 +303,10 @@ $(document).ready(function () {
 
     $("#factura-btn-pagar").on("click", function () {
         var t = $("#tabla-factura");
-        if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         if (t.find("tbody tr").length <= 0) { return alert(MSG_SIN_ELEMENTOS); }
-        anexo = obtenerAnexo($("#tabla-factura-anexo"));
-        if (isNullOrWhiteSpace(anexo.nrodoc)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El RUC o DNI")); }
-        if (isNullOrWhiteSpace(anexo.desane)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El cliente")); }
-        if (isNullOrWhiteSpace(anexo.nrodoc)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La direcci\u00F3")); }
+        if (!Validar.Anexo( obtenerAnexo($("#tabla-factura-anexo")))) { return;}
         var m = $("#modal-pagar");
         m.data("tabla", "#tabla-factura");m.data("anexo", "#tabla-factura-anexo");
         $("#form-pagar-total").text(parseFloat($("#tabla-factura-total").text()).toFixed(2));
@@ -337,8 +315,8 @@ $(document).ready(function () {
     });
    
     $("#cambiar-undatencion").on("click", function () {
-        if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         $("#modal-cambiar-undatencion").modal("show");
         $("#modal-cambiar-divatencion").val($("#divatencion").val());
         $("#modal-cambiar-divatencion").change();
@@ -358,16 +336,16 @@ $(document).ready(function () {
             });
     });
     $("#factura-pre-factura").on("click", function () {
-        if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         var t = $("#tabla-factura");
         if (t.find("tbody tr").length <= 0) { return alert(MSG_SIN_ELEMENTOS); }
         printPreFactura(t)
     });
 
     $("#anular-factura").on("click", function () {
-        if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         if (confirm(MSG_DESEA_ANULAR)) {
             var cod = $("#tabla-factura").data("codigo");
             $.ajax({
@@ -405,16 +383,15 @@ $(document).ready(function () {
     });
 
     $("#factura-btn-guardar").on("click", function () {
-        if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         guardarFactura($("#tabla-factura"));
     });
 
     $("#tipos-comprobantes .btn").on("click", function () {
         if (!$(this).hasClass("active")) {
             $("#tipos-comprobantes .btn").removeClass("active");
-            $(this).addClass("active");
-            $(this).children("input[type=radio]").prop('checked', true);
+            $(this).addClass("active"); $(this).children("input[type=radio]").prop('checked', true);
         }   
     });
     $("#modal-pagar-naturaleza .btn").on("click", function () {
@@ -446,7 +423,7 @@ $(document).ready(function () {
     $("#forma-pago-agregar").on("click", function () {
         var btn = $(this);
         var codforma = btn.data("codforma");
-        if (isNullOrWhiteSpace(codforma)) {return alert("Recomendaci\u00F3n: Seleccione una forma de pago");}
+        if (!Validar.Dato(codforma)) {return alert("Recomendaci\u00F3n: Seleccione una forma de pago");}
         var tabla = "#tabla-forma-pago";
         var seleccion = $(".seleccion-tipo-pago[data-codigo=" + codforma + "]");
         var formapago = seleccion.children("a").first().text();
@@ -457,18 +434,18 @@ $(document).ready(function () {
         if (!importe.match(/^[0-9]+([.][0-9]+)?$/)) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "El importe")); }
         if (seleccion.data("istarjeta") == "S") {
             tipotarjeta = padre.find(".tarjeta").text(); codtipotar = padre.find(".tarjeta").data("codigo");
-            if (isNullOrWhiteSpace(tipotarjeta)) {return alert(MSG_NO_NULO_VACIO.replace("<attr>","El tipo de tarjeta"));}
-            if (isNullOrWhiteSpace(nroref)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>","El n\u00FAmero de referenc\u00EDa")); }
+            if (!Validar.Dato(tipotarjeta)) {return alert(MSG_NO_NULO_VACIO.replace("<attr>","El tipo de tarjeta"));}
+            if (!Validar.Dato(nroref)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El n\u00FAmero de referenc\u00EDa")); }
             if (!nroref.match(/^[0-9]+$/)) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>","El n\u00FAmero de referenc\u00EDa")); }
         }else { nroref = ""; }
-        if (isNullOrWhiteSpace(importe)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El importe")); }
-        if (isNullOrWhiteSpace(formapago)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de pago")); }
+        if (!Validar.Dato(importe)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El importe")); }
+        if (!Validar.Dato(formapago)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de pago")); }
         var montoact = sumar($(tabla), COLIMPORTE);
         if (parseFloat($("#forma-pago-total").text()) < parseFloat($("#form-pagar-total").text())) {
             if (montoact+parseFloat(importe) - parseFloat($("#form-pagar-total").text())>0) { importe = parseFloat($("#form-pagar-total").text()) - montoact; }
             elementos = [formapago,tipotarjeta, nroref, parseFloat(importe).toFixed(2)];
             var fila = addRow($(tabla), elementos);
-            if (isNullOrWhiteSpace(padre.find(".cambio").val())) { fila.data("cambio", "0"); }
+            if (!Validar.Dato(padre.find(".cambio").val())) { fila.data("cambio", "0"); }
             else { fila.data("cambio", padre.find(".cambio").val()); }
             fila.data("forpago", codforma); fila.data("tipotar", codtipotar);
             $("#forma-pago-total").text(sumar($(tabla), COLIMPORTE).toFixed(2));
@@ -493,8 +470,8 @@ $(document).ready(function () {
         var anexo = obtenerAnexo($("#tabla-factura-anexo"));
         var fv = $("input[name=naturaleza-opcion]:checked").data("codigo");
         var td = $("input[name=tipo-documentos]:checked").val();
-        if (isNullOrWhiteSpace(conc)) { return alert(MSG_SELECCIONE_UNDATENCION); }
-        if (isNullOrWhiteSpace(td)) { return alert(MSG_NO_EXISTE.replace("<attr>", "Tipo de documento")); }
+        if (!Validar.Dato(conc)) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato(td)) { return alert(MSG_NO_EXISTE.replace("<attr>", "Tipo de documento")); }
         var fp = new Array();
         $("#tabla-forma-pago").find("tbody tr").each(function (index) {
             var f = $(this);
@@ -526,20 +503,13 @@ $(document).ready(function () {
         });
         $("#modal-pagar").modal("hide");
     });
-    
     $("#conventa-btn-buscar").on("click", function () {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });
     $("#conventa-texto").on("keyup", function (evt) {
-        if (!isNullOrWhiteSpace($("#conventa-texto").val())) {
-            buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
-        } else { $("#panel-buscar").empty(); }
-        
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });
     $('#conventa-texto').bind('accepted', function (e, keyboard, el) {
-        if (!isNullOrWhiteSpace($("#conventa-texto").val())) {
-            buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
-        } else { $("#panel-buscar").empty(); }
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });
-
 });

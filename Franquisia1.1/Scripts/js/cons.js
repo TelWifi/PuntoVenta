@@ -23,7 +23,7 @@ function updateRow(f, t) {
 }
 function resetTabla(t) { $(t).find("tbody tr").remove(); $(t).data("codigo", ""); $(t + "-items").text("-"); $(t + "-igv").text("-"); $(t + "-total").text("-"); $(t + "-sel-items").text("-"); $(t + "-sel-total").text("-"); $(t + "-sel-igv").text("-"); }
 function guardarFactura(t) {
-    if (isNullOrWhiteSpace(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
+    if (!Validar.Dato(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
     var cod = t.data("codigo"); var arr = new Array();
     t.find("tbody tr").each(function (index) {
         var cond = {"CANTIDAD": parseFloat($(this).find("td input[type=number]").val()), "CONVENTA": $(this).data("codigo"), "ITEM": $(this).find("td").get(COLITEMS).innerHTML,};
@@ -59,8 +59,8 @@ function agregarProducto(pp) {
     });
 }
 function obtenerDetalle(sl, cd, t, pa, ua, f) {
-    if (isNullOrWhiteSpace(sl.val()) || isNullOrWhiteSpace(cd) || isNullOrWhiteSpace(t)) { return; }
-    if (!sl.val().match(/^[0-9]+$/)) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "La unidad de atenci\u00F3n")); }
+    if (!Validar.Dato(sl.val()) || !Validar.Dato(cd) || !Validar.Dato(t)) { return; }
+    if (!Validar.StrSoloNum(sl.val())) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "La unidad de atenci\u00F3n")); }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Obtener", data: { codund: sl.val(), coddiv: cd },
         success: function (response, textStatus, jqXHR) {
@@ -94,32 +94,14 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
 }
 
 function changeUndAtencion(txt) {
-    if (isNullOrWhiteSpace(txt.val())) {
-        resetTabla("#tabla-factura"); clearDesc("#peratencion-desc", "#undatencion-desc");
-    } else {
-        if (!isNullOrWhiteSpace($("#divatencion").val())) {
-            if (!isNullOrWhiteSpace($("#undatencion").val())) {
-                obtenerDetalle(txt, $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc",
+    if (Validar.Dato($("#divatencion").val())) {
+        if (Validar.Dato(txt.val())) {
+            obtenerDetalle(txt, $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc",
                 function (select) {
                     if (confirm(MSG_DESEA_APERTURAR)) { $("#modal-seleccionar-peratencion").modal('show'); }
                 });
-            } else { alert(MSG_SELECCIONE_UNDATENCION); }
-        } else { $(this).val(""); alert(MSG_SELECCIONE_DIVATENCION); $("#divatencion").focus(); }
-    }
-}
-function verificarUndAperturada() {
-    var div = $("#divate").text();
-    var und = $("#undate").text();
-    var per = $("#perate").text();
-    if (!isNullOrWhiteSpace(div) && !isNullOrWhiteSpace(und) && !isNullOrWhiteSpace(per)) {
-        aperturarUndAtencion(div, und, per);
-        $("#undatencion").val(und);
-        $("#divatencion").val(div);
-    }
-    console.log("aqui");
-}
-function undAperturada() {
-    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc");
+        } else { alert(MSG_SELECCIONE_UNDATENCION); }
+    } else { $(this).val(""); alert(MSG_SELECCIONE_DIVATENCION); }
 }
 $(document).ready(function () {
     $("#divatencion").on("change", function () {
@@ -135,8 +117,8 @@ $(document).ready(function () {
         tecladoNumerico($("input[type='number']"));
     }
     $("#cambiar-undatencion").on("click", function () {
-        if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         $("#modal-cambiar-undatencion").modal("show");
         $("#modal-cambiar-divatencion").val($("#divatencion").val());
         $("#modal-cambiar-divatencion").change();
@@ -157,16 +139,15 @@ $(document).ready(function () {
     });
 
     $("#factura-pre-factura").on("click", function () {
-        if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         var t = $("#tabla-factura");
         if (t.find("tbody tr").length <= 0) { return alert(MSG_SIN_ELEMENTOS); }
         printPreFactura(t)
     });
 
     $(".seleccion-categoria").on("click", function () {
-        var codigo = $(this).data("codigo");
-        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo));
+        buscarConventaClaserv($(this).data("codigo"), $("#panel-productos-" + codigo));
     });
 
     $("#empleados li").on("click", function () {
@@ -189,8 +170,8 @@ $(document).ready(function () {
     });
 
     $("#factura-btn-guardar").on("click", function () {
-        if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         guardarFactura($("#tabla-factura"));
     });
     
@@ -198,13 +179,9 @@ $(document).ready(function () {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });
     $("#conventa-texto").on("keyup", function (evt) {
-        if (!isNullOrWhiteSpace($("#conventa-texto").val())) {
-            buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
-        } else { $("#panel-buscar").empty(); }
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });
     $('#conventa-texto').bind('accepted', function (e, keyboard, el) {
-        if (!isNullOrWhiteSpace($("#conventa-texto").val())) {
-            buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
-        } else { $("#panel-buscar").empty(); }
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });
 });

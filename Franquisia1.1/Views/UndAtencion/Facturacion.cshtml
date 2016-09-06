@@ -32,7 +32,7 @@
                 </div>
                 <div id="tabla-factura-anexo" class="anexo">
                     <div class="input-group input-group-sm">
-                        <input type="text" placeholder="RUC/DNI" class="anexo-nrodoc form-control" />
+                        <input type="number" placeholder="RUC/DNI" class="anexo-nrodoc form-control" required/>
                         <span class="input-group-btn">
                             <a class="btn-seleccionar-anexo btn btn-xs btn-info" data-anexo="#tabla-factura-anexo"><span class="glyphicon glyphicon-search"></span></a>
                             <a class="btn-crear-anexo btn btn-xs btn-success" data-anexo="#tabla-factura-anexo"><span class="glyphicon glyphicon-plus"></span></a>
@@ -125,8 +125,8 @@
                                             <button id="conventa-btn-buscar" class="btn btn-default" type="button">Buscar</button>
                                         </span>
                                         <input id="conventa-texto" type="text" class="form-control" placeholder="Ingrese el valor a buscar">
-                                    </div><!-- /input-group -->
-                                </div><!-- /.col-lg-6 -->
+                                    </div>
+                                </div>
                             </div>
                             <div id="panel-buscar" class="row panel panel-body" style="padding-top:0px;padding-bottom: 0px;margin-bottom: 0px;"></div>
                         </div>
@@ -149,7 +149,7 @@
                         <a id="cambiar-undatencion" class="btn btn-secundario btn-secundario-bordes">Cambiar Und. Atención</a>
                         <a href="/UndAtencion/Consumos?div=@ViewBag.div&und=@ViewBag.und&per=@ViewBag.per" class="btn btn-secundario btn-secundario-bordes">M. Consumos</a>
                     </div>
-                    <a class="btn btn-danger" href="/Home/OffLogin">Salir </a>
+                    <a class="btn btn-danger" href="/Home/OffLogin">Salir</a>
                 </div>
                 <div class="pull-right">
                     <img class="img-responsive logo" src="/Content/images/logo.png" alt="Neinco">

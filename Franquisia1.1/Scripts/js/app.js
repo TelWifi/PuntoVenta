@@ -3,8 +3,8 @@ var IMG_DEFAULT = "iVBORw0KGgoAAAANSUhEUgAAACUAAAAdCAYAAAAtt6XDAAAAAXNSR0IArs4c6
 var ANCHO_IMPRESION = "280px"; var TAMANO_FUENTE = "10px"; var CARSUBSTR = 3;
 var Validar = {
     RUC: function (ruc) {
-        var regEx = /\d{11}/;
-        if (regEx.test(ruc)) {
+        var r = /\d{11}/;
+        if (r.test(ruc)) {
             var factores = new String("5432765432");
             var ultimoIndex = ruc.length - 1; var sumaTotal = 0, residuo = 0; var ultimoDigitoRUC = 0, ultimoDigitoCalc = 0;
             for (var i = 0; i < ultimoIndex; i++) { sumaTotal += (parseInt(ruc.charAt(i)) * parseInt(factores.charAt(i))); }
@@ -12,37 +12,36 @@ var Validar = {
             ultimoDigitoCalc = (residuo == 10) ? 0 : ((residuo == 11) ? 1 : (11 - residuo) % 10);
             ultimoDigitoRUC = parseInt(ruc.charAt(ultimoIndex));
             if (ultimoDigitoRUC == ultimoDigitoCalc) return true;
-            alert("ERROR: El RUC " + ruc + " NO es v\u00E1lido!.");
+            alert("ERROR: El RUC " + ruc + " NO es v\u00E1lido.");
             return false;
         }
-        alert("ERROR: El RUC NO es v\u00E1lido!, debe constar de 11 caracteres num\u00E9ricos.");
+        alert("ERROR: El RUC NO es v\u00E1lido, debe constar de 11 caracteres num\u00E9ricos.");
         return false;
     },
     DNI: function (dni) {
-        var regEx = /(^([0-9]{8,8})|^)$/;
-        return regEx.test(dni);
+        var r = /(^([0-9]{8,8})|^)$/;
+        if (!r.test(dni))
+            alert("ERROR: El DNI NO es v\u00E1lido, debe constar de 8 caracteres num\u00E9ricos.");
+        return r.test(dni);
     },
     Anexo: function (a) {
-        if (a.nrodoc.length == 11)
-            return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);
-        else if (a.nrodoc.length == 8)
-            return Validar.DNI(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);;
+        if (a.nrodoc.length == 11) return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);
+        else if (a.nrodoc.length == 8) return Validar.DNI(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);
+        alert("El formato del RUC/DNI es incorrecto");
         return false;
     },
-    StrValido: function (s) {
-        return $.trim(s).length > 0;
-    },
-    StrLength: function (s, l) {
-        return s.length == l;
-    },
-    DatoValido: function (d) {
+    StrValido: function (s) { return $.trim(s).length > 0; },
+    StrLength: function (s, l) { return s.length == l; },
+    StrSoloNum: function (s) { var re = /^[0-9]+$/; return re.test(s); },
+    Dato: function (d) {
         return d != undefined && Validar.StrValido(d);
     },
+
 };
 function decBase64(arr) { var s = ""; l = arr.length; for (var i = 0; i < l; i++) { s += String.fromCharCode(arr[i]); } return s; }
 function sumar(t, c) {var s = 0; t.find("tbody tr").each(function (index) { s += parseFloat($(this).find("td").get(c).innerHTML); }); return s;}
 function clearDesc(p,u) {$(p).data("codigo", ""); $(p).text(""); $(u).data("codigo", ""); $(u).text("");}
-function isNullOrWhiteSpace(e) { return e == null || $.trim(e) == "";}
+function trim(e) { return $.trim(e);}
 function errorAjax(xhr, status) { alert("ERROR: Error mientras se ejecutaba la petici\u00F3n\nVerifique su conexi\u00F3n a internet\n C\u00F3digo de estado: " + status);}
 function addRow(t, e) {var nc = t.find("th").length;var nf = $("<tr data-codigo=\"\"></tr>");var td;for (var i = 0; i < nc; i++) {td = $("<td></td>");td.append(e[i]);nf.append(td);}t.append(nf);return nf;}
 function addRowEvent(t, e, f) {var trs = t.find("th").length;var fila = $("<tr></tr>");for (var i = 0; i < trs; i++) {fila.append($("<td>" + e[i] + "</td>"));}t.append(fila);if (f == undefined) {return;}f(fila);}
@@ -88,8 +87,7 @@ function printPreFactura(t) {
     if (!print(dp)) { alert("ERROR: Error al imprimir"); }
 }
 function cambiarUndatencion(cd,su, sd, nu, nd, udes){
-    if (isNullOrWhiteSpace(cd) || isNullOrWhiteSpace(su.val()) || isNullOrWhiteSpace(sd.val()) || isNullOrWhiteSpace(nu) || isNullOrWhiteSpace(nd))
-    { return alert(MSG_CAMPOS_NULOS_VACIOS); }
+    if (!Validar.Dato(cd) || !Validar.Dato(su.val()) || !Validar.Dato(sd.val()) || !Validar.Dato(nu) || !Validar.Dato(nd)){ return alert(MSG_CAMPOS_NULOS_VACIOS); }
   $.ajax({
         type: "post", dataType: 'json', cache: false, url: '/UndAtencion/Cambiar', data: { codigo: cd, nuevound: nu, nuevodiv: nd },
         success: function (response, textStatus, jqXHR) {
@@ -101,11 +99,11 @@ function cambiarUndatencion(cd,su, sd, nu, nd, udes){
     });
 }
 function buscarConventaDescripcion(d, p) {
-    if (isNullOrWhiteSpace(d)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El texto a buscar")); }
+    p.empty();
+    if (!Validar.Dato(d)) { return; }
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: '/Conventa/Buscar', data: { descripcion: d },
         success: function (response, textStatus, jqXHR) {
-            p.empty();
             if (response.respuesta.toString().split(":")[0] == "EXITO") {
                 $.each(response.lista, function (idx, obj) {
                     var img;
@@ -116,7 +114,7 @@ function buscarConventaDescripcion(d, p) {
                     var n = $("<div class=\"nombre\">" + obj["descripcion"] + "</div>");
                     ps.append(img); ps.append(n); p.append(ps);
                     img.on("click", function () {
-                        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { alert(MSG_SELECCIONE_UNDATENCION); } else { agregarProducto(ps); }
+                        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { alert(MSG_SELECCIONE_UNDATENCION); } else { agregarProducto(ps); }
                     });
                 });
             } else { alert(response.respuesta); }
@@ -124,7 +122,7 @@ function buscarConventaDescripcion(d, p) {
     });
 }
 function buscarConventaClaserv(c, p) {
-    if (isNullOrWhiteSpace(c)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El c\u00F3digo de claserv")); }
+    if (!Validar.Dato(c)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El c\u00F3digo de claserv")); }
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: '/Conventa/Obtener', data: { claserv: c },
         success: function (response, textStatus, jqXHR) {
@@ -139,7 +137,7 @@ function buscarConventaClaserv(c, p) {
                     var n = $("<div class=\"nombre\">" + obj["descripcion"] + "</div>");
                     ps.append(img); ps.append(n); p.append(ps);
                     img.on("click", function () {
-                        if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { alert(MSG_SELECCIONE_UNDATENCION); } else { agregarProducto(ps); }
+                        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { alert(MSG_SELECCIONE_UNDATENCION); } else { agregarProducto(ps); }
                     });
                 });
             } else { alert(response.respuesta); }
