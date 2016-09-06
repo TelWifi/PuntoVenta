@@ -37,7 +37,7 @@ function guardarFactura(t) {
 }
 function agregarProducto(pp) {
     var txtc = $("<input type=\"number\"  min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { txtc.keyboard(); }
+    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { tecladoNumerico(txtc); }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Crear",
         data: { codigo: $("#tabla-factura").data("codigo"), cantidad: txtc.val() , conventa: pp.data("codigo")  },
@@ -76,7 +76,7 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
                 $(pa).text(response.peratencion.descripcion);
                 $.each(response.lista, function (idx, obj) {
                     var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"" + obj["CANTIDAD"] + "\" class=\"numero\" />");
-                    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { txtc.keyboard(); }
+                    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { tecladoNumerico(txtc); }
                     var btne = $("<button class='close remove-producto red'>&times;</button>");
                     var el = [$(t).find("tr").length, obj["DESCRIPCION"], parseFloat(obj["PREUNI"]).toFixed(2), txtc, parseFloat(obj["TOTAL"]).toFixed(2), btne];
                     var nf = addRow($(t), el); nf.data("codigo", obj["CONVENTA"]); nf.data("item", obj["ITEM"]);
@@ -129,10 +129,11 @@ $(document).ready(function () {
     });
     $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this));}});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
-    //verificarUndAperturada();
     obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) { console.log("sdsa"); });
-
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$("input[type='text']").keyboard();$("input[type='number']").keyboard();}
+    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
+        $("input[type='text']").keyboard();
+        tecladoNumerico($("input[type='number']"));
+    }
     $("#cambiar-undatencion").on("click", function () {
         if (isNullOrWhiteSpace($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
         if (isNullOrWhiteSpace($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }

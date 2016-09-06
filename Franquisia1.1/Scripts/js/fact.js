@@ -31,9 +31,7 @@ function obtenerAnexo(d) {
     return { desane: d.find(".anexo-desane").val(), nrodoc: d.find(".anexo-nrodoc").val(), refane: d.find(".anexo-refane").val() };
 }
 function actualizarAnexo(a, d) {
-    if (isNullOrWhiteSpace(a.desane) || isNullOrWhiteSpace(a.nrodoc) || isNullOrWhiteSpace(a.refane)) { return alert(MSG_CAMPOS_NULOS_VACIOS); }
-    if (a.nrodoc.length != 8 && a.nrodoc.length != 11) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
-    if (!a.nrodoc.match(/^[0-9]+$/)) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "El n\u00FAmero de documento")); }
+    if (!Validar.Anexo(a) ) {return;}
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Anexos/Actualizar",
         data: { desane: a.desane, nrodoc: a.nrodoc, refane: a.refane },
@@ -43,18 +41,14 @@ function actualizarAnexo(a, d) {
                 mostrarAnexo({ "desane": "", "nrodoc": "", "refane": "" }, d);
                 console.log(response.respuesta);
             }
-            else if (response.respuesta.toString().split(":")[0] == "EXITO") {
-                mostrarAnexo(response.anexo, d);
-            }
+            else if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, d);}
         },
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
 function getBDAnexo(div) {
     var a = obtenerAnexo(div);
-    if (isNullOrWhiteSpace(a.nrodoc)) { a.refane = ""; a.desane = ""; mostrarAnexo(a, div);return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El n\u00FAmero de documento"));}
-    if (a.nrodoc.length != 8 && a.nrodoc.length != 11) { a.refane = ""; a.desane = ""; mostrarAnexo(a, div); return alert(MSG_ANEXO_NROCAR_NRODOC); }
-    if (!a.nrodoc.match(/^[0-9]+$/)) { a.refane = ""; a.desane = ""; mostrarAnexo(a, div); return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "El n\u00FAmero de documento")); }
+    if (!Validar.Anexo(a)) { a.refane = ""; a.desane = ""; mostrarAnexo(a, div); return; }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
         success: function (response, textStatus, jqXHR) {
@@ -65,11 +59,9 @@ function getBDAnexo(div) {
     });
 }
 function crearAnexo(a, d, m) {
-    if (isNullOrWhiteSpace(a.desane) || isNullOrWhiteSpace(a.tipdoc) || isNullOrWhiteSpace(a.nrodoc) ||
-    isNullOrWhiteSpace(a.refane)) { return alert(MSG_CAMPOS_NULOS_VACIOS); }
     if (a.tipdoc == "RUC" && a.nrodoc.length != 11) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
     if (a.tipdoc == "DNI" && a.nrodoc.length != 8) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
-    if (!a.nrodoc.match(/^[0-9]+$/)) {return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "El n\u00FAmero de documento")); }
+    if (!Validar.Anexo(a)) { return; }
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: '/Anexos/Crear', data: { desane: a.desane, tipdoc: a.tipdoc, nrodoc: a.nrodoc, refane: a.refane },
         success: function (response, textStatus, jqXHR) {
@@ -98,7 +90,7 @@ function printFactura(t, a) {
     if (!print(dp)) { alert("ERROR: Error al imprimir"); }
 }
 function guardarFactura(t) {
-    if (isNullOrWhiteSpace(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
+    if (!Validar.DatoValido(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
     var cod = t.data("codigo"); var ar = new Array(); var cond;
     t.find("tbody tr").each(function (index) {
         cond = {
@@ -113,7 +105,7 @@ function guardarFactura(t) {
     });
 }
 function obtenerDetalle(sl, cd, t, pa, ua, f) {
-    if (isNullOrWhiteSpace(sl.val()) || isNullOrWhiteSpace(cd) || isNullOrWhiteSpace(t)) { return; }
+    if (Validar.DatoValido(sl.val()) || Validar.DatoValido(cd) || Validar.DatoValido(t)) { return; }
     if (!sl.val().match(/^[0-9]+$/)) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "La unidad de atenci\u00F3n")); }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Obtener", data: { codund: sl.val(), coddiv: cd },
@@ -132,7 +124,7 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
                 $(pa).text(response.peratencion.descripcion);
                 $.each(response.lista, function (idx, obj) {
                     var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"" + obj["CANTIDAD"] + "\" class=\"numero\"/>");
-                    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { txtc.keyboard(); }
+                    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { tecladoNumerico(txtc); }
                     var btne = $("<button class='close remove-producto red'>&times;</button>");
                     var el = [$(t).find("tr").length, obj["DESCRIPCION"], parseFloat(obj["PREUNI"]).toFixed(2), obj["tipovalorventa"].substring(0, CARSUBSTR), txtc, parseFloat(obj["TOTAL"]).toFixed(2), btne];
 
@@ -158,7 +150,7 @@ function agregarProducto(pp) {
     var tf = '#tabla-factura';
     var btne = $("<button class='close remove-producto red'>&times;</button>");
     var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { txtc.keyboard(); }
+    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { tecladoNumerico(txtc); }
     var n = pp.find(".nombre").first().text();var p = parseFloat(pp.data("precio")).toFixed(2);
     var el = [$(tf).find("tr").length, n, p, pp.data("tipovv").substring(0, CARSUBSTR), txtc, p, btne]; var nf = addRow($(tf), el); nf.data("codigo", pp.data("codigo"));
     actualizarTotal(tf, COLSUBTOTAL);actualizarItems(tf, COLITEMS);actualizarIGV(tf);
@@ -262,6 +254,7 @@ function verificarUndAperturada() {
 function undAperturada() {
     obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc");
 }
+
 $(document).ready(function () {
     IGV = obtenerIGV();
     initTipDoc("tipo-documentos");
@@ -275,33 +268,7 @@ $(document).ready(function () {
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
     if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
         $("input[type='text']").keyboard();
-        $("input[type='number']").keyboard();
-        $('#hex')
-	    .keyboard({
-	        layout: 'custom',
-	        customLayout: {
-	            'normal': [
-				    '7 8 9',
-				    '4 5 6',
-				    '1 2 3 4',
-				    '0 {bksp} {a} {c}'
-	            ]
-	        },
-	        maxLength: 6,
-	        // Prevent keys not in the displayed keyboard from being typed in
-	        restrictInput: true,
-	        // include lower case characters (added v1.25.7)
-	        restrictInclude: 'a b c d e f',
-	        // don't use combos or A+E could become a ligature
-	        useCombos: false,
-	        // activate the "validate" callback function
-	        acceptValid: true,
-	        validate: function (keyboard, value, isClosing) {
-	            // only make valid if input is 6 characters in length
-	            return value.length === 6;
-	        }
-	    })
-	    .addTyping();
+        tecladoNumerico($("input[type='number']"));
     }
     $(".anexo").find(".anexo-nrodoc").on("change", function () { getBDAnexo($(this).parent().parent()); });
     $(".anexo").find(".anexo-desane, .anexo-refane").on("change", function () {

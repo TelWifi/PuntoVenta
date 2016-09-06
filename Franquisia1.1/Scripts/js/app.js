@@ -1,7 +1,45 @@
 var MSG_SELECCIONE_UNDATENCION = "RECOMENDACION: Seleccione una unidad de atenci\u00F3n";var MSG_SELECCIONE_DIVATENCION = "RECOMENDACION: Seleccione una divisi\u00F3n de atenci\u00F3n";var MSG_DESEA_APERTURAR = "La unidad de atenci\u00F3n No est\u00E1 aperturada\n\u00BFDesea aperturarla?";var MSG_ERROR_SOLO_NUMEROS = "ERROR: <attr> solo debe contener caracteres num\u00E9ricos";var MSG_DESEA_ANULAR = "\u00BFDesea anular el consumo?";var MSG_NO_PUEDE_SER_MENOR_QUE = "ERROR: La cantidad ingresada no puede ser menor que {text}";var MSG_CAMPOS_NULOS_VACIOS = "ERROR: Los campos no pueden ser nulos o vac\u00EDos";var MSG_NO_NULO_VACIO = "ERROR: <attr> no puede ser nulo o vac\u00EDo";var MSG_SIN_ELEMENTOS = "ERROR: No existen elementos";var MSG_NO_EXISTE = "ERROR: No existe <attr>";var MSG_DESEA_CAMBIAR_UNDATENCION = "\u00BFSeguro que desea cambiar a otra unidad de atenci\u00F3n";var MSG_ANEXO_NROCAR_NRODOC = "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres";
 var IMG_DEFAULT = "iVBORw0KGgoAAAANSUhEUgAAACUAAAAdCAYAAAAtt6XDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA0SURBVFhH7c4xAQAwDASh+jf9tcCY4VDA20GlVClVSpVSpVQpVUqVUqVUKVVKlVKlVCmzffdHtC3tn87PAAAAAElFTkSuQmCC";
 var ANCHO_IMPRESION = "280px"; var TAMANO_FUENTE = "10px"; var CARSUBSTR = 3;
-function decBase64(arr) {var s = "";l = arr.length; for (var i = 0; i < l; i++) { s += String.fromCharCode(arr[i]); } return s;}
+var Validar = {
+    RUC: function (ruc) {
+        var regEx = /\d{11}/;
+        if (regEx.test(ruc)) {
+            var factores = new String("5432765432");
+            var ultimoIndex = ruc.length - 1; var sumaTotal = 0, residuo = 0; var ultimoDigitoRUC = 0, ultimoDigitoCalc = 0;
+            for (var i = 0; i < ultimoIndex; i++) { sumaTotal += (parseInt(ruc.charAt(i)) * parseInt(factores.charAt(i))); }
+            residuo = sumaTotal % 11;
+            ultimoDigitoCalc = (residuo == 10) ? 0 : ((residuo == 11) ? 1 : (11 - residuo) % 10);
+            ultimoDigitoRUC = parseInt(ruc.charAt(ultimoIndex));
+            if (ultimoDigitoRUC == ultimoDigitoCalc) return true;
+            alert("ERROR: El RUC " + ruc + " NO es v\u00E1lido!.");
+            return false;
+        }
+        alert("ERROR: El RUC NO es v\u00E1lido!, debe constar de 11 caracteres num\u00E9ricos.");
+        return false;
+    },
+    DNI: function (dni) {
+        var regEx = /(^([0-9]{8,8})|^)$/;
+        return regEx.test(dni);
+    },
+    Anexo: function (a) {
+        if (a.nrodoc.length == 11)
+            return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);
+        else if (a.nrodoc.length == 8)
+            return Validar.DNI(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);;
+        return false;
+    },
+    StrValido: function (s) {
+        return $.trim(s).length > 0;
+    },
+    StrLength: function (s, l) {
+        return s.length == l;
+    },
+    DatoValido: function (d) {
+        return d != undefined && Validar.StrValido(d);
+    },
+};
+function decBase64(arr) { var s = ""; l = arr.length; for (var i = 0; i < l; i++) { s += String.fromCharCode(arr[i]); } return s; }
 function sumar(t, c) {var s = 0; t.find("tbody tr").each(function (index) { s += parseFloat($(this).find("td").get(c).innerHTML); }); return s;}
 function clearDesc(p,u) {$(p).data("codigo", ""); $(p).text(""); $(u).data("codigo", ""); $(u).text("");}
 function isNullOrWhiteSpace(e) { return e == null || $.trim(e) == "";}
@@ -118,14 +156,30 @@ function aperturarUndAtencion(d, u, p, c, f) {
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-
+function tecladoNumerico(s) {
+    s.keyboard({
+        layout: 'custom',
+        customLayout: {
+            'normal': [
+                '1 2 3 ',
+                '4 5 6',
+                '7 8 9',
+                '0 {bksp}',
+                '{a} {c}'
+            ]
+        },
+        maxLength: 3,
+        restrictInput: true,
+        useCombos: false,
+    });
+}
 $(document).ready(function () {
     $("input[name=control-teclado-opciones]:checked").parent().siblings('.btn').removeClass("active");
     $("input[name=control-teclado-opciones]:checked").parent().addClass("active");  
     $("#control-teclado .btn").on("click", function () {
         $(this).siblings('.btn').removeClass("active");$(this).addClass("active");$(this).children("input[type=radio]").prop('checked', true);
         if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
-            $("input[type=number]").keyboard();$("input[type=text]").keyboard();
+            tecladoNumerico($("input[type=number]")); $("input[type=text]").keyboard();
         } else {
             $("input[type=number]").each(function () {var t = $(this).keyboard().getkeyboard();t.destroy();});
             $("input[type=text]").each(function () {var t = $(this).keyboard().getkeyboard();t.destroy();});
