@@ -147,7 +147,8 @@ $(document).ready(function () {
     });
 
     $(".seleccion-categoria").on("click", function () {
-        buscarConventaClaserv($(this).data("codigo"), $("#panel-productos-" + codigo));
+        var codigo = $(this).data("codigo");
+        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo));
     });
 
     $("#empleados li").on("click", function () {

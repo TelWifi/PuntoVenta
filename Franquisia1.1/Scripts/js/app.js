@@ -66,7 +66,7 @@ function print(div) {
     mw.document.write($(div).html());
     mw.document.write("<script>window.onload = function() { print(); /*close();*/ };</script>");
     mw.document.write('</body></html>');
-    //mw.document.close(); // necessary for IE >= 10
+    mw.document.close(); // necessary for IE >= 10
     mw.focus(); // necessary for IE >= 10
     return true;
 }
