@@ -73,7 +73,7 @@ function crearAnexo(a, d, m) {
 function resetTabla(t) {
     mostrarAnexo({ "desane": "", "nrodoc": "", "refane": "" }, $(t + "-anexo")); $(t).find("tbody tr").remove();$(t).data("codigo", "");$(t + "-items").text("-");$(t + "-igv").text("-");$(t + "-total").text("-");
 }
-function printFactura(t, a) {
+function printFactura(t, a, r) {
     var itd = "Nro. Items: ".concat(t.find("tbody tr").length);
     var ttld = "Total: ".concat(sumar(t, COLSUBTOTAL).toFixed(2));
     var tp = $("<table width=100% border=0 style=\"font-size:" + TAMANO_FUENTE + ";\"><thead><tr> <th>Cant.</th> <th style=\"text-align:left;\">Producto</th> <th style='text-align:right;'>Precio</th> <th style='text-align:right;'>Subtotal</th></tr></thead><tbody></tbody><tfoot><tr><td colspan=\"2\">" + itd + "</td> <td colspan=\"2\">" + ttld + "</td></tr></tfoot></table>");
@@ -85,8 +85,9 @@ function printFactura(t, a) {
         nf.append($("<td style='text-align:right;'></td>").append($(this).find("td").get(COLSUBTOTAL).innerHTML));
         tp.find("tbody").append(nf);
     });
-    var dp = $("<div style='width:" + ANCHO_IMPRESION + ";'><h4 style='text-align:center;'>EL CHALAN S.A.C.</h4><div>");
-    dp.append("Raz\u00F3n Social/Ape. y Nombres: "+a.desane+"<br/>RUC/DNI: "+a.nrodoc+"<br/>Direcci\u00F3n: "+a.refane+"<br/>"); dp.append(tp);
+    var dp = $("<div style='width:" + ANCHO_IMPRESION + ";'><h4 style='text-align:center;'>EL CHALAN S.A.C.</h4><h5>"+r.direccion+"</h5><div>");
+    dp.append("Raz\u00F3n Social/Ape. y Nombres: " + a.desane + "<br/>RUC/DNI: " + a.nrodoc + "<br/>Direcci\u00F3n: " + a.refane + "<br/>"); dp.append(tp);
+    dp.append("Gravado: " + r.gravado + " Exonerado: " + r.exonerado + " Inafecto: " + r.inafecto);
     if (!print(dp)) { alert("ERROR: Error al imprimir"); }
 }
 function guardarFactura(t) {
@@ -493,7 +494,7 @@ $(document).ready(function () {
             success: function (response, textStatus, jqXHR) {
                 if (response.respuesta.split(":")[0] == "ERROR") {alert(response.respuesta);}
                 if (response.respuesta.split(":")[0] == "EXITO") {
-                    printFactura($("#tabla-factura"), anexo);
+                    printFactura($("#tabla-factura"), anexo, response);
                     $("#undatencion").val("");
                     clearDesc("#peratencion-desc", "#undatencion-desc");
                     resetTabla("#tabla-factura");

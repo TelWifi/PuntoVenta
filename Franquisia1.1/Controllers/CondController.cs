@@ -14,8 +14,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     if (!String.IsNullOrWhiteSpace(codigo))
                     {
@@ -65,8 +65,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     if (!String.IsNullOrWhiteSpace(codigo))
                     {
@@ -157,8 +157,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     if (!String.IsNullOrWhiteSpace(codigo))
                     {
@@ -193,8 +193,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     if (!String.IsNullOrWhiteSpace(codigo))
                     {

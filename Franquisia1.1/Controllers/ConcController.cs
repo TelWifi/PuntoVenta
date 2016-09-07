@@ -20,8 +20,8 @@ namespace Franquisia1._1.Controllers
             {
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
                 string sucursal = Session["Loged_usrfile_sucursal"].ToString();
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                 if (!String.IsNullOrWhiteSpace(codigo))
                 {
                     codigo = codigo.Trim();
@@ -32,11 +32,11 @@ namespace Franquisia1._1.Controllers
                         foreach (var cond in lista) { db.cond.Remove(cond); }
                         db.conc.Remove(conc);
                         db.SaveChanges();
-                        return Json(new { respuesta = "EXITO: SE ANULO EL CONSUMO" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { respuesta = "EXITO: Consumo anulado" }, JsonRequestBehavior.AllowGet);
                     }
-                    else { return Json(new { respuesta = "ERROR: EL CODIGO DEL CONSUMO NO EXISTE" }, JsonRequestBehavior.AllowGet); }
+                    else { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
                 }
-                else { return Json(new { respuesta = "ERROR: EL CODIGO DEL CONSUMO NO PUEDE SER NULO O VACIO" }, JsonRequestBehavior.AllowGet); }
+                else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
@@ -47,8 +47,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
 
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
                 string sucursal = Session["Loged_usrfile_sucursal"].ToString();
@@ -115,6 +115,7 @@ namespace Franquisia1._1.Controllers
                     conc.SITUACION = "C";
                     List<cond> items = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(conc.CODIGO)).ToList();
                     index = 1;
+                    decimal sumagra = 0, sumaexo = 0, sumaina = 0;
                     foreach (cond item in items)
                     {
                         vend vend = new vend();
@@ -137,12 +138,15 @@ namespace Franquisia1._1.Controllers
                         {
                             case "01":
                                 vend.GRAVADO = vend.NETO;
+                                sumagra +=(decimal)vend.GRAVADO;
                                 break;
                             case "02":
                                 vend.EXONERADO = vend.NETO;
+                                sumaexo +=(decimal)vend.EXONERADO;
                                 break;
                             case "03":
                                 vend.INAFECTO = vend.NETO;
+                                sumaina += (decimal)vend.EXONERADO;
                                 break;
                             default:
                                 break;
@@ -151,7 +155,11 @@ namespace Franquisia1._1.Controllers
                     }
                     db.venc.Add(venc);
                     db.SaveChanges();
-                    return Json(new { respuesta = "EXITO: La operaci\u00F3n se realiz\u00F3 exitosamente" }, JsonRequestBehavior.AllowGet); 
+                    sucursal suc = db.sucursal.Where(a=>a.codcia.Equals(codcia) && a.codigo.Equals(sucursal) && a.situa.Equals("V")).FirstOrDefault();
+                    
+                    return Json(new { respuesta = "EXITO: Exito", gravado=sumagra, exonerado=sumaexo, inafecto = sumaina,
+                        direccion=suc.direccion
+                    }, JsonRequestBehavior.AllowGet); 
                 }
                 else { return Json(new { respuesta = "ERROR: Error el consumo est\u00E1 cerrado" }, JsonRequestBehavior.AllowGet); }
             }

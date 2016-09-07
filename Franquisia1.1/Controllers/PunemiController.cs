@@ -14,8 +14,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                 
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
                 string sucursal = Session["Loged_usrfile_sucursal"].ToString();

@@ -16,8 +16,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     if (String.IsNullOrWhiteSpace(claserv)) { return Json(new { respuesta = "ERROR: El c\u00F3digo de la categor\u00EDa no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
                     else
@@ -25,8 +25,11 @@ namespace Franquisia1._1.Controllers
                         claserv = claserv.Trim();
                         string codcia = Session["Loged_usrfile_ciafile"].ToString();
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
-                        //leer parametro imagen 
-                        if (true)
+                        
+                        parreg p = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
+                        if (p==null) { return Json(new { respuesta = "ERROR: No se encontraron los par\u00E1metros" }, JsonRequestBehavior.AllowGet); }
+
+                        if (p.POS_IS_IMAGEN.Equals("S"))
                         {
                             var listajson = (from result in db.conventa
                                              join a in db.convensuc on result.codigo equals a.conventa
@@ -44,8 +47,7 @@ namespace Franquisia1._1.Controllers
                                                  tipovalorventa = c.desmaesgen
                                              }).ToList();
                             return Json(new { respuesta = "EXITO: EXITO", lista = listajson }, JsonRequestBehavior.AllowGet);
-                        }
-                        else
+                        }else
                         {
                             var listajson = (from result in db.conventa
                                              join a in db.convensuc on result.codigo equals a.conventa
@@ -73,8 +75,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     if (String.IsNullOrWhiteSpace(descripcion)) { return Json(new { respuesta = "ERROR: Ingrese la descripci\u00F3n a buscar" }, JsonRequestBehavior.AllowGet); }
                     else
@@ -82,8 +84,11 @@ namespace Franquisia1._1.Controllers
                         descripcion = descripcion.Trim();
                         string codcia = Session["Loged_usrfile_ciafile"].ToString();
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
-                        //leer parametro imagen 
-                        if (true)
+
+                        parreg p = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
+                        if (p == null) { return Json(new { respuesta = "ERROR: No se encontraron los par\u00E1metros" }, JsonRequestBehavior.AllowGet); }
+
+                        if (p.POS_IS_IMAGEN.Equals("S"))
                         {
                             var listajson = (from result in db.conventa
                                              join a in db.convensuc on result.codigo equals a.conventa

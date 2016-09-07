@@ -33,12 +33,10 @@ var Validar = {
     StrValido: function (s) { return $.trim(s).length > 0; },
     StrLength: function (s, l) { return s.length == l; },
     StrSoloNum: function (s) { var re = /^[0-9]+$/; return re.test(s); },
-    Dato: function (d) {
-        return d != undefined && Validar.StrValido(d);
-    },
+    Dato: function (d) {return d != undefined && Validar.StrValido(d);},
 
 };
-function decBase64(arr) { var s = ""; l = arr.length; for (var i = 0; i < l; i++) { s += String.fromCharCode(arr[i]); } return s; }
+function decBase64(a) { var s = ""; l = a.length; for (var i = 0; i < l; i++) { s += String.fromCharCode(a[i]); } return s; }
 function sumar(t, c) {var s = 0; t.find("tbody tr").each(function (index) { s += parseFloat($(this).find("td").get(c).innerHTML); }); return s;}
 function clearDesc(p,u) {$(p).data("codigo", ""); $(p).text(""); $(u).data("codigo", ""); $(u).text("");}
 function trim(e) { return $.trim(e);}

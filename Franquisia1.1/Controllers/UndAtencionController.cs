@@ -13,8 +13,8 @@ namespace Franquisia1._1.Controllers
         private appbosaEntities db = new appbosaEntities();
         public ActionResult Index()
         {
-            string rol = Session["Loged_usrfile_rol"].ToString();
-            if (rol.Equals("C") || rol.Equals("M"))
+            var rol = Session["Loged_usrfile_rol"];
+            if ("C".Equals(rol) || "M".Equals(rol))
             {
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
                 string sucursal = Session["Loged_usrfile_sucursal"].ToString();
@@ -26,7 +26,6 @@ namespace Franquisia1._1.Controllers
                 return View();
             }
             else { return RedirectToAction("ErrorPermiso", "Error"); }
-            
         }
        [HttpPost]
        public JsonResult Aperturar(string codigo, string idperatencion, string divate, string pwd)
@@ -39,15 +38,15 @@ namespace Franquisia1._1.Controllers
                {
                    usrfile u = new usrfile();
                    string newpwd = u.Encripta(pwd);
-                   
                    peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(idperatencion)).FirstOrDefault();
                    if (p == null || !p.clave.Equals(newpwd))
                    {
                        return Json(new { respuesta = "ERROR: Contrase\u00F1a incorrecta" }, JsonRequestBehavior.AllowGet);
                    }
                }
-               string rol = Session["Loged_usrfile_rol"].ToString();
-               if (rol.Equals("C") || rol.Equals("M")){
+               var rol = Session["Loged_usrfile_rol"];
+               if ("C".Equals(rol) || "M".Equals(rol))
+               {
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                    string codpunemi = Session["Loged_usrfile_punemi"].ToString();
                    string idusr = Session["Loged_usrfile_idusr"].ToString();
@@ -85,21 +84,19 @@ namespace Franquisia1._1.Controllers
        public ActionResult Facturacion(string div, string und, string per){
            try
            {
-               string rol = Session["Loged_usrfile_rol"].ToString();
-               if (rol.Equals("C"))
+               var rol = Session["Loged_usrfile_rol"];
+               if ("C".Equals(rol))
                {
                    string codcia = Session["Loged_usrfile_ciafile"].ToString();
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                    string idusr = Session["Loged_usrfile_idusr"].ToString();
-
+                   
+                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
+                   if (p == null) { return RedirectToAction("ErrorPermiso", "Error"); }
                    ViewBag.div = div;
                    ViewBag.und = und;
                    ViewBag.per = per;
-                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
-                   if (p == null || !p.codigo.Equals(per))
-                   {
-                       return RedirectToAction("ErrorPermiso", "Error");
-                   }
+                   
                    ViewBag.categorias = db.claserv.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
                    ViewBag.divisiones = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
                    ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
@@ -128,13 +125,15 @@ namespace Franquisia1._1.Controllers
        {
            try
            {
-               string rol = Session["Loged_usrfile_rol"].ToString();
-               if (rol.Equals("C") || rol.Equals("M"))
+               var rol = Session["Loged_usrfile_rol"];
+               if ("C".Equals(rol) || "M".Equals(rol))
                {
                    string codcia = Session["Loged_usrfile_ciafile"].ToString();
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                    string idusr = Session["Loged_usrfile_idusr"].ToString();
 
+                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
+                   if (p == null) { return RedirectToAction("ErrorPermiso", "Error"); }
                    ViewBag.div = div;
                    ViewBag.und = und;
                    ViewBag.per = per;
@@ -155,8 +154,8 @@ namespace Franquisia1._1.Controllers
        {
            try
            {
-               string rol = Session["Loged_usrfile_rol"].ToString();
-               if (rol.Equals("C") || rol.Equals("M"))
+               var rol = Session["Loged_usrfile_rol"];
+               if ("C".Equals(rol) || "M".Equals(rol))
                {
                    var codcia = Session["Loged_usrfile_ciafile"].ToString();
                    var sucursal = Session["Loged_usrfile_sucursal"].ToString();
@@ -183,8 +182,8 @@ namespace Franquisia1._1.Controllers
        {
            try
            {
-               string rol = Session["Loged_usrfile_rol"].ToString();
-               if (rol.Equals("C") || rol.Equals("M"))
+               var rol = Session["Loged_usrfile_rol"];
+               if ("C".Equals(rol) || "M".Equals(rol))
                {
                    usrfile u = new usrfile();
                    string newpwd = u.Encripta(pass);
@@ -195,7 +194,7 @@ namespace Franquisia1._1.Controllers
                        return JavaScript ("ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n");
                        //return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet);
                    }
-                   switch (rol)
+                   switch (rol.ToString())
                    {
                        case "M":
                            return RedirectToAction("Consumos", new { div = div, und = und, per = per });
@@ -215,8 +214,8 @@ namespace Franquisia1._1.Controllers
        {
            try
            {
-               string rol = Session["Loged_usrfile_rol"].ToString();
-               if (rol.Equals("C") || rol.Equals("M"))
+               var rol = Session["Loged_usrfile_rol"];
+               if ("C".Equals(rol) || "M".Equals(rol))
                {
                    string codcia = Session["Loged_usrfile_ciafile"].ToString();
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
@@ -234,8 +233,8 @@ namespace Franquisia1._1.Controllers
        {
            try
            {
-               string rol = Session["Loged_usrfile_rol"].ToString();
-               if (rol.Equals("C") || rol.Equals("M"))
+               var rol = Session["Loged_usrfile_rol"];
+               if ("C".Equals(rol) || "M".Equals(rol))
                {
                    string codcia = Session["Loged_usrfile_ciafile"].ToString();
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();

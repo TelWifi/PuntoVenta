@@ -13,9 +13,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
-                
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
                 List<tarjetas> tar = db.tarjetas.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
                 return Json(new { respuesta = "EXITO: Petici\u00F3n exitosa", lista = tar}, JsonRequestBehavior.AllowGet); 

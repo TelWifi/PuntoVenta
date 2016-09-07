@@ -15,8 +15,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                 
                 string rpta = "ERROR: ";
                 bool estado = true;
@@ -33,8 +33,8 @@ namespace Franquisia1._1.Controllers
                         anexo = new anexos();
                         anexo.idcia = codcia;
                         anexo.tipane = "C";
-                        anexo.desane = desane.Trim();
-                        anexo.refane = refane.Trim();
+                        anexo.desane = desane.Trim().ToUpper();
+                        anexo.refane = refane.Trim().ToUpper();
                         anexo.nrodoc = nrodoc;
                         anexo.situane = "V";
                         if (tipdoc.Equals("RUC"))
@@ -76,8 +76,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                 
                 var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
@@ -96,8 +96,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                 var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
 
@@ -116,8 +116,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                 
                 string rpta;
                 if (!String.IsNullOrWhiteSpace(nrodoc))
@@ -134,8 +134,8 @@ namespace Franquisia1._1.Controllers
                             {
                                 if (anexo.situane.Equals("V"))
                                 {
-                                    anexo.desane = desane.Trim();
-                                    anexo.refane = refane.Trim();
+                                    anexo.desane = desane.Trim().ToUpper();
+                                    anexo.refane = refane.Trim().ToUpper();
                                     db.SaveChanges();
                                     rpta = "EXITO: Anexo actualizado";
                                     return Json(new { respuesta = rpta, anexo = anexo }, JsonRequestBehavior.AllowGet);
@@ -157,8 +157,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (!rol.Equals("C")) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                 
                 string rpta;
                 if (!String.IsNullOrWhiteSpace(nrodoc))
@@ -193,8 +193,8 @@ namespace Franquisia1._1.Controllers
                     anexo = new anexos();
                     anexo.idcia = codcia;
                     anexo.tipane = "C";
-                    anexo.desane = desane.Trim();
-                    anexo.refane = refane.Trim();
+                    anexo.desane = desane.Trim().ToUpper();
+                    anexo.refane = refane.Trim().ToUpper();
                     anexo.nrodoc = nrodoc;
                     anexo.situane = "V";
                     if (nrodoc.Trim().Length == 11)

@@ -14,8 +14,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     string codcia = Session["Loged_usrfile_ciafile"].ToString();
                     string sucursal = Session["Loged_usrfile_sucursal"].ToString();
@@ -33,8 +33,8 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                string rol = Session["Loged_usrfile_rol"].ToString();
-                if (rol.Equals("C") || rol.Equals("M"))
+                var rol = Session["Loged_usrfile_rol"];
+                if ("C".Equals(rol) || "M".Equals(rol))
                 {
                     string codcia = Session["Loged_usrfile_ciafile"].ToString();
                     string sucursal = Session["Loged_usrfile_sucursal"].ToString();
