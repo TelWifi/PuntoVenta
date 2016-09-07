@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         Division:
-                        <select id="divatencion" class="col-sm-6 form-control input-sm" value="@ViewBag.div">
+                        <select id="divatencion" class="col-sm-6 form-control input-sm" disabled>
                             @if (ViewBag.divisiones.Count == 0){<option value="">Sin Elementos</option>}
                             @foreach (var div in ViewBag.divisiones){<option value="@div.CODIGO">@div.DESCRIPCION</option>}
                         </select>

@@ -1,6 +1,6 @@
 var MSG_SELECCIONE_UNDATENCION = "RECOMENDACION: Seleccione una unidad de atenci\u00F3n";var MSG_SELECCIONE_DIVATENCION = "RECOMENDACION: Seleccione una divisi\u00F3n de atenci\u00F3n";var MSG_DESEA_APERTURAR = "La unidad de atenci\u00F3n No est\u00E1 aperturada\n\u00BFDesea aperturarla?";var MSG_ERROR_SOLO_NUMEROS = "ERROR: <attr> solo debe contener caracteres num\u00E9ricos";var MSG_DESEA_ANULAR = "\u00BFDesea anular el consumo?";var MSG_NO_PUEDE_SER_MENOR_QUE = "ERROR: La cantidad ingresada no puede ser menor que {text}";var MSG_CAMPOS_NULOS_VACIOS = "ERROR: Los campos no pueden ser nulos o vac\u00EDos";var MSG_NO_NULO_VACIO = "ERROR: <attr> no puede ser nulo o vac\u00EDo";var MSG_SIN_ELEMENTOS = "ERROR: No existen elementos";var MSG_NO_EXISTE = "ERROR: No existe <attr>";var MSG_DESEA_CAMBIAR_UNDATENCION = "\u00BFSeguro que desea cambiar a otra unidad de atenci\u00F3n";var MSG_ANEXO_NROCAR_NRODOC = "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres";
 var IMG_DEFAULT = "iVBORw0KGgoAAAANSUhEUgAAACUAAAAdCAYAAAAtt6XDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA0SURBVFhH7c4xAQAwDASh+jf9tcCY4VDA20GlVClVSpVSpVQpVUqVUqVUKVVKlVKlVCmzffdHtC3tn87PAAAAAElFTkSuQmCC";
-var ANCHO_IMPRESION = "280px"; var TAMANO_FUENTE = "10px"; var CARSUBSTR = 3;
+var ANCHO_IMPRESION = "264px"; var TAMANO_FUENTE = "10px"; var CARSUBSTR = 3;
 var Validar = {
     RUC: function (ruc) {
         var r = /\d{11}/;
@@ -69,11 +69,11 @@ function print(div) {
     var mw = window.open('', 'Imprimir Factura', 'height=500,width=' + ANCHO_IMPRESION);
     if (!mw.print) { return false; }
     mw.document.write('<html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Imprimir Factura</title>');
-    mw.document.write('</head><body style=\"font-size:' + TAMANO_FUENTE + ';\">');
+    mw.document.write('</head><body style=\"font-size:' + TAMANO_FUENTE + '; width:'+ANCHO_IMPRESION+';\">');
     mw.document.write($(div).html());
     mw.document.write("<script>window.onload = function() { print(); /*close();*/ };</script>");
     mw.document.write('</body></html>');
-    mw.document.close(); // necessary for IE >= 10
+    //mw.document.close(); // necessary for IE >= 10
     mw.focus(); // necessary for IE >= 10
     return true;
 }

@@ -77,7 +77,7 @@ function resetTabla(t) {
 function printFactura(t, a, r) {
     var itd = "Nro. Items: ".concat(t.find("tbody tr").length);
     var ttld = "Total: ".concat(sumar(t, COLSUBTOTAL).toFixed(2));
-    var tp = $("<table width=100% border=0 style=\"font-size:" + TAMANO_FUENTE + ";\"><thead><tr> <th>Cant.</th> <th style=\"text-align:left;\">Producto</th><th style='text-align:right;'>Total</th></tr></thead><tbody></tbody></table>");
+    var tp = $("<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\"><thead><tr> <th>Cant.</th> <th style=\"text-align:left;\">Producto</th><th style='text-align:right;'>Total</th></tr></thead><tbody></tbody></table>");
     
     t.find("tbody tr").each(function () {
         var nf = $("<tr></tr>");
@@ -89,7 +89,7 @@ function printFactura(t, a, r) {
     var separador = "<hr />";
     var dp = $("<div style='width:" + ANCHO_IMPRESION + ";'><h4 style='text-align:center;'>EL CHALAN S.A.C.</h4><h5>"+r.direccion+"</h5><div>");
     dp.append("Raz\u00F3n Social/Ape. y Nombres: " + a.desane + "<br/>RUC/DNI: " + a.nrodoc + "<br/>Direcci\u00F3n: " + a.refane + "<br/>"); dp.append(tp);
-    var strf = "<table width=100% style=\"font-size:" + TAMANO_FUENTE + ";\" ><tr><td>Op. Gravadas</td><td style='text-align:right;'>{gravado}</td></tr><tr><td>Op. Exoneradas</td><td style='text-align:right;'>{exonerado}</td></tr><tr><td>Op. Inafectas</td><td style='text-align:right;'>{inafecto}</td></tr><tr><td>I.G.V. S./</td><td style='text-align:right;'>{IGV}</td></tr><tr><td>Importe Total a Pagar S./</td><td style='text-align:right;'>{TOTAL}</td></tr></table>";
+    var strf = "<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\" ><tr><td>Op. Gravadas</td><td style='text-align:right;'>{gravado}</td></tr><tr><td>Op. Exoneradas</td><td style='text-align:right;'>{exonerado}</td></tr><tr><td>Op. Inafectas</td><td style='text-align:right;'>{inafecto}</td></tr><tr><td>I.G.V. S./</td><td style='text-align:right;'>{IGV}</td></tr><tr><td>Importe Total a Pagar S./</td><td style='text-align:right;'>{TOTAL}</td></tr></table>";
     strf = strf.replace("{gravado}", parseFloat(r.gravado).toFixed(2));
     strf = strf.replace("{exonerado}", parseFloat(r.exonerado).toFixed(2));
     strf = strf.replace("{inafecto}", parseFloat(r.inafecto).toFixed(2));
@@ -108,7 +108,7 @@ function printFactura(t, a, r) {
     dp.append(taux);
     if (!print(dp)) { alert("ERROR: Error al imprimir"); }
     //$.ajax({
-    //    type: "post", dataType: 'json', cache: false, url: '192.168.1.100', data: { "":$(dp).html() },
+    //    type: "post", dataType: 'json', cache: false, url: 'http://192.168.1.100', data: { "":$(dp).html() },
     //    success: function (response, textStatus, jqXHR) { alert(response.respuesta); },
     //    error: function (xhr, status) { errorAjax(xhr, status); }
     //});
