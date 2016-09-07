@@ -9,11 +9,20 @@ var Validar = {
             var ultimoIndex = ruc.length - 1; var sumaTotal = 0, residuo = 0; var ultimoDigitoRUC = 0, ultimoDigitoCalc = 0;
             for (var i = 0; i < ultimoIndex; i++) { sumaTotal += (parseInt(ruc.charAt(i)) * parseInt(factores.charAt(i))); }
             residuo = sumaTotal % 11;
-            ultimoDigitoCalc = (residuo == 10) ? 0 : ((residuo == 11) ? 1 : (11 - residuo) % 10);
-            ultimoDigitoRUC = parseInt(ruc.charAt(ultimoIndex));
-            if (ultimoDigitoRUC == ultimoDigitoCalc) return true;
-            alert("ERROR: El RUC " + ruc + " NO es v\u00E1lido.");
-            return false;
+            var resta = (11 - residuo), digChk;
+            if ((resta == 10)){
+                digChk = 0;
+            }else if ((resta == 11)){
+                digChk = 1;
+            }
+            else{
+                digChk = resta;
+            }
+            if ((ruc.charAt(ultimoIndex) == digChk)){return true;}
+            else{
+                alert("ERROR: El RUC " + ruc + " NO es v\u00E1lido.");
+                return false;
+            }
         }
         alert("ERROR: El RUC NO es v\u00E1lido, debe constar de 11 caracteres num\u00E9ricos.");
         return false;
@@ -152,7 +161,9 @@ function aperturarUndAtencion(d, u, p, c, f) {
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function tecladoNumerico(s) {
+function tecladoNumerico(s, n) {
+    if (!Validar.Dato(n)) { n = 11;}
+
     s.keyboard({
         layout: 'custom',
         customLayout: {
@@ -164,7 +175,7 @@ function tecladoNumerico(s) {
                 '{a} {c}'
             ]
         },
-        maxLength: 3,
+        maxLength: n,
         restrictInput: true,
         useCombos: false,
     });

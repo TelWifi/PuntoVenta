@@ -54,6 +54,7 @@ namespace Franquisia1._1.Controllers
                 string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                 string punemi = Session["Loged_usrfile_punemi"].ToString();
                 string idusr = Session["Loged_usrfile_idusr"].ToString();
+                string desusr = Session["Loged_usrfile_desusr"].ToString();
 
                 anexos anexo = AnexosController.crearObtener(codcia, nroane, desane, refane);
                 if (anexo == null) { return Json(new { respuesta = "ERROR: Error al obtener o crear el anexo, asegurese que los datos del cliente esten correctamente ingresados" }, JsonRequestBehavior.AllowGet); }
@@ -61,6 +62,8 @@ namespace Franquisia1._1.Controllers
                 if (fv == null) { return Json(new { respuesta = "ERROR: La forma de venta seleccionada no existe" }, JsonRequestBehavior.AllowGet); }
                 parreg parreg = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
                 if (parreg == null) { return Json(new { respuesta = "ERROR: Error al obtener par\u00E1metros intenernos" }, JsonRequestBehavior.AllowGet); }
+                parreg prigv = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("COM")).FirstOrDefault();
+                if (prigv == null) { return Json(new { respuesta = "ERROR: Error al obtener par\u00E1metros intenernos" }, JsonRequestBehavior.AllowGet); }
 
                 string numdoc = GenerarNumDoc(tipdoc);
                 if (String.IsNullOrWhiteSpace(numdoc)) { return Json(new { respuesta = "ERROR: Error al generar el n\u00FAmero del documento" }, JsonRequestBehavior.AllowGet); }
@@ -115,7 +118,7 @@ namespace Franquisia1._1.Controllers
                     conc.SITUACION = "C";
                     List<cond> items = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(conc.CODIGO)).ToList();
                     index = 1;
-                    decimal sumagra = 0, sumaexo = 0, sumaina = 0;
+                    decimal total=0, sumagra = 0, sumaexo = 0, sumaina = 0, sumaigv=0;
                     foreach (cond item in items)
                     {
                         vend vend = new vend();
@@ -129,11 +132,13 @@ namespace Franquisia1._1.Controllers
                         vend.PORCDESC = 0;
                         vend.DESCUENTO = 0;
                         vend.TOTAL = vend.PREUNI;
-                        vend.IGV = (decimal)(vend.TOTAL * parreg.COM_TASA_IGV / (100 + parreg.COM_TASA_IGV));
+                        vend.IGV = (decimal)(vend.TOTAL * prigv.COM_TASA_IGV / (100 + prigv.COM_TASA_IGV));
                         vend.CONVENTA = item.CONVENTA;
                         conventa conventa = db.conventa.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(item.CONVENTA) && a.situa.Equals("V")).FirstOrDefault();
                         vend.TIPOVALORVENTA = conventa.tipovalorventa;
                         vend.NETO = vend.TOTAL-vend.IGV;
+                        sumaigv += vend.IGV;
+                        total += vend.TOTAL;
                         switch (vend.TIPOVALORVENTA)
                         {
                             case "01":
@@ -146,7 +151,7 @@ namespace Franquisia1._1.Controllers
                                 break;
                             case "03":
                                 vend.INAFECTO = vend.NETO;
-                                sumaina += (decimal)vend.EXONERADO;
+                                sumaina += (decimal)vend.INAFECTO;
                                 break;
                             default:
                                 break;
@@ -155,10 +160,16 @@ namespace Franquisia1._1.Controllers
                     }
                     db.venc.Add(venc);
                     db.SaveChanges();
+                    string codaux = punemi + tmp.ToString().PadLeft(8, '0');
                     sucursal suc = db.sucursal.Where(a=>a.codcia.Equals(codcia) && a.codigo.Equals(sucursal) && a.situa.Equals("V")).FirstOrDefault();
-                    
+                    var u =(from a in db.forpago join b in db.venpag on a.codigo equals b.FORPAGO
+                           where b.CODCIA.Equals(codcia) && b.CODIGO.Equals(codaux)
+                                select new {a.descripcion, a.is_tarjeta, b.IMPORTE, b.RECIBIDO, b.VUELTO  }
+                                ).ToList();
+                    string codper = conc.PERATENCION;
+                    peratencion per = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(codper)).FirstOrDefault();
                     return Json(new { respuesta = "EXITO: Exito", gravado=sumagra, exonerado=sumaexo, inafecto = sumaina,
-                        direccion=suc.direccion
+                        direccion=suc.direccion, igv=sumaigv,total=total, resumen=u, cajero=desusr, vendedor=per.descripcion
                     }, JsonRequestBehavior.AllowGet); 
                 }
                 else { return Json(new { respuesta = "ERROR: Error el consumo est\u00E1 cerrado" }, JsonRequestBehavior.AllowGet); }

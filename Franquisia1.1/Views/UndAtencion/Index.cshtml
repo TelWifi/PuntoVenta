@@ -1,8 +1,9 @@
 ﻿@{
     ViewBag.Title = "Punto de Venta";
 }
-
-<h2 class="text-center">Seleccione</h2>
+<header class="text-center">
+    El Chalan S.A.C
+</header>
 
 <ul id="divisiones" class="nav nav-tabs" style="font-size:small;">
     @foreach (var div in ViewBag.divs)
@@ -10,7 +11,7 @@
         <li data-codigo="@div.CODIGO"><a data-toggle="tab" href="#tab-@div.CODIGO">@div.DESCRIPCION</a></li>
     }
 </ul>
-<div class="tab-content ">
+<div class="tab-content">
     @foreach (var div in ViewBag.divs)
     {
         <div id="tab-@div.CODIGO" class="tab-pane fade in">

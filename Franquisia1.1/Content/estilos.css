@@ -5,23 +5,19 @@ html,body{
     margin:0px;
     height:100%;
 }
-/* Styles for validation helpers
------------------------------------------------------------*/
+header{
+    padding:0;
+    margin:0; 
+    background-color:#F2F1EF;
+    height:10%;
+    font-size:2em;
+    border-bottom: 3px solid #c0392b;
+}
+
 .field-validation-error {
     color: #f00;
 }
 .field-validation-valid {
-    display: none;
-}
-.input-validation-error {
-    border: 1px solid #f00;
-    background-color: #fee;
-}
-.validation-summary-errors {
-    font-weight: bold;
-    color: #f00;
-}
-.validation-summary-valid {
     display: none;
 }
 /*app css*/
@@ -90,6 +86,8 @@ input[type=checkbox] {
 }
 .undatencion{
     padding-top:30px;
+    margin-bottom:5px;
+
     background-color:#ecf0f1;
     border: 1px solid #95a5a6; 
     height:100px;
@@ -104,6 +102,7 @@ input[type=checkbox] {
 }
 .undatencion-ocupada{
     padding-top:20px;
+    margin-bottom:5px;
     background-color:#f39c12;
     border: 1px solid #000; 
     height:100px;

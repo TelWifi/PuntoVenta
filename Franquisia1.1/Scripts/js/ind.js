@@ -1,5 +1,6 @@
 var parpwd = $("#parpwd").text();
 var rol = $("#rol").text();
+var refresh = undefined;
 function getUndAtencion(p, c) {
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: "/UndAtencion/Obtener", data: { divatencion: c },
@@ -17,6 +18,7 @@ function getUndAtencion(p, c) {
                         $("#perate-pass").focus();
                 });
             });
+            p.append($("<div class='container row'></div>"));
             $.each(response.ocupadas, function (idx, obj) {
                 var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion-ocupada'>" + obj["UNDDES"] + "<br/></div>");
                 pu.data("codund", obj["CODUND"]); pu.data("coddiv", obj["CODDIV"]); pu.data("codper", obj["CODPER"]);
@@ -43,7 +45,7 @@ function getUndAtencion(p, c) {
 }
 function ingresarSoloClave() {
     var pass = $("#perate-pass-2").val();
-    if (!isNullOrWhiteSpace(pass)) {
+    if (Validar.Dato(pass)) {
         var m = $("#modal-ingresar");
         m.modal("hide");
         var und = m.data("codund"); var div = m.data("coddiv"); var per = m.data("codper");
@@ -56,9 +58,19 @@ function ingresarSoloClave() {
         });
     } else { alert("Ingrese contrase\u00f1a"); }
 }
-
+function obtenerRefresh() {
+    $.ajax({
+        type: "get", dataType: 'json', cache: false, url: "/Parreg/TiempoRefrescoPanel", data: {},
+        success: function (response, textStatus, jqXHR) {
+            if (response.respuesta.split(":")[0] == "ERROR") { alert(response.respuesta); }
+            refresh = 1000 * parseInt(response.tiempo);
+            console.log(refresh);
+        }, error: function (xhr, status) { errorAjax(xhr, status); }
+    });
+}
 $(document).ready(function () {
-    $("input").keyboard();
+    obtenerRefresh(refresh);
+    tecladoNumerico($("input"), 4);
     $("#divisiones li").on("click", function () {
         var cod = $(this).data("codigo");
         $("#div-sel").text(cod);
@@ -72,9 +84,9 @@ $(document).ready(function () {
     $("#empleados li").on("click", function () {
         if (parpwd == "S") {
             var pass = $("#perate-pass").val();
-            if (!isNullOrWhiteSpace(pass)) {
+            if (Validar.Dato(pass)) {
                 var div = $("#div-sel").text(); var und = $("#und-sel").text(); var per = $("#per-sel").text();
-                if (isNullOrWhiteSpace(per)) { return alert("Seleccione una persona");}
+                if (!Validar.Dato(per)) { return alert("Seleccione una persona"); }
                 $("#modal-seleccionar-peratencion").modal("hide");
                 aperturarUndAtencion(div, und, per, pass, function (response) {
                     if (response.rol == "M") {

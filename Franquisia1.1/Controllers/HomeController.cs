@@ -50,6 +50,7 @@ namespace Franquisia1._1.Controllers
                         Session["Loged_usrfile_ciafile"] = idcia;
                         Session["Loged_usrfile_sucursal"] = sucur;
                         Session["Loged_usrfile_rol"] = rol;
+                        Session["Loged_usrfile_desusr"] = v.desusr;
                         punemi punemi = ae.punemi.Where(a => a.codcia.Equals(idcia) && a.sucursal.Equals(sucur) && a.situa.Equals("V")).FirstOrDefault();
                         if (punemi != null) { Session["Loged_usrfile_punemi"] = punemi.codigo; }
                         string redir = "/UndAtencion/Index";//RedireccionTiposUuario();
