@@ -31,11 +31,11 @@
                     }
                 </div>
                 <div id="tabla-factura-anexo" class="anexo">
-                    <div class="input-group input-group-sm">
+                    <div class="input-group">
                         <input type="number" placeholder="RUC/DNI" class="anexo-nrodoc form-control" required/>
                         <span class="input-group-btn">
-                            <a class="btn-seleccionar-anexo btn btn-xs btn-info" data-anexo="#tabla-factura-anexo"><span class="glyphicon glyphicon-search"></span></a>
-                            <a class="btn-crear-anexo btn btn-xs btn-success" data-anexo="#tabla-factura-anexo"><span class="glyphicon glyphicon-plus"></span></a>
+                            <a class="btn-actualizar-anexo btn btn-warning"><span class="glyphicon glyphicon-retweet"></span></a>
+                            <a class="btn-seleccionar-anexo btn btn-info" data-anexo="#tabla-factura-anexo"><span class="glyphicon glyphicon-search"></span></a>
                         </span>
                     </div>
                     <input type="text" placeholder="Cliente" class="anexo-desane form-control" />
@@ -244,7 +244,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal-crear-anexo" data-anexo="#tabla-factura-anexo" data-padre="">
+<div class="modal" id="modal-crear-anexo" data-anexo="#tabla-factura-anexo" data-padre="">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -254,7 +254,7 @@
                 <div class="panel panel-body">
                     <div class="form form-horizontal">
                         <div id="form-anexo" class="form-group">
-                            <label>Razón Social/Apellidos y Nombres</label><input type="text" id="form-anexo-desane" class="form-control" />
+                            <label>Razón Social/Apellidos y Nombres</label><input type="text" id="form-anexo-desane" class="form-control" placeholder="Ingrese Razón Social o Apellidos y Nombres" autofocus />
                         </div>
                         <div class="form-group">
                             <label>Tipos de Documento</label><br />
@@ -266,10 +266,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Número de Documento</label><input type="text" id="form-anexo-nrodoc" class="form-control" />
+                            <label>Número de Documento: </label><input type="number" id="form-anexo-nrodoc" class="input-sm" placeholder="Ingrese el número del documento" required/>
                         </div>
                         <div class="form-group">
-                            <label>Dirección</label><input type="text" id="form-anexo-refane" class="form-control" />
+                            <label>Dirección</label><input type="text" id="form-anexo-refane" class="form-control" placeholder="Ingrese dirección"/>
                         </div>
                         <div class="form-group">
                             <button id="form-anexo-btn-crear" class="btn btn-primary">Agregar</button>
@@ -280,6 +280,82 @@
         </div>
     </div>
 </div>
+<div class="modal" id="modal-actualizar-anexo-dni" data-anexo="#tabla-factura-anexo" data-padre="">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label id="actualizar-dni-titulo"></label><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-body">
+                    <div class="form form-horizontal">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label>DNI:</label>
+                                    <input type="number" id="form-actdni-nrodoc" class="form-control" placeholder="Ingrese DNI" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección</label><input type="text" id="form-actdni-refane" class="form-control" placeholder="Ingrese dirección" />
+                        </div>
+                        <div class="form-group">
+                            <label>Apellidos</label><input type="text" id="form-actdni-ape" class="form-control" placeholder="Ingrese apellidos" />
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Nombre 1</label><input type="text" id="form-actdni-nom1" class="form-control" placeholder="Ingrese primer nombre" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Nombre 2</label><input type="text" id="form-actdni-nom2" class="form-control" placeholder="Ingrese segundo nombre" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button id="btn-actdni" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modal-actualizar-anexo-ruc" data-anexo="#tabla-factura-anexo" data-padre="">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label id="actualizar-ruc-titulo"></label><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-body">
+                    <div class="form form-horizontal">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label>RUC:</label>
+                                    <input type="number" id="form-actruc-nrodoc" class="form-control" placeholder="Ingrese DNI" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Razón Social</label><input type="text" id="form-actruc-desane" class="form-control" placeholder="Ingrese Razón Social" />
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <textarea id="form-actruc-refane" rows="3" class="form-control" placeholder="Ingrese dirección"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button id="btn-actruc" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="modal-cambiar-undatencion">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

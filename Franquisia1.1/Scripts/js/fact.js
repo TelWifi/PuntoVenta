@@ -27,6 +27,9 @@ function obtenerIGV() {
 function mostrarAnexo(a, d) {
     d.find(".anexo-desane").val(a.desane); d.find(".anexo-nrodoc").val(a.nrodoc); d.find(".anexo-refane").val(a.refane);
 }
+function clearAnexo(d) {
+    mostrarAnexo({ "desane": "", "nrodoc": "", "refane": "" }, d);
+}
 function obtenerAnexo(d) {
     return { desane: d.find(".anexo-desane").val(), nrodoc: d.find(".anexo-nrodoc").val(), refane: d.find(".anexo-refane").val() };
 }
@@ -46,15 +49,50 @@ function actualizarAnexo(a, d) {
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function getBDAnexo(div) {
+function actualizarAnexoDNI(a, d) {
+    if (!Validar.Anexo(a)) { return; }
+    $.ajax({
+        type: "post", dataType: 'json', cache: false, url: "/Anexos/ActualizarDNI",
+        data: { desane: a.desane, nrodoc: a.nrodoc, refane: a.refane },
+        success: function (response, textStatus, jqXHR) {
+            if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+            else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
+                mostrarAnexo({ "desane": "", "nrodoc": a.nroane, "refane": "" }, d);
+            }
+            else if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, d); }
+        },
+        error: function (xhr, status) { errorAjax(xhr, status); }
+    });
+}
+function getBDAnexo(div,m) {
     var a = obtenerAnexo(div);
-    if (a.nrodoc.length==11&& !Validar.RUC(a.nrodoc)) { a.refane = ""; a.desane = ""; mostrarAnexo(a, div); return; }
-    if (a.nrodoc.length==8&& !Validar.DNI(a.nrodoc)) { a.refane = ""; a.desane = ""; mostrarAnexo(a, div); return; }
+    var input = "input[name=tipo-documentos]:checked";
+    if ($(input).val() == "01" && !Validar.RUC(a.nrodoc)) { clearAnexo(div); return; }
+    else if ($(input).val() == "03" && !Validar.DNI(a.nrodoc)) { clearAnexo(div); return; }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-            else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") { a.refane = ""; a.desane = ""; mostrarAnexo(a, div); console.log(response.respuesta); }
+            else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
+                mostrarAnexo({"nrodoc":a.nrodoc, "refane":"", "desane":""}, div);
+                var m = "#modal-actualizar-anexo-dni";
+                if ($(input).val() == "01") {
+                    m = "#modal-actualizar-anexo-ruc";
+                    $(m).find("input[type='text']").val("");
+
+                    $(m).find("#actualizar-ruc-titulo").text("Agregar cliente");
+                    $(m).find("#form-actruc-nrodoc").val(a.nrodoc);
+                    $(m).modal('show');
+                    $(m).find("#form-actruc-refane").focus();
+                } else {
+                    $(m).find("input[type='text']").val("");
+
+                    $(m).find("#actualizar-dni-titulo").text("Agregar cliente");
+                    $(m).find("#form-actdni-nrodoc").val(a.nrodoc);
+                    $(m).modal('show');
+                    $(m).find("#form-actdni-refane").focus();
+                }
+            }
             else if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, div); }
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
@@ -107,11 +145,6 @@ function printFactura(t, a, r) {
     dp.append($(separador));
     dp.append(taux);
     if (!print(dp)) { alert("ERROR: Error al imprimir"); }
-    //$.ajax({
-    //    type: "post", dataType: 'json', cache: false, url: 'http://192.168.1.100', data: { "":$(dp).html() },
-    //    success: function (response, textStatus, jqXHR) { alert(response.respuesta); },
-    //    error: function (xhr, status) { errorAjax(xhr, status); }
-    //});
 }
 function guardarFactura(t) {
     if (!Validar.Dato(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
@@ -183,7 +216,7 @@ function agregarProducto(pp) {
     });
     txtc.change(function () {
         var cant = parseFloat($(this).val());
-        if (cant > 0) { actualizarSubtotal(nf, txtc, COLPRECIO, COLSUBTOTAL); actualizarTotal(tf, COLSUBTOTAL); actualizarIGV(tf); actualizarIGV(ts); }
+        if (cant > 0) { actualizarSubtotal(nf, txtc, COLPRECIO, COLSUBTOTAL); actualizarTotal(tf, COLSUBTOTAL); actualizarIGV(tf); actualizarIGV(tf); }
         else { $(this).val(1); alert(MSG_NO_PUEDE_SER_MENOR_QUE.replace("{text}", "una unidad")); }
     });
 }
@@ -288,12 +321,45 @@ $(document).ready(function () {
         modal.data("anexo", $(this).data("anexo"));
         modal.modal('show');
     });
-    $(".btn-crear-anexo").on("click", function () {
-        var modal = $("#modal-crear-anexo");
-        $(".modal").modal("hide");
-        modal.data("anexo", $(this).data("anexo"));
-        modal.modal('show');
+    $(".btn-actualizar-anexo").on("click", function () {
+        a = obtenerAnexo($("#tabla-factura-anexo"));
+        if (Validar.Anexo(a)) {
+            $.ajax({
+                type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
+                success: function (response, textStatus, jqXHR) {
+                    if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+                    else if (response.respuesta.toString().split(":")[0] == "EXITO") {
+                        var input = "input[name=tipo-documentos]:checked";
+                        var m = "#modal-actualizar-anexo-ruc";
+                        if ($(input).val() == "01" && Validar.RUC(a.nrodoc)) {
+                            $(m).find("input[type='text']").val("");
+
+                            $(m).find("#actualizar-ruc-titulo").text("Actualizar cliente");
+                            $("#form-actruc-nrodoc").val(response.anexo.nrodoc);
+                            $("#form-actruc-desane").val(response.anexo.desane);
+                            $("#form-actruc-refane").val(response.anexo.refane);
+                            console.log(response.anexo.refane);
+
+                        }
+                        else if ($(input).val() == "03" && Validar.DNI(a.nrodoc)) {
+                            m = "#modal-actualizar-anexo-dni";
+                            $(m).find("input[type='text']").val("");
+
+                            $("#actualizar-dni-titulo").text("Actualizar cliente");
+                            $("#form-actdni-nrodoc").val(response.anexo.nrodoc);
+                            $("#form-actdni-desane").val(response.anexo.desane);
+                            $("#form-actdni-refane").val(response.anexo.refane);
+                            $("#form-actdni-nom1").val(response.anexo.nombre1);
+                            $("#form-actdni-nom2").val(response.anexo.nombre2);
+
+                        }
+                        $(m).modal("show");
+                    }
+                }, error: function (xhr, status) { errorAjax(xhr, status); }
+            });
+        } else { alert("ERROR: No se puede actualizar porque no esta registrado"); }
     });
+
     $("#modal-crear-anexo").on("show.bs.modal", function () {
         $(this).find('input[type=text]').val();
     });
@@ -416,6 +482,7 @@ $(document).ready(function () {
         if (!$(this).hasClass("active")) {
             $("#tipos-comprobantes .btn").removeClass("active");
             $(this).addClass("active"); $(this).children("input[type=radio]").prop('checked', true);
+            clearAnexo($("#tabla-factura-anexo"));
         }   
     });
     $("#modal-pagar-naturaleza .btn").on("click", function () {
@@ -527,6 +594,12 @@ $(document).ready(function () {
         });
         $("#modal-pagar").modal("hide");
     });
+
+    
+
+
+
+
     $("#conventa-btn-buscar").on("click", function () {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });
