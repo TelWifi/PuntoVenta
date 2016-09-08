@@ -402,7 +402,17 @@ $(document).ready(function () {
         function (f) {
             var m = $("#modal-seleccionar-anexo");
             f.on("click", function () {
-                var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(1).innerHTML, refane: f.find('td').get(2).innerHTML};
+                var input = "input[name=tipo-documentos]:checked";
+                var aux = "";
+                switch ($(input).val()) {
+                    case "01":aux = "RUC";break;
+                    case "03":aux = "DNI";break;
+                }
+                if (aux != f.find('td').get(1).innerHTML) {
+                    return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc"));
+                }
+
+                var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(2).innerHTML, refane: f.find('td').get(3).innerHTML};
                 mostrarAnexo(a, $(m.data("anexo")));m.modal('hide');
             });
         });
@@ -412,7 +422,16 @@ $(document).ready(function () {
         function (f) {
             var m = $("#modal-seleccionar-anexo");
             f.on("click", function () {
-                var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(1).innerHTML, refane: f.find('td').get(2).innerHTML};
+                var input = "input[name=tipo-documentos]:checked";
+                var aux = "";
+                switch ($(input).val()) {
+                    case "01":aux = "RUC";break;
+                    case "03":aux = "DNI";break;
+                }
+                if (aux != f.find('td').get(1).innerHTML) {
+                    return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc"));
+                }
+                var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(2).innerHTML, refane: f.find('td').get(3).innerHTML};
                 mostrarAnexo(a, $(m.data("anexo")));
                 m.modal('hide');
             });

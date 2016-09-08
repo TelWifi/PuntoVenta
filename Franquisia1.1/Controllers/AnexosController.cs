@@ -84,9 +84,20 @@ namespace Franquisia1._1.Controllers
                 if (!String.IsNullOrWhiteSpace(clave))
                 {
                     clave = clave.Trim();
-                    string listajson = serializer.Serialize(db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C")
-                    && a.nrodoc.Contains(clave) && a.situane.Equals("V")).OrderBy(a => a.nrodoc).ToList());
-                    return Json(new { respuesta ="EXITO: LA PETICION SE REALIZO EXITOSAMENTE",lista = listajson }, JsonRequestBehavior.AllowGet);
+                    List<anexos> lista = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C")
+                    && a.nrodoc.Contains(clave) && a.situane.Equals("V")).OrderBy(a => a.nrodoc).ToList();
+                    foreach (var item in lista)
+                    {
+                        switch (item.tipdoc)
+                        {
+                            case "01":
+                                item.tipdoc = "DNI";
+                                break;
+                            case "06": item.tipdoc = "RUC";
+                                break;
+                        }
+                    }
+                    return Json(new { respuesta ="EXITO: LA PETICION SE REALIZO EXITOSAMENTE",lista = serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
                 }else { return Json(new { respuesta = "ERROR: EL VALOR A BUSCAR NO PUEDE SER NULO O VACIO"}, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
@@ -103,9 +114,20 @@ namespace Franquisia1._1.Controllers
 
                 if (!String.IsNullOrWhiteSpace(clave)){
                     clave = clave.Trim();
-		            string listajson = serializer.Serialize(db.anexos.Where(a =>a.idcia.Equals(codcia) && a.tipane.Equals("C")
-                    && a.desane.Contains(clave) && a.situane.Equals("V")).OrderBy(a => a.desane).ToList());
-                    return Json(new { respuesta="EXITO: LA PETICION SE REALIZO EXITOSAMENTE", lista=listajson }, JsonRequestBehavior.AllowGet);
+                    List<anexos> lista = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C")
+                    && a.desane.Contains(clave) && a.situane.Equals("V")).OrderBy(a => a.desane).ToList();
+                    foreach (var item in lista)
+                    {
+                        switch (item.tipdoc)
+                        {
+                            case "01":
+                                item.tipdoc = "DNI";
+                                break;
+                            case "06": item.tipdoc = "RUC";
+                                break;
+                        }
+                    }
+                    return Json(new { respuesta="EXITO: LA PETICION SE REALIZO EXITOSAMENTE", lista=serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
                 }
                 else { return Json(new { respuesta = "ERROR: EL VALOR A BUSCAR NO PUEDE SER NULO O VACIO"}, JsonRequestBehavior.AllowGet); }
             }
