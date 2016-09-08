@@ -53,7 +53,22 @@ function actualizarAnexoDNI(a, d) {
     if (!Validar.Anexo(a)) { return; }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Anexos/ActualizarDNI",
-        data: { desane: a.desane, nrodoc: a.nrodoc, refane: a.refane },
+        data: { nrodoc: a.nrodoc, refane: a.refane, nom1: a.nombre1, nom2: a.nombre2, apepat: a.apepat, apemat: a.apemat },
+        success: function (response, textStatus, jqXHR) {
+            if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+            else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
+                mostrarAnexo({ "desane": "", "nrodoc": a.nroane, "refane": "" }, d);
+            }
+            else if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, d); }
+        },
+        error: function (xhr, status) { errorAjax(xhr, status); }
+    });
+}
+function actualizarAnexoRUC(a, d) {
+    if (!Validar.Anexo(a)) { return; }
+    $.ajax({
+        type: "post", dataType: 'json', cache: false, url: "/Anexos/ActualizarRUC",
+        data: { nrodoc: a.nrodoc, refane: a.refane, desane:a.desane},
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
             else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
@@ -338,8 +353,6 @@ $(document).ready(function () {
                             $("#form-actruc-nrodoc").val(response.anexo.nrodoc);
                             $("#form-actruc-desane").val(response.anexo.desane);
                             $("#form-actruc-refane").val(response.anexo.refane);
-                            console.log(response.anexo.refane);
-
                         }
                         else if ($(input).val() == "03" && Validar.DNI(a.nrodoc)) {
                             m = "#modal-actualizar-anexo-dni";
@@ -347,11 +360,10 @@ $(document).ready(function () {
 
                             $("#actualizar-dni-titulo").text("Actualizar cliente");
                             $("#form-actdni-nrodoc").val(response.anexo.nrodoc);
-                            $("#form-actdni-desane").val(response.anexo.desane);
                             $("#form-actdni-refane").val(response.anexo.refane);
+                            $("#form-actdni-ape").val(response.anexo.apepat + " " + response.anexo.apemat);
                             $("#form-actdni-nom1").val(response.anexo.nombre1);
                             $("#form-actdni-nom2").val(response.anexo.nombre2);
-
                         }
                         $(m).modal("show");
                     }
@@ -359,7 +371,23 @@ $(document).ready(function () {
             });
         } else { alert("ERROR: No se puede actualizar porque no esta registrado"); }
     });
-
+    $("#btn-actdni").on("click", function () {
+        a = obtenerAnexo($("#tabla-factura-anexo"));
+        a.refane = $("#form-actdni-refane").val();
+        a.nombre1 = $("#form-actdni-nom1").val();
+        a.nombre2 = $("#form-actdni-nom2").val();
+        a.apepat = $("#form-actdni-ape").val().split(" ")[0];
+        a.apemat = $("#form-actdni-ape").val().split(" ")[1];
+        actualizarAnexoDNI(a, $("#tabla-factura-anexo"));
+        $("#modal-actualizar-anexo-dni").modal('hide');
+    });
+    $("#btn-actruc").on("click", function () {
+        a.nrodoc = $("#form-actruc-nrodoc").val();
+        a.desane = $("#form-actruc-desane").val();
+        a.refane = $("#form-actruc-refane").val();
+        actualizarAnexoRUC(a, $("#tabla-factura-anexo"));
+        $("#modal-actualizar-anexo-ruc").modal('hide');
+    });
     $("#modal-crear-anexo").on("show.bs.modal", function () {
         $(this).find('input[type=text]').val();
     });
@@ -370,7 +398,7 @@ $(document).ready(function () {
     });
 
     $("#btn-buscar-razon").on("click", function () {
-        buscarAjax("/Anexos/BuscarRazon", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane", "nrodoc", "refane"],
+        buscarAjax("/Anexos/BuscarRazon", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane","tipdoc", "nrodoc", "refane"],
         function (f) {
             var m = $("#modal-seleccionar-anexo");
             f.on("click", function () {
@@ -380,7 +408,7 @@ $(document).ready(function () {
         });
     });
     $("#btn-buscar-ruc").on("click", function () {
-        buscarAjax("/Anexos/BuscarRuc", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane", "nrodoc", "refane"],
+        buscarAjax("/Anexos/BuscarRuc", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane", "tipdoc", "nrodoc", "refane"],
         function (f) {
             var m = $("#modal-seleccionar-anexo");
             f.on("click", function () {

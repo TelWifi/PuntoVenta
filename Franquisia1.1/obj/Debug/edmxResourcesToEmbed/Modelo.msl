@@ -527,6 +527,8 @@
     <EntitySetMapping Name="forpago">
       <EntityTypeMapping TypeName="ModeloAplicacion.forpago">
         <MappingFragment StoreEntitySet="forpago">
+          <ScalarProperty Name="is_referencia" ColumnName="is_referencia" />
+          <ScalarProperty Name="is_efectivo" ColumnName="is_efectivo" />
           <ScalarProperty Name="situa" ColumnName="situa" />
           <ScalarProperty Name="is_tarjeta" ColumnName="is_tarjeta" />
           <ScalarProperty Name="descripcion" ColumnName="descripcion" />
@@ -550,6 +552,8 @@
     <EntitySetMapping Name="venc">
       <EntityTypeMapping TypeName="ModeloAplicacion.venc">
         <MappingFragment StoreEntitySet="venc">
+          <ScalarProperty Name="NRODOC" ColumnName="NRODOC" />
+          <ScalarProperty Name="SERIE" ColumnName="SERIE" />
           <ScalarProperty Name="DESCRI_FINAL_EXPORTACION" ColumnName="DESCRI_FINAL_EXPORTACION" />
           <ScalarProperty Name="CONTENEDORES" ColumnName="CONTENEDORES" />
           <ScalarProperty Name="PESO_NETO" ColumnName="PESO_NETO" />

@@ -177,6 +177,8 @@
     <Property Name="codigo" Type="char" MaxLength="3" Nullable="false" />
     <Property Name="descripcion" Type="varchar" MaxLength="60" Nullable="false" />
     <Property Name="is_tarjeta" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="is_efectivo" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="is_referencia" Type="char" MaxLength="1" Nullable="false" />
     <Property Name="situa" Type="char" MaxLength="1" Nullable="false" />
   </EntityType>
   <EntityType Name="forventa">
@@ -667,6 +669,8 @@
     <Property Name="PESO_NETO" Type="decimal" Precision="15" Scale="2" />
     <Property Name="CONTENEDORES" Type="char" MaxLength="40" />
     <Property Name="DESCRI_FINAL_EXPORTACION" Type="text" />
+    <Property Name="SERIE" Type="char" MaxLength="4" />
+    <Property Name="NRODOC" Type="char" MaxLength="10" />
   </EntityType>
   <EntityType Name="vend">
     <Key>

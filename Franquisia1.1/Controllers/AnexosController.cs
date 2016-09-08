@@ -179,7 +179,7 @@ namespace Franquisia1._1.Controllers
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e.Message }, JsonRequestBehavior.AllowGet); }
         }
-        public JsonResult ActualizarDNI(string nrodoc, string refane, string nom1, string nom2)
+        public JsonResult ActualizarDNI(string nrodoc, string refane, string nom1, string nom2, string apepat, string apemat)
         {
             try
             {
@@ -196,12 +196,57 @@ namespace Franquisia1._1.Controllers
                         anexos anexo = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.codane.Equals(nrodoc)).FirstOrDefault();
                         if (anexo != null)
                         {
-                            if (String.IsNullOrWhiteSpace(desane) || String.IsNullOrWhiteSpace(refane)) { rpta = "ERROR: ALGUNOS CAMPOS SON VACIOS O NULOS"; }
+                            if (String.IsNullOrWhiteSpace(refane)) { rpta = "ERROR: ALGUNOS CAMPOS SON VACIOS O NULOS"; }
                             else
                             {
                                 if (anexo.situane.Equals("V"))
                                 {
-                                    anexo.desane = desane.Trim().ToUpper();
+                                    anexo.apepat = apepat.ToUpper();
+                                    anexo.apemat = apemat.ToUpper();
+                                    anexo.nombre1 = nom1.ToUpper();
+                                    anexo.nombre2 = nom2.ToUpper();
+                                    anexo.desane = anexo.nombre1 + " " + anexo.nombre2 + " " + anexo.apepat + " " + anexo.apemat;
+                                    anexo.refane = refane.Trim().ToUpper();
+                                    db.SaveChanges();
+                                    rpta = "EXITO: Anexo actualizado";
+                                    return Json(new { respuesta = rpta, anexo = anexo }, JsonRequestBehavior.AllowGet);
+                                }
+                                else { rpta = "ERROR: No se puede actualizar porque el registro esta deshabilitado"; }
+                            }
+                        }
+                        else { rpta = "ADVERTENCIA: El n\u00FAmero de documento no est\u00E1 registrado\nRecomendaci\u00F3n: puede registrarlo dando click en el bot\u00F3n agregar cliente"; }
+                    }
+                    else { rpta = "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres"; }
+                }
+                else { rpta = "ERROR: El RUC/DNI no puede ser nulo o vac\u00EDo"; }
+                return Json(new { respuesta = rpta }, JsonRequestBehavior.AllowGet);
+            }
+            catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception e) { return Json(new { respuesta = "ERROR: " + e.Message }, JsonRequestBehavior.AllowGet); }
+        }
+        public JsonResult ActualizarRUC(string nrodoc, string refane, string desane)
+        {
+            try
+            {
+                var rol = Session["Loged_usrfile_rol"];
+                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+
+                string rpta;
+                if (!String.IsNullOrWhiteSpace(nrodoc))
+                {
+                    nrodoc = nrodoc.Trim();
+                    if (nrodoc.Length == 8 || nrodoc.Length == 11)
+                    {
+                        string codcia = Session["Loged_usrfile_ciafile"].ToString();
+                        anexos anexo = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.codane.Equals(nrodoc)).FirstOrDefault();
+                        if (anexo != null)
+                        {
+                            if (String.IsNullOrWhiteSpace(refane)) { rpta = "ERROR: ALGUNOS CAMPOS SON VACIOS O NULOS"; }
+                            else
+                            {
+                                if (anexo.situane.Equals("V"))
+                                {
+                                    anexo.desane = desane.ToUpper();
                                     anexo.refane = refane.Trim().ToUpper();
                                     db.SaveChanges();
                                     rpta = "EXITO: Anexo actualizado";
