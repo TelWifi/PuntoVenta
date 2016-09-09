@@ -69,7 +69,7 @@ function print(div) {
     var mw = window.open('', 'Imprimir Factura', 'height=500,width=' + ANCHO_IMPRESION);
     if (!mw.print) { return false; }
     mw.document.write('<html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Imprimir Factura</title>');
-    mw.document.write('</head><body style=\"font-size:' + TAMANO_FUENTE + '; width:'+ANCHO_IMPRESION+';\">');
+    mw.document.write('</head><body style=\"font-family: Arial;font-size:' + TAMANO_FUENTE + '; width:' + ANCHO_IMPRESION + ';\">');
     mw.document.write($(div).html());
     mw.document.write("<script>window.onload = function() { print(); /*close();*/ };</script>");
     mw.document.write('</body></html>');

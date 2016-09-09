@@ -43,7 +43,7 @@ namespace Franquisia1._1.Controllers
         }
 
         [HttpPost]
-        public JsonResult Facturar(string codconc, string nroane,string desane, string refane,string tipdoc,string formaventa, string formapago)
+        public JsonResult Facturar(string codconc, string nroane,string desane, string refane,string tipdoc, string vp)
         {
             try
             {
@@ -58,8 +58,6 @@ namespace Franquisia1._1.Controllers
 
                 anexos anexo = AnexosController.crearObtener(codcia, nroane, desane, refane);
                 if (anexo == null) { return Json(new { respuesta = "ERROR: Error al obtener o crear el anexo, asegurese que los datos del cliente esten correctamente ingresados" }, JsonRequestBehavior.AllowGet); }
-                forventa fv = db.forventa.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(formaventa) && a.situa.Equals("V")).FirstOrDefault();
-                if (fv == null) { return Json(new { respuesta = "ERROR: La forma de venta seleccionada no existe" }, JsonRequestBehavior.AllowGet); }
                 parreg parreg = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
                 if (parreg == null) { return Json(new { respuesta = "ERROR: Error al obtener par\u00E1metros intenernos" }, JsonRequestBehavior.AllowGet); }
                 parreg prigv = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("COM")).FirstOrDefault();
@@ -70,13 +68,12 @@ namespace Franquisia1._1.Controllers
                 int? tmp = generar(codcia, punemi);
                 if (tmp==null){return Json(new { respuesta = "ERROR: Error al generar el c\u00F3digo "}, JsonRequestBehavior.AllowGet);}
                 
-                List<venpag> lista = JsonConvert.DeserializeObject<List<venpag>>(formapago);
+                List<venpag> lista = JsonConvert.DeserializeObject<List<venpag>>(vp);
                 int index = 1;
                 foreach (venpag item in lista)
                 {
                     item.CODCIA = codcia;
                     item.CODIGO = punemi + tmp.ToString().PadLeft(8, '0');
-                    item.FORVENTA = fv.codigo;
                     item.ITEM = index.ToString().PadLeft(3, '0');
                     item.RECIBIDO = item.VUELTO + item.IMPORTE;
                     if (String.IsNullOrWhiteSpace(item.FORPAGO)) { item.TARJETA = null; }

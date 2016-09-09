@@ -149,14 +149,15 @@ function printFactura(t, a, r) {
     strf = strf.replace("{IGV}", parseFloat(r.igv).toFixed(2));
     strf = strf.replace("{TOTAL}", parseFloat(r.total).toFixed(2));
     taux = $(strf)
+    var s = "";
     $.each(r.resumen, function (idx, obj) {
-        var s = "<tr><td>SON: </tr></td>";
+        s += "<tr><td>SON: </tr></td>";
         s += "<tr><td>" + obj["descripcion"] + " " + obj["RECIBIDO"] + " (Soles)</td></tr>";
         s += "<tr><td>Vuelto: S/." + parseFloat(obj["VUELTO"]).toFixed(2) + "</td></tr>";
-        s += "<tr><td>Cajero: " + r.cajero + "</td></tr>";
-        s += "<tr><td>Vendedor: " + r.vendedor + "</td></tr>";
-        taux.append($(s))
     });
+    s += "<tr><td>Cajero: " + r.cajero + "</td></tr>";
+    s += "<tr><td>Vendedor: " + r.vendedor + "</td></tr>";
+    taux.append($(s))
     dp.append($(separador));
     dp.append(taux);
     if (!print(dp)) { alert("ERROR: Error al imprimir"); }
@@ -262,30 +263,7 @@ function obtenerTarjetas(p) {
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function getFormEfectivo(p) {
-    p.empty();
-    var html = "<div id=\"denominaciones\"><label>Denominaciones</label><div class=\"efectivo text-center\">"+ "<div class=\"btn-group btn-group-sm btn-group-justified\"><a>S/. 200</a><a>S/. 100</a><a>S/. 50</a><a>S/. 20</a></div>"+ "<div class=\"btn-group btn-group-sm btn-group-justified\"><a>S/. 10</a><a>S/. 5</a><a>S/. 2</a><a>S/. 1</a></div>"
-        + "<div class=\"btn-group btn-group-sm btn-group-justified\"><a>S/. 0.50</a><a>S/. 0.20</a><a>S/. 0.10</a><aux class=\"btn btn-danger input-reset\">"+ "Limpiar</aux></div></div></div>";
-    html += " <div class=\"row\"><div class=\"col-xs-6 form-group\">"+ "<label>Importe</label><input class=\"form-control input-sm importe\" type=\"text\" disabled />"
-        + "</div><div class=\"col-xs-6 form-group\"><label>Cambio</label><input class=\"form-control input-sm cambio\""+ "type=\"text\" disabled /></div></div>";
-    p.append($(html));
-    p.find("a").addClass("btn btn-secundario btn-secundario-bordes");
-    p.find('a').on("click", function () {
-        var ipI = p.find(".importe").first();var ipC = p.find(".cambio").first();var e = parseFloat($(this).text().split(' ')[1]);var ef = parseFloat(ipI.val());
-        if (isNaN(ef)) { ef = 0; }var nef = e + ef;ipI.val(parseFloat(nef).toFixed(2));
-        var nc = nef - (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2);
-        if (nc >= 0) { ipC.val(nc.toFixed(2)); }
-    });
-    p.find(".input-reset").on("click", function () {
-        p.find(".importe").val(""); p.find(".cambio").val("");
-    });
-}
-function getFormTarjeta(p, ist) {
-    p.empty();
-    var html = "<div class=\"row\"><div class=\"col-xs-6 form-group\"><label>Tarjeta: </label> <label class=\"tarjeta\"></label><br/>"+ "<label>Nro. de referencia</label><input  class=\"form-control input-sm nro-ref\" type=\"text\" />"+ "<label>Importe</label><input class=\"form-control input-sm importe\" type=\"text\" />"+ "</div><div id=\"divtarjetas\" class=\"col-xs-6 form-group\"></div></div>";
-    p.append($(html));var ipI = p.find(".importe");var tp = parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text());
-    if (tp > 0) { ipI.val(tp.toFixed(2)); }if (ist == "S") { obtenerTarjetas(p.find("#divtarjetas")); }if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { p.find("input[type=text]").keyboard(); }
-}
+
 function changeUndAtencion(txt) {
     if (Validar.Dato($("#divatencion").val())) {
         if(Validar.Dato(txt.val())){
@@ -311,7 +289,8 @@ function getIsTarjeta(p,s) {
     var html = $("<div class='form-group'><label>Tarjeta: </label><label class='tarjeta'></label></div>");
     p.append(html);
     obtenerTarjetas(s);
-    $("#input-importe").val((parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2));
+    var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text()));
+    if (aux > 0) { $("#input-importe").val(aux.toFixed(2)); }
     $("#input-importe").attr('disabled', false);
 }
 function getIsNroReferencia(p,s) {
@@ -344,6 +323,7 @@ function actFormPago(i) {
     var p = $("#modal-pagar-principal");
     var s = $("#modal-pagar-secundario");
     p.empty(); s.empty();
+    $("#input-importe").val("00.00");
     switch (o.val()) {
         case "C":
             if (i.val() == undefined) {
@@ -355,12 +335,13 @@ function actFormPago(i) {
             if (i.data("isreferencia") == "S") { getIsNroReferencia(p, s); }
             if (i.data("isefectivo") == "S") { getIsEfectivo(p, s); }
             $("#forpago").text(i.data("desc"));
-            
             break;
         case "P":
+            $("#input-importe").prop("disabled", false);
             i.prop('checked', false);
             i.parent().removeClass("btn-primary");
-            $("#input-importe").val((parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2));
+            var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text()));
+            if (aux > 0) { $("#input-importe").val(aux.toFixed(2));}
             $("#forpago").text("");
             break;
     }
@@ -607,7 +588,7 @@ $(document).ready(function () {
         if (!Validar.Dato(ifv.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de venta"));}
         var t = $("#tabla-forma-pago");
         var e = new Array();
-        var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2);
+        var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text()));
         e.push(ifv.data("desc"));
         switch (ifv.val()) {
             case "C":
@@ -615,14 +596,30 @@ $(document).ready(function () {
                 if (aux > 0) {
                     e.push(ifp.data("desc"));
                     var pp = $("#modal-pagar-principal");
-                    if (ifp.data("istarjeta") == "S") { e.push(pp.find(".tarjeta").text());}
+                    if (ifp.data("istarjeta") == "S") {
+                        var tt = pp.find(".tarjeta");
+                        if (!Validar.Dato(tt.text())) { return alert("ERROR: Seleccione un tipo de tarjeta"); }
+                        e.push(tt.text()); tt.text("");
+                    }
                     else { e.push(""); }
-                    if (ifp.data("isreferencia") == "S") { e.push(pp.find(".txt-nro-ref").val()); }
+                    if (ifp.data("isreferencia") == "S") {
+                        var nroref = pp.find(".txt-nro-ref");
+                        if (!Validar.Dato(nroref.val())) {return alert("ERROR: El N\u00FAmero de referenc\u00EDa No puede estar vac\u00EDo");}
+                        e.push(nroref.val()); nroref.val("");
+                    }
                     else { e.push(""); }
-                    e.push($("#input-importe").val());
+                    var importe = parseFloat($("#input-importe").val().replace(',', '.'));
+                    if (importe == 0) {return alert("ERROR: El Importe No puede ser 00.00");}
+                    if (importe > parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())) {
+                        importe = parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text());
+                        console.log("dawd");
+                    }
+                    e.push(importe.toFixed(2));
+                    $("#input-importe").val("00.00");
                     var f = addRow(t, e);
-                    if (ifp.data("isefectivo") == "S") { f.data("cambio", $("#lbl-vuelto").text());}
+                    if (ifp.data("isefectivo") == "S") { f.data("cambio", $("#lbl-vuelto").text()); $("#lbl-vuelto").text("00.00"); }
                     else { f.data("cambio", "0"); }
+                    f.data("fv", ifv.data("codigo")); f.data("fp", ifp.val()); f.data("tt", pp.find(".tarjeta").data("codigo"));
                     $("#forma-pago-total").text(sumar(t,COLIMPORTE).toFixed(2));
                 } else {alert("ERROR: No se puede agregar, porque el total a pagar ya coincide con la suma de los montos agregado");}
                 break;
@@ -639,42 +636,36 @@ $(document).ready(function () {
     });
 
     $("#form-pagar-btn-aceptar").on("click", function () {
-        var conc = $("#tabla-factura").data("codigo");
-        var anexo = obtenerAnexo($("#tabla-factura-anexo"));
-        var fv = $("input[name=naturaleza-opcion]:checked").data("codigo");
-        var td = $("input[name=tipo-documentos]:checked").val();
-        if (!Validar.Dato(conc)) { return alert(MSG_SELECCIONE_UNDATENCION); }
-        if (!Validar.Dato(td)) { return alert(MSG_NO_EXISTE.replace("<attr>", "Tipo de documento")); }
-        var fp = new Array();
-        $("#tabla-forma-pago").find("tbody tr").each(function (index) {
-            var f = $(this);
-            var i = {
-                "FORPAGO": f.data("forpago"), "TARJETA": f.data("tipotar"),"REFERENCIA": f.find("td").get(COLNROREF).innerHTML, "IMPORTE": f.find("td").get(COLIMPORTE).innerHTML, "VUELTO":f.data("cambio"),
-            };
-            fp.push(i);
-        });
-        if ($("input[name=naturaleza-opcion]:checked").val() == "C" ) {
-            if (sumar($("#tabla-forma-pago"), COLIMPORTE).toFixed(2) != parseFloat($("#form-pagar-total").text()).toFixed(2)) { return alert("Error: Para poder realizar la transacci\u00F3n los totales debe coincidir"); }
-        }
-        if ($("input[name=naturaleza-opcion]:checked").val() == "P") {
-            item = {"FORVENTA":fv, "IMPORTE":$("#tabla-factura-total").text()};
-            fp.push((item));
-        }
-        $.ajax({
-            type: "post", dataType: 'json', cache: false, url: "/Conc/Facturar",
-            data: { codconc: conc, nroane: anexo.nrodoc, desane: anexo.desane, refane: anexo.refane, tipdoc:td, formaventa: fv, formapago: JSON.stringify(fp) },
-            success: function (response, textStatus, jqXHR) {
-                if (response.respuesta.split(":")[0] == "ERROR") {alert(response.respuesta);}
-                if (response.respuesta.split(":")[0] == "EXITO") {
-                    printFactura($("#tabla-factura"), anexo, response);
-                    $("#undatencion").val("");
-                    clearDesc("#peratencion-desc", "#undatencion-desc");
-                    resetTabla("#tabla-factura");
-                    window.location = "/UndAtencion/Index";
-                }
-            }, error: function (xhr, status) { errorAjax(xhr, status); }
-        });
-        $("#modal-pagar").modal("hide");
+        var ifv = $("input[name=forma-venta]:checked");
+        var ifp = $("input[name=forma-pago]:checked");
+        if (parseFloat($("#forma-pago-total").text()) == parseFloat($("#form-pagar-total").text())) {
+            var conc = $("#tabla-factura").data("codigo");
+            var anexo = obtenerAnexo($("#tabla-factura-anexo"));
+            var td = $("input[name=tipo-documentos]:checked").val();
+            var fp = new Array();
+            $("#tabla-forma-pago").find("tbody tr").each(function (index) {
+                var f = $(this);
+                var i = {
+                    "FORVENTA":f.data("fv") ,"FORPAGO": f.data("fp"),"TARJETA": f.data("tt"), "REFERENCIA": f.find("td").get(COLNROREF).innerHTML, "IMPORTE": f.find("td").get(COLIMPORTE).innerHTML, "VUELTO": f.data("cambio"),
+                };
+                fp.push(i);
+            });
+            $.ajax({
+                type: "post", dataType: 'json', cache: false, url: "/Conc/Facturar",
+                data: { codconc: conc, nroane: anexo.nrodoc, desane: anexo.desane, refane: anexo.refane, tipdoc: td, vp: JSON.stringify(fp) },
+                success: function (response, textStatus, jqXHR) {
+                    if (response.respuesta.split(":")[0] == "ERROR") { alert(response.respuesta); }
+                    if (response.respuesta.split(":")[0] == "EXITO") {
+                        printFactura($("#tabla-factura"), anexo, response);
+                        $("#undatencion").val("");
+                        clearDesc("#peratencion-desc", "#undatencion-desc");
+                        resetTabla("#tabla-factura");
+                        window.location = "/UndAtencion/Index";
+                    }
+                }, error: function (xhr, status) { errorAjax(xhr, status); }
+            });
+            $("#modal-pagar").modal("hide");
+        } else {alert("ERROR: Para poder realizar la transacci\u00F3n los totales debe coincidir");}
     });
 
     $("#conventa-btn-buscar").on("click", function () {
