@@ -173,6 +173,16 @@
           <Property Name="CODIGO" Type="char" MaxLength="2" Nullable="false" />
           <Property Name="DESCRIPCION" Type="varchar" MaxLength="80" />
         </EntityType>
+        <EntityType Name="fordoc">
+          <Key>
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODIGO" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="SERIE" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="LONGSERIE" Type="int" Nullable="false" />
+          <Property Name="LONGNUMERO" Type="int" />
+          <Property Name="COMPLETAR" Type="char" MaxLength="1" />
+        </EntityType>
         <EntityType Name="forpago">
           <Key>
             <PropertyRef Name="codcia" />
@@ -570,6 +580,14 @@
           <Property Name="prg" Type="char" MaxLength="5" Nullable="false" />
           <Property Name="tipdoc" Type="char" MaxLength="4" Nullable="false" />
         </EntityType>
+        <EntityType Name="tdtipdoc">
+          <Key>
+            <PropertyRef Name="TD" />
+            <PropertyRef Name="TIPDOC" />
+          </Key>
+          <Property Name="TD" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="TIPDOC" Type="char" MaxLength="4" Nullable="false" />
+        </EntityType>
         <EntityType Name="undatencion">
           <Key>
             <PropertyRef Name="CODCIA" />
@@ -676,6 +694,7 @@
           <Property Name="DESCRI_FINAL_EXPORTACION" Type="text" />
           <Property Name="SERIE" Type="char" MaxLength="4" />
           <Property Name="NRODOC" Type="char" MaxLength="10" />
+          <Property Name="CONSUMO" Type="char" MaxLength="10" />
         </EntityType>
         <EntityType Name="vend">
           <Key>
@@ -754,6 +773,7 @@
           <EntitySet Name="convensuc" EntityType="Self.convensuc" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="conventa" EntityType="Self.conventa" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="divatencion" EntityType="Self.divatencion" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="fordoc" EntityType="Self.fordoc" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="forpago" EntityType="Self.forpago" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="forventa" EntityType="Self.forventa" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="maesgen" EntityType="Self.maesgen" Schema="appbosa" store:Type="Tables" />
@@ -771,6 +791,7 @@
           <EntitySet Name="tarjetas" EntityType="Self.tarjetas" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="tdcom" EntityType="Self.tdcom" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="tdprgven" EntityType="Self.tdprgven" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="tdtipdoc" EntityType="Self.tdtipdoc" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="undatencion" EntityType="Self.undatencion" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="usrfile" EntityType="Self.usrfile" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="venc" EntityType="Self.venc" Schema="appbosa" store:Type="Tables" />
@@ -908,6 +929,8 @@
           <EntitySet Name="numpemi" EntityType="ModeloAplicacion.numpemi" />
           <EntitySet Name="tdprgven" EntityType="ModeloAplicacion.tdprgven" />
           <EntitySet Name="vend" EntityType="ModeloAplicacion.vend" />
+          <EntitySet Name="tdtipdoc" EntityType="ModeloAplicacion.tdtipdoc" />
+          <EntitySet Name="fordoc" EntityType="ModeloAplicacion.fordoc" />
         </EntityContainer>
         <EntityType Name="sucusr">
           <Key>
@@ -1445,6 +1468,7 @@
           <Property Name="DESCRI_FINAL_EXPORTACION" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
           <Property Name="SERIE" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
           <Property Name="NRODOC" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CONSUMO" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="numpos">
           <Key>
@@ -1552,6 +1576,24 @@
           <Property Name="EXPORTACION" Type="Decimal" />
           <Property Name="GRATUITA" Type="Decimal" />
           <Property Name="ROL" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tdtipdoc">
+          <Key>
+            <PropertyRef Name="TD" />
+            <PropertyRef Name="TIPDOC" />
+          </Key>
+          <Property Name="TD" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="TIPDOC" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="fordoc">
+          <Key>
+            <PropertyRef Name="CODIGO" />
+          </Key>
+          <Property Name="CODIGO" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="SERIE" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="LONGSERIE" Type="Int32" Nullable="false" />
+          <Property Name="LONGNUMERO" Type="Int32" />
+          <Property Name="COMPLETAR" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2110,6 +2152,7 @@
           <EntitySetMapping Name="venc">
             <EntityTypeMapping TypeName="ModeloAplicacion.venc">
               <MappingFragment StoreEntitySet="venc">
+                <ScalarProperty Name="CONSUMO" ColumnName="CONSUMO" />
                 <ScalarProperty Name="NRODOC" ColumnName="NRODOC" />
                 <ScalarProperty Name="SERIE" ColumnName="SERIE" />
                 <ScalarProperty Name="DESCRI_FINAL_EXPORTACION" ColumnName="DESCRI_FINAL_EXPORTACION" />
@@ -2285,6 +2328,25 @@
                 <ScalarProperty Name="ITEM" ColumnName="ITEM" />
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tdtipdoc">
+            <EntityTypeMapping TypeName="ModeloAplicacion.tdtipdoc">
+              <MappingFragment StoreEntitySet="tdtipdoc">
+                <ScalarProperty Name="TIPDOC" ColumnName="TIPDOC" />
+                <ScalarProperty Name="TD" ColumnName="TD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fordoc">
+            <EntityTypeMapping TypeName="ModeloAplicacion.fordoc">
+              <MappingFragment StoreEntitySet="fordoc">
+                <ScalarProperty Name="COMPLETAR" ColumnName="COMPLETAR" />
+                <ScalarProperty Name="LONGNUMERO" ColumnName="LONGNUMERO" />
+                <ScalarProperty Name="LONGSERIE" ColumnName="LONGSERIE" />
+                <ScalarProperty Name="SERIE" ColumnName="SERIE" />
+                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

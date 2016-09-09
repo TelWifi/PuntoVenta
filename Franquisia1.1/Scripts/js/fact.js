@@ -140,7 +140,7 @@ function printFactura(t, a, r) {
         tp.find("tbody").append(nf);
     });
     var separador = "<hr />";
-    var dp = $("<div style='width:" + ANCHO_IMPRESION + ";'><h4 style='text-align:center;'>EL CHALAN S.A.C.</h4><h5>"+r.direccion+"</h5><div>");
+    var dp = $("<div><h4 align=center>EL CHALAN S.A.C.</h4><h5 align=center>" + r.direccion + "</h5><div>");
     dp.append("Raz\u00F3n Social/Ape. y Nombres: " + a.desane + "<br/>RUC/DNI: " + a.nrodoc + "<br/>Direcci\u00F3n: " + a.refane + "<br/>"); dp.append(tp);
     var strf = "<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\" ><tr><td>Op. Gravadas</td><td style='text-align:right;'>{gravado}</td></tr><tr><td>Op. Exoneradas</td><td style='text-align:right;'>{exonerado}</td></tr><tr><td>Op. Inafectas</td><td style='text-align:right;'>{inafecto}</td></tr><tr><td>I.G.V. S./</td><td style='text-align:right;'>{IGV}</td></tr><tr><td>Importe Total a Pagar S./</td><td style='text-align:right;'>{TOTAL}</td></tr></table>";
     strf = strf.replace("{gravado}", parseFloat(r.gravado).toFixed(2));
@@ -155,8 +155,8 @@ function printFactura(t, a, r) {
         s += "<tr><td>" + obj["descripcion"] + " " + obj["RECIBIDO"] + " (Soles)</td></tr>";
         s += "<tr><td>Vuelto: S/." + parseFloat(obj["VUELTO"]).toFixed(2) + "</td></tr>";
     });
-    s += "<tr><td>Cajero: " + r.cajero + "</td></tr>";
-    s += "<tr><td>Vendedor: " + r.vendedor + "</td></tr>";
+    s += "<tr><td colspan='2'>Cajero: " + r.cajero + "</td></tr>";
+    s += "<tr><td colspan='2'>Vendedor: " + r.vendedor + "</td></tr>";
     taux.append($(s))
     dp.append($(separador));
     dp.append(taux);
@@ -580,7 +580,6 @@ $(document).ready(function () {
         $(this).siblings(".btn").removeClass("btn-primary");
         $(this).addClass("btn-primary");
         var input = $(this).children("input[type=radio]"); input.prop('checked', true);
-
         actFormPago(input);
     });
     $("#group-tipane .btn").on("click", function () {
@@ -638,6 +637,7 @@ $(document).ready(function () {
                     var f = addRow(t, e);
                     f.data("cambio", "0");
                     $("#forma-pago-total").text(sumar(t, COLIMPORTE).toFixed(2));
+                    $("#input-importe").val("00.00");
                 } else {alert("ERROR: No se puede agregar, porque el total a pagar ya coincide con la suma de los montos agregado");}
                 break;
         }

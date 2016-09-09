@@ -36,6 +36,8 @@
         <EntityTypeShape EntityType="ModeloAplicacion.numpemi" Width="1.5" PointX="13.375" PointY="13.75" />
         <EntityTypeShape EntityType="ModeloAplicacion.tdprgven" Width="1.5" PointX="15.375" PointY="0.75" />
         <EntityTypeShape EntityType="ModeloAplicacion.vend" Width="1.5" PointX="15.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.tdtipdoc" Width="1.5" PointX="15.375" PointY="14.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.fordoc" Width="1.5" PointX="17.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

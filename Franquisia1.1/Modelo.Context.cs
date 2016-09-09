@@ -56,5 +56,7 @@ namespace Franquisia1._1
         public DbSet<numpemi> numpemi { get; set; }
         public DbSet<tdprgven> tdprgven { get; set; }
         public DbSet<vend> vend { get; set; }
+        public DbSet<tdtipdoc> tdtipdoc { get; set; }
+        public DbSet<fordoc> fordoc { get; set; }
     }
 }

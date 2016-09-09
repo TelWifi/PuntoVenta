@@ -127,6 +127,8 @@
     <EntitySet Name="numpemi" EntityType="ModeloAplicacion.numpemi" />
     <EntitySet Name="tdprgven" EntityType="ModeloAplicacion.tdprgven" />
     <EntitySet Name="vend" EntityType="ModeloAplicacion.vend" />
+    <EntitySet Name="tdtipdoc" EntityType="ModeloAplicacion.tdtipdoc" />
+    <EntitySet Name="fordoc" EntityType="ModeloAplicacion.fordoc" />
   </EntityContainer>
   <EntityType Name="sucusr">
     <Key>
@@ -664,6 +666,7 @@
     <Property Name="DESCRI_FINAL_EXPORTACION" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
     <Property Name="SERIE" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
     <Property Name="NRODOC" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="CONSUMO" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="numpos">
     <Key>
@@ -771,5 +774,23 @@
     <Property Name="EXPORTACION" Type="Decimal" />
     <Property Name="GRATUITA" Type="Decimal" />
     <Property Name="ROL" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tdtipdoc">
+    <Key>
+      <PropertyRef Name="TD" />
+      <PropertyRef Name="TIPDOC" />
+    </Key>
+    <Property Name="TD" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+    <Property Name="TIPDOC" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="fordoc">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+    <Property Name="SERIE" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="LONGSERIE" Type="Int32" Nullable="false" />
+    <Property Name="LONGNUMERO" Type="Int32" />
+    <Property Name="COMPLETAR" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
   </EntityType>
 </Schema>

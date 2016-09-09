@@ -552,6 +552,7 @@
     <EntitySetMapping Name="venc">
       <EntityTypeMapping TypeName="ModeloAplicacion.venc">
         <MappingFragment StoreEntitySet="venc">
+          <ScalarProperty Name="CONSUMO" ColumnName="CONSUMO" />
           <ScalarProperty Name="NRODOC" ColumnName="NRODOC" />
           <ScalarProperty Name="SERIE" ColumnName="SERIE" />
           <ScalarProperty Name="DESCRI_FINAL_EXPORTACION" ColumnName="DESCRI_FINAL_EXPORTACION" />
@@ -727,6 +728,25 @@
           <ScalarProperty Name="ITEM" ColumnName="ITEM" />
           <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
           <ScalarProperty Name="CODCIA" ColumnName="CODCIA" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tdtipdoc">
+      <EntityTypeMapping TypeName="ModeloAplicacion.tdtipdoc">
+        <MappingFragment StoreEntitySet="tdtipdoc">
+          <ScalarProperty Name="TIPDOC" ColumnName="TIPDOC" />
+          <ScalarProperty Name="TD" ColumnName="TD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="fordoc">
+      <EntityTypeMapping TypeName="ModeloAplicacion.fordoc">
+        <MappingFragment StoreEntitySet="fordoc">
+          <ScalarProperty Name="COMPLETAR" ColumnName="COMPLETAR" />
+          <ScalarProperty Name="LONGNUMERO" ColumnName="LONGNUMERO" />
+          <ScalarProperty Name="LONGSERIE" ColumnName="LONGSERIE" />
+          <ScalarProperty Name="SERIE" ColumnName="SERIE" />
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

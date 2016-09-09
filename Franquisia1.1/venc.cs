@@ -86,5 +86,6 @@ namespace Franquisia1._1
         public string DESCRI_FINAL_EXPORTACION { get; set; }
         public string SERIE { get; set; }
         public string NRODOC { get; set; }
+        public string CONSUMO { get; set; }
     }
 }

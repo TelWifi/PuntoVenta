@@ -222,6 +222,9 @@
     <Compile Include="divatencion.cs">
       <DependentUpon>Modelo.tt</DependentUpon>
     </Compile>
+    <Compile Include="fordoc.cs">
+      <DependentUpon>Modelo.tt</DependentUpon>
+    </Compile>
     <Compile Include="forpago.cs">
       <DependentUpon>Modelo.tt</DependentUpon>
     </Compile>
@@ -292,6 +295,9 @@
       <DependentUpon>Modelo.tt</DependentUpon>
     </Compile>
     <Compile Include="tdprgven.cs">
+      <DependentUpon>Modelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tdtipdoc.cs">
       <DependentUpon>Modelo.tt</DependentUpon>
     </Compile>
     <Compile Include="undatencion.cs">

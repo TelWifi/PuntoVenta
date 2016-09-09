@@ -107,7 +107,8 @@ namespace Franquisia1._1.Controllers
                 venc.CSIT = "RF";
                 venc.IS_GR_REMITENTE = "N";
                 venc.CODMON = parreg.POS_MON_REFERENCIA;
-
+                venc.NRODOC = numdoc.ToString().Split('-')[0];
+                venc.CONSUMO = numdoc.ToString().Split('-')[1];
                 conc conc=db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codconc)).FirstOrDefault();
                 if (conc==null){ return Json(new { respuesta = "ERROR: Error el c\u00F3digo del consumo no existe" }, JsonRequestBehavior.AllowGet); }
                 if (conc.SITUACION.Equals("A"))
@@ -202,7 +203,16 @@ namespace Franquisia1._1.Controllers
                 if (np == null) { return null; }
                 np.NUMERO++;
                 db.SaveChanges();
-                return np.SERIE + "-" + np.NUMERO;
+                fordoc fd = db.fordoc.Where(a=>a.CODIGO.Equals("01")).FirstOrDefault();
+                if (fd!=null )
+                {
+                    if ( fd.COMPLETAR.Equals("S"))
+                    {
+                        return np.SERIE + "-" + np.NUMERO.ToString().PadLeft((int)fd.LONGNUMERO, '0');
+                    }
+                    return np.SERIE + "-" + np.NUMERO;
+                }
+                return null;
             }
             catch (System.Data.EntityException ex) { return null; }
             catch (Exception ex) { return null; }
