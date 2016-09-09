@@ -352,6 +352,8 @@ function initFormPago() {
     grnt = $("input[name='forma-pago']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-primary");
     $("#forpago").text(grnt.first().data("desc"));
     actFormPago(grnt.first());
+    grnt = $("input[name='tipo-anexo']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-info");
+    //actFormCrearAnexo(grnt.first());
 }
 $(document).ready(function () {
     IGV = obtenerIGV();
@@ -578,8 +580,14 @@ $(document).ready(function () {
         $(this).siblings(".btn").removeClass("btn-primary");
         $(this).addClass("btn-primary");
         var input = $(this).children("input[type=radio]"); input.prop('checked', true);
-        
+
         actFormPago(input);
+    });
+    $("#group-tipane .btn").on("click", function () {
+        $(this).siblings(".btn").removeClass("btn-info");
+        $(this).addClass("btn-info");
+        var input = $(this).children("input[type=radio]"); input.prop('checked', true);
+        //actFormCrearAnexo;
     });
 
     $("#forma-pago-agregar").on("click", function () {

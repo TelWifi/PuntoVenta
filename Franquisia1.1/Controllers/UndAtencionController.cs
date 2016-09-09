@@ -23,6 +23,8 @@ namespace Franquisia1._1.Controllers
                 ViewBag.divs = divs;
                 parreg pr= db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
                 ViewBag.parpwd = pr.POS_IS_CLAVE_PERATENCION;
+                ViewBag.cia = db.ciafile.Where(a => a.idcia.Equals(codcia)).FirstOrDefault();
+                ViewBag.sucursal = db.sucursal.Where(a => a.codigo.Equals(sucursal)).FirstOrDefault();
                 return View();
             }
             else { return RedirectToAction("ErrorPermiso", "Error"); }

@@ -1,6 +1,6 @@
 var MSG_SELECCIONE_UNDATENCION = "RECOMENDACION: Seleccione una unidad de atenci\u00F3n";var MSG_SELECCIONE_DIVATENCION = "RECOMENDACION: Seleccione una divisi\u00F3n de atenci\u00F3n";var MSG_DESEA_APERTURAR = "La unidad de atenci\u00F3n No est\u00E1 aperturada\n\u00BFDesea aperturarla?";var MSG_ERROR_SOLO_NUMEROS = "ERROR: <attr> solo debe contener caracteres num\u00E9ricos";var MSG_DESEA_ANULAR = "\u00BFDesea anular el consumo?";var MSG_NO_PUEDE_SER_MENOR_QUE = "ERROR: La cantidad ingresada no puede ser menor que {text}";var MSG_CAMPOS_NULOS_VACIOS = "ERROR: Los campos no pueden ser nulos o vac\u00EDos";var MSG_NO_NULO_VACIO = "ERROR: <attr> no puede ser nulo o vac\u00EDo";var MSG_SIN_ELEMENTOS = "ERROR: No existen elementos";var MSG_NO_EXISTE = "ERROR: No existe <attr>";var MSG_DESEA_CAMBIAR_UNDATENCION = "\u00BFSeguro que desea cambiar a otra unidad de atenci\u00F3n";var MSG_ANEXO_NROCAR_NRODOC = "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres";
 var IMG_DEFAULT = "iVBORw0KGgoAAAANSUhEUgAAACUAAAAdCAYAAAAtt6XDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA0SURBVFhH7c4xAQAwDASh+jf9tcCY4VDA20GlVClVSpVSpVQpVUqVUqVUKVVKlVKlVCmzffdHtC3tn87PAAAAAElFTkSuQmCC";
-var ANCHO_IMPRESION = "264px"; var TAMANO_FUENTE = "10px"; var CARSUBSTR = 3;
+var ANCHO_IMPRESION = "264px"; var TAMANO_FUENTE = "13px"; var CARSUBSTR = 3;
 var Validar = {
     RUC: function (ruc) {
         var r = /\d{11}/;
@@ -10,19 +10,11 @@ var Validar = {
             for (var i = 0; i < ultimoIndex; i++) { sumaTotal += (parseInt(ruc.charAt(i)) * parseInt(factores.charAt(i))); }
             residuo = sumaTotal % 11;
             var resta = (11 - residuo), digChk;
-            if ((resta == 10)){
-                digChk = 0;
-            }else if ((resta == 11)){
-                digChk = 1;
-            }
-            else{
-                digChk = resta;
-            }
-            if ((ruc.charAt(ultimoIndex) == digChk)){return true;}
-            else{
-                alert("ERROR: El RUC " + ruc + " NO es v\u00E1lido.");
-                return false;
-            }
+            if ((resta == 10)) { digChk = 0;}
+            else if ((resta == 11)) { digChk = 1; }
+            else { digChk = resta;}
+            if ((ruc.charAt(ultimoIndex) == digChk)) { return true;}
+            else { alert("ERROR: El RUC " + ruc + " NO es v\u00E1lido."); return false;}
         }
         alert("ERROR: El RUC NO es v\u00E1lido, debe constar de 11 caracteres num\u00E9ricos.");
         return false;
@@ -71,26 +63,29 @@ function print(div) {
     mw.document.write('<html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Imprimir Factura</title>');
     mw.document.write('</head><body style=\"font-family: Arial;font-size:' + TAMANO_FUENTE + '; width:' + ANCHO_IMPRESION + ';\">');
     mw.document.write($(div).html());
-    mw.document.write("<script>window.onload = function() { print(); /*close();*/ };</script>");
+    mw.document.write("<script>window.onload = function() { print(); close(); };</script>");
     mw.document.write('</body></html>');
-    //mw.document.close(); // necessary for IE >= 10
+    mw.document.close(); // necessary for IE >= 10
     mw.focus(); // necessary for IE >= 10
     return true;
 }
 function printPreFactura(t) {
-    var itd = "Nro. Items: ".concat(t.find("tbody tr").length);
-    var ttld = "Total: ".concat(sumar(t, COLSUBTOTAL).toFixed(2));
-    var tp = $("<table width=100% border=0 style=\"font-size:" + TAMANO_FUENTE + ";\"><thead><tr> <th>Cant.</th> <th style=\"text-align:left;\">Producto</th> <th style='text-align:right;'>Precio</th> <th style='text-align:right;'>Sub</th></tr></thead><tbody></tbody><tfoot><tr><td colspan=\"2\">" + itd + "</td> <td colspan=\"2\">" + ttld + "</td></tr></tfoot></table>");
+    var itd = t.find("tbody tr").length;
+    var tp = $("<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\"><thead><tr> <th>Cant.</th> <th style=\"text-align:left;\">Producto</th></tr></thead><tbody></tbody></table>");
     t.find("tbody tr").each(function () {
         var nf = $("<tr></tr>");
         nf.append($("<td style='text-align:center;'></td>").append($(this).find("td input[type=number]").val()));
         nf.append($("<td></td>").append($(this).find("td").get(COLPRODUCTO).innerHTML));
-        nf.append($("<td style='text-align:right;'></td>").append($(this).find("td").get(COLPRECIO).innerHTML));
-        nf.append($("<td style='text-align:right;'></td>").append($(this).find("td").get(COLSUBTOTAL).innerHTML));
         tp.find("tbody").append(nf);
     });
-    var dp = $("<div  style='width:" + ANCHO_IMPRESION + ";'><h4 style='text-align:center;'>Pre Factura</h4><div>");
-    dp.append("Raz\u00F3n Social/Ape. y Nombres:<br/>RUC/DNI:<br/>Direcci\u00F3n:<br/>"); dp.append(tp);
+    var separador = "<hr />";
+    var dp = $("<div style='width:" + ANCHO_IMPRESION + ";'><h4 style='text-align:center;'>EL CHALAN S.A.C.</h4><div>");
+    dp.append(tp);
+    var strf = "<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\" ><tr><td>{ITEMS}</td><td></td></tr></table>";
+    strf = strf.replace("{ITEMS}",  "Items: ".concat(itd));
+    taux = $(strf)
+    dp.append($(separador));
+    dp.append(taux);
     if (!print(dp)) { alert("ERROR: Error al imprimir"); }
 }
 function cambiarUndatencion(cd,su, sd, nu, nd, udes){

@@ -76,7 +76,7 @@
                 <div style="padding-top:5px;"></div>
                 <div class="btn-group btn-group-xs btn-group-justified">
                     <a id="anular-factura" class="btn btn-danger">Anular</a>
-                    <a class="btn btn-sm btn-warning" href="/UndAtencion/Index">Regresar</a>
+                    <a class="btn btn-sm btn-warning" href="/UndAtencion/Index"><span class="glyphicon glyphicon-arrow-left"></span> Regresar</a>
                 </div>
             </div>
         </div>
@@ -101,7 +101,6 @@
                             <option value="@punemi.codigo">@punemi.descripcion</option>}
                         </select>
                     </label>
-
                 </div>
             </div>
             <div class="row panel panel-default text-center" style="margin-bottom:0px;">
@@ -149,7 +148,7 @@
                         <a id="cambiar-undatencion" class="btn btn-secundario btn-secundario-bordes">Cambiar Und. Atención</a>
                         <a href="/UndAtencion/Consumos?div=@ViewBag.div&und=@ViewBag.und&per=@ViewBag.per" class="btn btn-secundario btn-secundario-bordes">M. Consumos</a>
                     </div>
-                    <a class="btn btn-danger" href="/Home/OffLogin">Salir</a>
+                    <a class="btn btn-danger" href="/Home/OffLogin"><span class="glyphicon glyphicon-remove"></span> Salir</a>
                 </div>
                 <div class="pull-right">
                     <img class="img-responsive logo" src="/Content/images/logo.png" alt="Neinco">
@@ -215,15 +214,12 @@
                                     <input type="text" id="input-importe" class="form-control-static"/>
                                 </div>
                                 <div id="modal-pagar-principal">
-
                                 </div>
                             </div>
                             <div id="modal-pagar-secundario" class="col-sm-6">
-
                             </div>
                         </div>
                     </div>
-                    
                     <div class="row">
                         <button id="form-pagar-btn-aceptar" class="btn btn-danger">Aceptar</button>
                         <button id="forma-pago-agregar" class="btn btn-success" data-codforma="">Agregar</button>
@@ -268,31 +264,58 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                Agregar Cliente<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <label>Agregar Cliente</label> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="panel panel-body">
-                    <div class="form form-horizontal">
-                        <div id="form-anexo" class="form-group">
-                            <label>Razón Social/Apellidos y Nombres</label><input type="text" id="form-anexo-desane" class="form-control" placeholder="Ingrese Razón Social o Apellidos y Nombres" autofocus />
-                        </div>
-                        <div class="form-group">
-                            <label>Tipos de Documento</label><br />
-                            <div class="radio-inline">
-                                <input type="radio" id="form-anexo-tipdni" name="form-anexo-tipdoc" value="DNI" checked /><label>  DNI</label>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div id="group-tipane" class="btn-group btn-group-vertical">
+
+
+                                <div class="btn btn-default">
+                                    <input name="tipo-anexo" type="radio" class="hide" />wadwad
+                                </div>
+                                <div class="btn btn-default">
+                                    <input name="tipo-anexo" type="radio" class="hide" />wadwad
+                                </div>
+                                <div class="btn btn-default">
+                                    <input name="tipo-anexo" type="radio" class="hide" />wadwad
+                                </div>
+
                             </div>
-                            <div class="radio-inline">
-                                <input type="radio" id="form-anexo-tipruc" name="form-anexo-tipdoc" value="RUC" /><label>  RUC</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <div id="modal-crearane-principal" class="form form-horizontal">
+                                <div class="form-group">
+                                    <div class="row col-sm-6">
+                                        <label id="lbl-nrodoc">DNI:</label>
+                                        <input id="input-nrodoc" type="number" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Nombre 1:</label>
+                                            <input id="input-nom1" type="number" class="form-control" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Nombre 2:</label>
+                                            <input id="input-nom1" type="number" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dirección</label>
+                                    <textarea id="form-actruc-refane" rows="2" class="form-control" placeholder="Ingrese dirección"></textarea>
+                                </div>
+                                
+
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary">Guardar</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Número de Documento: </label><input type="number" id="form-anexo-nrodoc" class="input-sm" placeholder="Ingrese el número del documento" required/>
-                        </div>
-                        <div class="form-group">
-                            <label>Dirección</label><input type="text" id="form-anexo-refane" class="form-control" placeholder="Ingrese dirección"/>
-                        </div>
-                        <div class="form-group">
-                            <button id="form-anexo-btn-crear" class="btn btn-primary">Agregar</button>
                         </div>
                     </div>
                 </div>
@@ -313,7 +336,7 @@
                             <div class="row">
                                 <div class="col-sm-5">
                                     <label>DNI:</label>
-                                    <input type="number" id="form-actdni-nrodoc" class="form-control" placeholder="Ingrese DNI" readonly />
+                                    <input type="number" id="form-actdni-nrodoc" class="form-control" placeholder="Ingrese DNI" disabled />
                                 </div>
                             </div>
                         </div>

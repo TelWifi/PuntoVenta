@@ -1,8 +1,26 @@
 ﻿@{
     ViewBag.Title = "Punto de Venta";
 }
-<header class="text-center">
+<header class="text-center" >
     El Chalan S.A.C
+    <div class="pull-right">
+        <a class="btn btn-danger" href="/Home/OffLogin"><span class="glyphicon glyphicon-remove"></span> Salir</a>
+    </div>
+    <div style="font-size:0.5em">
+        <label class="info-divider">
+            Usuario: @Session["Loged_usrfile_idusr"].ToString()
+        </label>
+        <label class="info-divider">
+            Suc: @ViewBag.sucursal.descripcion
+        </label>
+        <label class="info-divider">
+            Cia: @ViewBag.cia.descia
+        </label>
+        <label class="info-divider">
+            Rol: @Session["Loged_usrfile_rol"].ToString()
+        </label>
+    </div>
+       
 </header>
 
 <ul id="divisiones" class="nav nav-tabs" style="font-size:small;">
