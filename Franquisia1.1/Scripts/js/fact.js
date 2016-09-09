@@ -1,4 +1,4 @@
-var COLITEMS = 0; var COLPRODUCTO = 1; var COLPRECIO = 2; var COLTIPOVV = 3; var COLCANTIDAD = 4; var COLSUBTOTAL = 5; var COLBTNELIMINAR = 6; var COLFORMAPAGO = 0; var COLTIPOTAR = 1; var COLNROREF = 2; var COLIMPORTE = 3; var IGV = 18;
+var COLITEMS = 0; var COLPRODUCTO = 1; var COLPRECIO = 2; var COLTIPOVV = 3; var COLCANTIDAD = 4; var COLSUBTOTAL = 5; var COLBTNELIMINAR = 6; var COLFORMAVENTA = 0; var COLFORMAPAGO = 1; var COLTIPOTAR = 2; var COLNROREF = 3; var COLIMPORTE = 4; var IGV = 18;
 function actualizarTotalCheckbox(t, cs, r) {
     var s = 0;
     $(t).find("tbody tr").each(function (index) {if ($(this).find("input[type=checkbox]").prop("checked")) { s += parseFloat($(this).find("td").get(cs).innerHTML);}});
@@ -346,18 +346,24 @@ function actFormPago(i) {
     p.empty(); s.empty();
     switch (o.val()) {
         case "C":
+            if (i.val() == undefined) {
+                i = $("input[name=forma-pago]").first();
+                i.prop('checked', true);
+                i.parent().addClass("btn-primary");
+            }
+            if (i.data("istarjeta") == "S") { getIsTarjeta(p, s); }
+            if (i.data("isreferencia") == "S") { getIsNroReferencia(p, s); }
+            if (i.data("isefectivo") == "S") { getIsEfectivo(p, s); }
+            $("#forpago").text(i.data("desc"));
             
-            
-            if (i.data("isefectivo") == "S") { getIsEfectivo(p, s);}
-            if (i.data("istarjeta") == "S") { getIsTarjeta(p, s);}
-            if (i.data("isreferencia") == "S") { getIsNroReferencia(p, s);}
             break;
         case "P":
-
+            i.prop('checked', false);
+            i.parent().removeClass("btn-primary");
+            $("#input-importe").val((parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2));
+            $("#forpago").text("");
             break;
     }
-    
-    
 }
 function initFormPago() {
     var grnt = $("input[name='forma-venta']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-success");
@@ -591,42 +597,45 @@ $(document).ready(function () {
         $(this).siblings(".btn").removeClass("btn-primary");
         $(this).addClass("btn-primary");
         var input = $(this).children("input[type=radio]"); input.prop('checked', true);
-        $("#forpago").text(input.data("desc"));
+        
         actFormPago(input);
     });
 
     $("#forma-pago-agregar").on("click", function () {
-        var btn = $(this);
-        var codforma = btn.data("codforma");
-        if (!Validar.Dato(codforma)) {return alert("Recomendaci\u00F3n: Seleccione una forma de pago");}
-        var tabla = "#tabla-forma-pago";
-        var seleccion = $(".seleccion-tipo-pago[data-codigo=" + codforma + "]");
-        var formapago = seleccion.children("a").first().text();
-        var padre = $("#tab-tipo-pago-" + codforma);
-        var importe = padre.find(".importe").val();
-        var nroref = padre.find(".nro-ref").val();
-        var tipotarjeta; var codtipotar="";
-        if (!importe.match(/^[0-9]+([.][0-9]+)?$/)) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "El importe")); }
-        if (seleccion.data("istarjeta") == "S") {
-            tipotarjeta = padre.find(".tarjeta").text(); codtipotar = padre.find(".tarjeta").data("codigo");
-            if (!Validar.Dato(tipotarjeta)) {return alert(MSG_NO_NULO_VACIO.replace("<attr>","El tipo de tarjeta"));}
-            if (!Validar.Dato(nroref)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El n\u00FAmero de referenc\u00EDa")); }
-            if (!nroref.match(/^[0-9]+$/)) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>","El n\u00FAmero de referenc\u00EDa")); }
-        }else { nroref = ""; }
-        if (!Validar.Dato(importe)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El importe")); }
-        if (!Validar.Dato(formapago)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de pago")); }
-        var montoact = sumar($(tabla), COLIMPORTE);
-        if (parseFloat($("#forma-pago-total").text()) < parseFloat($("#form-pagar-total").text())) {
-            if (montoact+parseFloat(importe) - parseFloat($("#form-pagar-total").text())>0) { importe = parseFloat($("#form-pagar-total").text()) - montoact; }
-            elementos = [formapago,tipotarjeta, nroref, parseFloat(importe).toFixed(2)];
-            var fila = addRow($(tabla), elementos);
-            if (!Validar.Dato(padre.find(".cambio").val())) { fila.data("cambio", "0"); }
-            else { fila.data("cambio", padre.find(".cambio").val()); }
-            fila.data("forpago", codforma); fila.data("tipotar", codtipotar);
-            $("#forma-pago-total").text(sumar($(tabla), COLIMPORTE).toFixed(2));
-            padre.find(".importe").val(""); padre.find(".cambio").val(""); padre.find(".nro-ref").val(""); padre.find(".tarjeta").text("");
-            padre.find("#divtarjetas .btn-success").removeClass("btn-success")
-        } else { alert("Error: No se puede agregar, porque el total a pagar ya coincide con los montos agregado"); }
+        var ifv = $("input[name=forma-venta]:checked");
+        var ifp = $("input[name=forma-pago]:checked");
+        if (!Validar.Dato(ifv.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de venta"));}
+        var t = $("#tabla-forma-pago");
+        var e = new Array();
+        var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2);
+        e.push(ifv.data("desc"));
+        switch (ifv.val()) {
+            case "C":
+                if (ifv.val() == "C" && !Validar.Dato(ifp.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de pago")); }
+                if (aux > 0) {
+                    e.push(ifp.data("desc"));
+                    var pp = $("#modal-pagar-principal");
+                    if (ifp.data("istarjeta") == "S") { e.push(pp.find(".tarjeta").text());}
+                    else { e.push(""); }
+                    if (ifp.data("isreferencia") == "S") { e.push(pp.find(".txt-nro-ref").val()); }
+                    else { e.push(""); }
+                    e.push($("#input-importe").val());
+                    var f = addRow(t, e);
+                    if (ifp.data("isefectivo") == "S") { f.data("cambio", $("#lbl-vuelto").text());}
+                    else { f.data("cambio", "0"); }
+                    $("#forma-pago-total").text(sumar(t,COLIMPORTE).toFixed(2));
+                } else {alert("ERROR: No se puede agregar, porque el total a pagar ya coincide con la suma de los montos agregado");}
+                break;
+            case "P":
+                if (aux > 0) {
+                    e.push(""); e.push(""); e.push("");
+                    e.push($("#input-importe").val());
+                    var f = addRow(t, e);
+                    f.data("cambio", "0");
+                    $("#forma-pago-total").text(sumar(t, COLIMPORTE).toFixed(2));
+                } else {alert("ERROR: No se puede agregar, porque el total a pagar ya coincide con la suma de los montos agregado");}
+                break;
+        }
     });
 
     $("#form-pagar-btn-aceptar").on("click", function () {
