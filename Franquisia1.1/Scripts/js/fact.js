@@ -301,29 +301,82 @@ function initTipDoc(n) {
         type: "get", dataType: 'json', cache: false, url: '/Parreg/TipDocDefault', data: { },
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.split(":")[0]=="EXITO") {
-                var td = $("input[name='" + n + "'][ value='"+response.codigo+"']");
-                td.prop('checked', true); td.parent().addClass("active");
+                var td = $("input[name='" + n + "'][ value='"+response.codigo+"']"); td.prop('checked', true); td.parent().addClass("active");
             }
         },
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
+function getIsTarjeta(p,s) {
+    var html = $("<div class='form-group'><label>Tarjeta: </label><label class='tarjeta'></label></div>");
+    p.append(html);
+    obtenerTarjetas(s);
+    $("#input-importe").val((parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2));
+    $("#input-importe").attr('disabled', false);
+}
+function getIsNroReferencia(p,s) {
+    var i = $("<input type='number' placeholder='Ingrese Nro. de referencia' class='txt-nro-ref form-control-static'>");
+    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
+        tecladoNumerico(i);
+    }
+    p.append($("<div class='form-group'><label>Nro. referencia: </label></div>").append(i));
+    $("#input-importe").attr('disabled', false);
+}
+function getIsEfectivo(p,s) {
+    html = $("<div id='denominaciones'><label>Denominaciones</label><div class='efectivo text-center'><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 200</a><a>S/. 100</a><a>S/. 50</a><a>S/. 20</a></div><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 10</a><a>S/. 5</a><a>S/. 2</a><a>S/. 1</a></div><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 0.50</a><a>S/. 0.20</a><a>S/. 0.10</a><aux class='btn btn-danger input-reset'>Limpiar</aux></div></div></div>;");
+    html.find("a").addClass("btn btn-secundario btn-secundario-bordes");
+    s.append(html);
+    p.append("<div class='form-group'><label>Vuelto: </label> <label id='lbl-vuelto'>00.00</label></div>");
+    $("#input-importe").val("0.00");
+    html.find('a').on("click", function () {
+        var ipI = $("#input-importe"); var ipC = p.find("#lbl-vuelto"); var e = parseFloat($(this).text().split(' ')[1]); var ef = parseFloat(ipI.val());
+        if (isNaN(ef)) { ef = 0; } var nef = e + ef; ipI.val(parseFloat(nef).toFixed(2));
+        var nc = nef - (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2);
+        if (nc >= 0) { ipC.text(nc.toFixed(2)); }
+    });
+    html.find(".input-reset").on("click", function () {
+        $("#input-importe").val("00.00"); p.find("#lbl-vuelto").text("00.00");
+    });
+    $("#input-importe").attr('disabled', true);
+}
+function actFormPago(i) {
+    var o = $("input[name=forma-venta]:checked");
+    var p = $("#modal-pagar-principal");
+    var s = $("#modal-pagar-secundario");
+    p.empty(); s.empty();
+    switch (o.val()) {
+        case "C":
+            
+            
+            if (i.data("isefectivo") == "S") { getIsEfectivo(p, s);}
+            if (i.data("istarjeta") == "S") { getIsTarjeta(p, s);}
+            if (i.data("isreferencia") == "S") { getIsNroReferencia(p, s);}
+            break;
+        case "P":
 
+            break;
+    }
+    
+    
+}
+function initFormPago() {
+    var grnt = $("input[name='forma-venta']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-success");
+    $("#forventa").text(grnt.first().data("desc"));
+    grnt = $("input[name='forma-pago']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-primary");
+    $("#forpago").text(grnt.first().data("desc"));
+    actFormPago(grnt.first());
+}
 $(document).ready(function () {
     IGV = obtenerIGV();
     initTipDoc("tipo-documentos");
     obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) {; });
-    var grnt = $("input[name=naturaleza-opcion]:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("active");
+    initFormPago();
     
-    $("#divatencion").on("change", function () {
-        $("#undatencion").val(""); resetTabla("#tabla-factura"); clearDesc("#peratencion-desc", "#undatencion-desc");
-    });
+
+    $("#divatencion").on("change", function () { $("#undatencion").val(""); resetTabla("#tabla-factura"); clearDesc("#peratencion-desc", "#undatencion-desc");});
     $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
-        $("input[type='text']").keyboard();
-        tecladoNumerico($("input[type='number']"));
-    }
+    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { $("input[type='text']").keyboard(); tecladoNumerico($("input[type='number']"));}
     $(".anexo").find(".anexo-nrodoc").bind('accepted', function (e, keyboard, el) { getBDAnexo($(this).parent().parent()); });
     $(".anexo").find(".anexo-nrodoc").keypress(function (e) { if (e.which == 13) { getBDAnexo($(this).parent().parent()); } });
 
@@ -369,7 +422,7 @@ $(document).ready(function () {
                     }
                 }, error: function (xhr, status) { errorAjax(xhr, status); }
             });
-        } else { alert("ERROR: No se puede actualizar porque no esta registrado"); }
+        }
     });
     $("#btn-actdni").on("click", function () {
         a = obtenerAnexo($("#tabla-factura-anexo"));
@@ -495,11 +548,6 @@ $(document).ready(function () {
         }
     });
 
-    $(".seleccion-categoria").on("click", function () {
-        var codigo = $(this).data("codigo");
-        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo));
-    });
-
     $("#empleados li").on("click", function () {
         $("#modal-seleccionar-peratencion").modal("hide");
         var sld = $(this);
@@ -532,30 +580,19 @@ $(document).ready(function () {
             clearAnexo($("#tabla-factura-anexo"));
         }   
     });
-    $("#modal-pagar-naturaleza .btn").on("click", function () {
-        $(this).siblings(".btn").removeClass("active");
-        $(this).addClass("active");
-        $(this).children("input[type=radio]").prop('checked', true);
-        $("input[name=naturaleza-opcion]:checked").change();
+    $("#group-forventa .btn").on("click", function () {
+        $(this).siblings(".btn").removeClass("btn-success");
+        $(this).addClass("btn-success");
+        var input = $(this).children("input[type=radio]");input.prop('checked', true);
+        $("#forventa").text(input.data("desc"));
+        actFormPago($("input[name=forma-pago]:checked"));
     });
-
-    $("input[name=naturaleza-opcion]").on("change", function () {
-        o = $(this);
-        if (o.val() == "C") {
-            var p = $("#tab-tipo-pago-" + $("#forma-pago-agregar").data("codforma"));
-            p.find(".importe").val("");
-            p.find(".nro-ref").val("");
-            p.find(".cambio").val("");
-            $("#naturaleza-c").removeClass("hide");
-            $("#forma-pago-agregar").removeClass("hide");
-        } else if (o.val() == "P") {
-            $("#forma-pago-agregar").addClass("hide");
-            $("#naturaleza-c").addClass("hide");
-            $("#tabs-forma-pago").tab();
-            $("#form-pagar-total").text(parseFloat($("#tabla-factura-total").text()).toFixed(2));
-            $("#forma-pago-total").text("0.00");
-            $("#tabla-forma-pago").find("tbody tr").remove();
-        }
+    $("#group-forpago .btn").on("click", function () {
+        $(this).siblings(".btn").removeClass("btn-primary");
+        $(this).addClass("btn-primary");
+        var input = $(this).children("input[type=radio]"); input.prop('checked', true);
+        $("#forpago").text(input.data("desc"));
+        actFormPago(input);
     });
 
     $("#forma-pago-agregar").on("click", function () {
@@ -590,17 +627,6 @@ $(document).ready(function () {
             padre.find(".importe").val(""); padre.find(".cambio").val(""); padre.find(".nro-ref").val(""); padre.find(".tarjeta").text("");
             padre.find("#divtarjetas .btn-success").removeClass("btn-success")
         } else { alert("Error: No se puede agregar, porque el total a pagar ya coincide con los montos agregado"); }
-    });
-
-    $(".seleccion-tipo-pago").on("click", function () {
-        seleccion = $(this);
-        $("#forma-pago-agregar").data("codforma", seleccion.data("codigo"));
-        switch (seleccion.data("codigo")) {
-            case "001":
-                getFormEfectivo($("#tab-tipo-pago-" + seleccion.data("codigo"))); break;
-            case "002":
-                getFormTarjeta($("#tab-tipo-pago-" + seleccion.data("codigo")), seleccion.data("istarjeta")); break;
-        }
     });
 
     $("#form-pagar-btn-aceptar").on("click", function () {
@@ -642,11 +668,6 @@ $(document).ready(function () {
         $("#modal-pagar").modal("hide");
     });
 
-    
-
-
-
-
     $("#conventa-btn-buscar").on("click", function () {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });
@@ -655,5 +676,9 @@ $(document).ready(function () {
     });
     $('#conventa-texto').bind('accepted', function (e, keyboard, el) {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
+    });
+    $(".seleccion-categoria").on("click", function () {
+        var codigo = $(this).data("codigo");
+        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo));
     });
 });

@@ -162,7 +162,7 @@ function aperturarUndAtencion(d, u, p, c, f) {
     });
 }
 function tecladoNumerico(s, n) {
-    if (!Validar.Dato(n)) { n = 11;}
+    if (!Validar.Dato(n)) { n = 11; }
 
     s.keyboard({
         layout: 'custom',
@@ -177,6 +177,26 @@ function tecladoNumerico(s, n) {
         },
         maxLength: n,
         restrictInput: true,
+        useCombos: false,
+    });
+}
+function tecladoNumericoDecimal(s, n) {
+    if (!Validar.Dato(n)) { n = 11; }
+
+    s.keyboard({
+        layout: 'custom',
+        customLayout: {
+            'normal': [
+                '1 2 3 ',
+                '4 5 6',
+                '7 8 9',
+                '0 {bksp}',
+                '{a} {c}'
+            ]
+        },
+        maxLength: n,
+        restrictInput: true,
+        restrictInclude: '.',
         useCombos: false,
     });
 }

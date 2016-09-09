@@ -180,31 +180,50 @@
                         </table>
                     </div>
                     <div class="row">
-                        <div id="modal-pagar-naturaleza" class="btn-group btn-group-xs btn-group-justified form-group">
+                        <div id="group-forventa" class="btn-group btn-group-xs btn-group-justified form-group">
                             @foreach (var fv in ViewBag.forventa)
                             {
-                                <div class="btn btn-info">
-                                    <input type="radio" name="naturaleza-opcion" value="@fv.naturaleza" data-codigo="@fv.codigo" class="hide" />@fv.descripcion
+                                <div class="btn btn-default">
+                                    <input name="forma-venta" value="@fv.naturaleza" data-codigo="@fv.codigo" data-desc="@fv.descripcion" type="radio" class="hide" />@fv.descripcion
                                 </div>
                             }
                         </div>
                     </div>
-                    <div id="naturaleza-c">
+                    <div class="row">
+                        <div id="group-forpago" class="btn-group btn-group-xs btn-group-justified form-group">
+                            @foreach (var fp in ViewBag.forpago)
+                            {
+                                <div class="btn btn-default">
+                                    <input name="forma-pago" value="@fp.codigo" data-codigo="@fp.codigo" data-desc="@fp.descripcion" data-istarjeta="@fp.is_tarjeta" data-isefectivo="@fp.is_efectivo" data-isreferencia="@fp.is_referencia" type="radio" class="hide" />@fp.descripcion
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="form form-horizontal">
+                        <div class="form-group">
+                            <div class="pull-left">
+                                <label>Forma de venta: </label><label id="forventa"></label>
+                            </div>
+                            <div class="pull-right">
+                                <label>Forma de pago: </label><label id="forpago"></label>
+                            </div>
+                        </div>
                         <div class="row">
-                            <ul id="tabs-forma-pago" class="nav nav-tabs">
-                                @foreach (var fp in ViewBag.forpago)
-                            {
-                                    <li class="seleccion-tipo-pago small" data-codigo="@fp.codigo" data-istarjeta="@fp.is_tarjeta"><a data-toggle="tab" href="#tab-tipo-pago-@fp.codigo">@fp.descripcion</a></li>
-                            }
-                            </ul>
-                            <div class="tab-content">
-                                @foreach (var fp in ViewBag.forpago)
-                            {
-                                    <div id="tab-tipo-pago-@fp.codigo" class="tab-pane fade in"><div id="panel-tipo-pago-@fp.codigo" class="row panel panel-body" style="padding-top:0px;"></div></div>
-                            }
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Importe: </label>
+                                    <input type="text" id="input-importe" class="form-control-static text-right"/>
+                                </div>
+                                <div id="modal-pagar-principal">
+
+                                </div>
+                            </div>
+                            <div id="modal-pagar-secundario" class="col-sm-6">
+
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row">
                         <button id="form-pagar-btn-aceptar" class="btn btn-danger">Aceptar</button>
                         <button id="forma-pago-agregar" class="btn btn-success" data-codforma="">Agregar</button>
