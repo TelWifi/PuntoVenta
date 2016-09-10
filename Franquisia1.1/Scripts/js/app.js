@@ -69,13 +69,13 @@ function print(div) {
     mw.focus(); // necessary for IE >= 10
     return true;
 }
-function printPreFactura(t) {
+function printPreFactura(t, f) {
     var itd = t.find("tbody tr").length;
     var tp = $("<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\"><thead><tr> <th>Cant.</th> <th style=\"text-align:left;\">Producto</th></tr></thead><tbody></tbody></table>");
     t.find("tbody tr").each(function () {
         var nf = $("<tr></tr>");
         nf.append($("<td style='text-align:center;'></td>").append($(this).find("td input[type=number]").val()));
-        nf.append($("<td></td>").append($(this).find("td").get(COLPRODUCTO).innerHTML));
+        nf.append($("<td></td>").append($(this).find("td").get(f.CPRODUCTO).innerHTML));
         tp.find("tbody").append(nf);
     });
     var separador = "<hr />";
