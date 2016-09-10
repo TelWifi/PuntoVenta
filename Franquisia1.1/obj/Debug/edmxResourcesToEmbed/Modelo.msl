@@ -157,6 +157,7 @@
     <EntitySetMapping Name="conc">
       <EntityTypeMapping TypeName="ModeloAplicacion.conc">
         <MappingFragment StoreEntitySet="conc">
+          <ScalarProperty Name="FACTURANDO" ColumnName="FACTURANDO" />
           <ScalarProperty Name="USER" ColumnName="USER" />
           <ScalarProperty Name="SITUACION" ColumnName="SITUACION" />
           <ScalarProperty Name="HORA" ColumnName="HORA" />

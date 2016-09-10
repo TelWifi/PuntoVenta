@@ -74,15 +74,19 @@ namespace Franquisia1._1.Controllers
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                         conc conc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codigo)).FirstOrDefault();
                         if (conc == null) { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
-                        item = item.PadLeft(4, '0');
-                        cond cond = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(conc.CODIGO) && a.ITEM.Equals(item)).FirstOrDefault() ;
-                        if (cond!=null)
+                        if (conc.FACTURANDO.Equals("N"))
                         {
-                            db.cond.Remove(cond);
-                            db.SaveChanges();
-                            return Json(new { respuesta = "EXITO: Guardado exitosamente" }, JsonRequestBehavior.AllowGet);
+                            item = item.PadLeft(4, '0');
+                            cond cond = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(conc.CODIGO) && a.ITEM.Equals(item)).FirstOrDefault() ;
+                            if (cond!=null)
+                            {
+                                db.cond.Remove(cond);
+                                db.SaveChanges();
+                                return Json(new { respuesta = "EXITO: Guardado exitosamente" }, JsonRequestBehavior.AllowGet);
+                            }
+                            else { return Json(new { respuesta = "ERROR: El item no existe" }, JsonRequestBehavior.AllowGet); }
                         }
-                        else { return Json(new { respuesta = "ERROR: El item no existe" }, JsonRequestBehavior.AllowGet); }
+                        else { return Json(new { respuesta = "ERROR: Acceso denegado, el consumo est\u00E1 en el proceso de facturaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                     }
                     else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
                 }
@@ -91,7 +95,6 @@ namespace Franquisia1._1.Controllers
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e }, JsonRequestBehavior.AllowGet); }
         }
-        
         [HttpPost]
         public JsonResult Obtener(string codund, string coddiv){
             try {
@@ -166,21 +169,25 @@ namespace Franquisia1._1.Controllers
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                         conc conc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codigo)).FirstOrDefault();
                         if (conc == null) { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
-                        string coditem = generarCodItem(codcia, conc.CODIGO);
-                        cond cond = new cond();
-                        cond.ITEM = coditem;
-                        cond.CODCIA = codcia;
-                        cond.CODIGO = codigo;
-                        cond.CONVENTA = conventa;
-                        cond.CANTIDAD = Convert.ToDecimal(cantidad);
-                        preconven preconven = db.preconven.Where(a => a.conventa.Equals(cond.CONVENTA) && a.codcia.Equals(codcia) &&
-                            a.sucursal.Equals(sucursal) && a.state.Equals("V")).FirstOrDefault();
-                        if (preconven == null) { return Json(new { respuesta = "ERROR: No existe un precio asignado" }, JsonRequestBehavior.AllowGet); }
-                        cond.PREUNI = preconven.precio;
-                        cond.TOTAL = cond.PREUNI * cond.CANTIDAD;
-                        db.cond.Add(cond);
-                        db.SaveChanges();
-                        return Json(new { respuesta = "EXITO: Exito", item=cond.ITEM }, JsonRequestBehavior.AllowGet);
+                        if (conc.FACTURANDO.Equals("N"))
+                        {
+                            string coditem = generarCodItem(codcia, conc.CODIGO);
+                            cond cond = new cond();
+                            cond.ITEM = coditem;
+                            cond.CODCIA = codcia;
+                            cond.CODIGO = codigo;
+                            cond.CONVENTA = conventa;
+                            cond.CANTIDAD = Convert.ToDecimal(cantidad);
+                            preconven preconven = db.preconven.Where(a => a.conventa.Equals(cond.CONVENTA) && a.codcia.Equals(codcia) &&
+                                a.sucursal.Equals(sucursal) && a.state.Equals("V")).FirstOrDefault();
+                            if (preconven == null) { return Json(new { respuesta = "ERROR: No existe un precio asignado" }, JsonRequestBehavior.AllowGet); }
+                            cond.PREUNI = preconven.precio;
+                            cond.TOTAL = cond.PREUNI * cond.CANTIDAD;
+                            db.cond.Add(cond);
+                            db.SaveChanges();
+                            return Json(new { respuesta = "EXITO: Exito", item = cond.ITEM }, JsonRequestBehavior.AllowGet);
+                        }
+                        else { return Json(new { respuesta = "ERROR: Acceso denegado, el consumo est\u00E1 en el proceso de facturaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                     }
                     else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
                 }
@@ -202,11 +209,15 @@ namespace Franquisia1._1.Controllers
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                         conc conc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codigo)).FirstOrDefault();
                         if (conc == null) { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
-                        cond cond = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(codigo) && a.ITEM.Equals(item)).FirstOrDefault();
-                        cond.CANTIDAD = Convert.ToDecimal(cantidad);
-                        cond.TOTAL = cond.PREUNI * cond.CANTIDAD;
-                        db.SaveChanges();
-                        return Json(new { respuesta = "EXITO: Exito" }, JsonRequestBehavior.AllowGet);
+                        if (conc.FACTURANDO.Equals("N"))
+                        {
+                            cond cond = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(codigo) && a.ITEM.Equals(item)).FirstOrDefault();
+                            cond.CANTIDAD = Convert.ToDecimal(cantidad);
+                            cond.TOTAL = cond.PREUNI * cond.CANTIDAD;
+                            db.SaveChanges();
+                            return Json(new { respuesta = "EXITO: Exito" }, JsonRequestBehavior.AllowGet);
+                        }
+                        else { return Json(new { respuesta = "ERROR: Acceso denegado, el consumo est\u00E1 en el proceso de facturaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                     }
                     else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
                 }

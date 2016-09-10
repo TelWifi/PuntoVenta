@@ -119,6 +119,7 @@
           <Property Name="FECHA" Type="date" />
           <Property Name="HORA" Type="char" MaxLength="8" />
           <Property Name="USER" Type="char" MaxLength="6" />
+          <Property Name="FACTURANDO" Type="char" MaxLength="1" />
           <Property Name="SITUACION" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="cond">
@@ -1056,6 +1057,7 @@
           <Property Name="HORA" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="SITUACION" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="USER" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="FACTURANDO" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="cond">
           <Key>
@@ -1757,6 +1759,7 @@
           <EntitySetMapping Name="conc">
             <EntityTypeMapping TypeName="ModeloAplicacion.conc">
               <MappingFragment StoreEntitySet="conc">
+                <ScalarProperty Name="FACTURANDO" ColumnName="FACTURANDO" />
                 <ScalarProperty Name="USER" ColumnName="USER" />
                 <ScalarProperty Name="SITUACION" ColumnName="SITUACION" />
                 <ScalarProperty Name="HORA" ColumnName="HORA" />

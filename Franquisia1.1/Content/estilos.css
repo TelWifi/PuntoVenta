@@ -83,35 +83,31 @@ input[type=checkbox] {
     background-color: #FFB34D;
     color: white ;
 }
-.undatencion{
+.und{
     padding-top:30px;
     margin-bottom:5px;
-
-    background-color:#ecf0f1;
-    border: 1px solid #95a5a6; 
     height:100px;
     text-align:center;
     font-size:1.2em;
     font-weight:700;
     cursor: pointer;
     color:#000;
-    -webkit-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
-    -moz-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
-    box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
+    -webkit-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.5);
+    box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.5);
 }
-.undatencion-ocupada{
-    padding-top:20px;
-    margin-bottom:5px;
-    background-color:#f39c12;
+
+.und-ocupada{
+    background-color: #e67e22;
     border: 1px solid #000; 
-    height:100px;
-    text-align:center;
-    font-size:1.2em;
-    font-weight:700;
-    cursor: pointer;
-    -webkit-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
-    -moz-box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
-    box-shadow: inset 0px 0px 63px -1px rgba(0,0,0,0.73);
+}
+.und-libre{
+    background-color:#ecf0f1;
+    border: 1px solid #000; 
+}
+.und-fact{
+    background-color:#EF4836;
+    border: 1px solid #CF000F; 
 }
 .percorto{
     font-size:0.7em;

@@ -74,6 +74,7 @@ namespace Franquisia1._1.Controllers
                    conc.HORA = DateTime.Now.ToString("hh:mm:ss");
                    conc.USER = idusr;
                    conc.SITUACION = "A";
+                   conc.FACTURANDO = "N";
                    db.conc.Add(conc);
                    db.SaveChanges();
                    return Json(new { respuesta = "EXITO: Unidad de atenci\u00F3n aperturada", div = undatencion.DIVATENCION, und = undatencion.CODIGO, per = per.codigo, rol=rol }, JsonRequestBehavior.AllowGet);
@@ -115,6 +116,11 @@ namespace Franquisia1._1.Controllers
                        tipdocs.Add(new Models.AxuliarHash(item.clave, item.descripcion));
                    }
                    ViewBag.tipdocs = tipdocs.ToList();
+
+                   conc c = db.conc.Where(a=>a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.UNDATENCION.Equals(und)).FirstOrDefault();
+                   c.FACTURANDO = "S";
+                   db.SaveChanges();
+                   ViewBag.conc = c;
                    ViewBag.forventa = db.forventa.Where(a=>a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
                    ViewBag.forpago = db.forpago.Where(a =>a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
                    return View("Facturacion");
@@ -172,45 +178,13 @@ namespace Franquisia1._1.Controllers
                    var ocp = (from a in ocupadas
                               join b in listconc on a.CODIGO equals b.UNDATENCION
                               join c in db.peratencion on b.PERATENCION equals c.codigo
-                              select new { CODUND = a.CODIGO,UNDDES=a.DESCRIPCION,CODPER=c.codigo, PERCORTO = c.corto, CODDIV=a.DIVATENCION });
+                              select new { CODUND = a.CODIGO,UNDDES=a.DESCRIPCION,CODPER=c.codigo, PERCORTO = c.corto, CODDIV=a.DIVATENCION, FACT=b.FACTURANDO });
                    return Json(new { respuesta = "EXITO: Exito", libres = libres, ocupadas = ocp }, JsonRequestBehavior.AllowGet);
                }
                else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
            }
            catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
            catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
-       }
-       public ActionResult Selector(string div, string und, string per, string pass)
-       {
-           try
-           {
-               var rol = Session["Loged_usrfile_rol"];
-               if ("C".Equals(rol) || "M".Equals(rol))
-               {
-                   usrfile u = new usrfile();
-                   string newpwd = u.Encripta(pass);
-                   string codcia = Session["Loged_usrfile_ciafile"].ToString();
-                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
-                   if (p==null || !p.clave.Equals(newpwd))
-                   {
-                       return JavaScript ("ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n");
-                       //return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet);
-                   }
-                   switch (rol.ToString())
-                   {
-                       case "M":
-                           return RedirectToAction("Consumos", new { div = div, und = und, per = per });
-                       case "C":
-                           return RedirectToAction("Facturacion", new { div = div, und = und, per = per });
-                       default:
-                           return RedirectToAction("ErrorPermiso", "Error");
-                   }
-               }
-               else { return RedirectToAction("ErrorPermiso", "Error"); }
-           }
-
-           catch (System.Data.EntityException ex) { return RedirectToAction("ErroBD", "Error", ex.Message); }
-           catch (Exception ex) { return RedirectToAction("Error", "Error", ex.Message); }
        }
        public JsonResult ObtenerLibres(string clave)
        {
@@ -257,6 +231,16 @@ namespace Franquisia1._1.Controllers
            }
            catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
            catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
+       }
+
+       public ActionResult Regresar(string c)
+       {
+           string codcia = Session["Loged_usrfile_ciafile"].ToString();
+           string sucursal = Session["Loged_usrfile_sucursal"].ToString();
+           conc conc = db.conc.Where(a=>a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(c)).FirstOrDefault();
+           conc.FACTURANDO = "N";
+           db.SaveChanges();
+           return RedirectToAction("Index");
        }
        private int? generar(string codcia)
        {

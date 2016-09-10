@@ -8,7 +8,7 @@ function getUndAtencion(p, c) {
             if (response.respuesta.split(":")[0] == "ERROR") { return alert(response.respuesta); }
             p.empty();
             $.each(response.libres, function (idx, obj) {
-                var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion'>" + obj["DESCRIPCION"] + "</div>");
+                var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel und und-libre'>" + obj["DESCRIPCION"] + "</div>");
                 pu.data("codigo", obj["CODIGO"]);
                 p.append(pu);
                 pu.on("click", function () {
@@ -20,10 +20,12 @@ function getUndAtencion(p, c) {
             });
             p.append($("<div class='container row'></div>"));
             $.each(response.ocupadas, function (idx, obj) {
-                var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel undatencion-ocupada'>" + obj["UNDDES"] + "<br/></div>");
+                var sts = obj["FACT"] == "S" ? "und-fact" : "und-ocupada";
+                var pu = $("<div class='col-xs-3 col-sm-2 col-md-1 panel und " + sts + "'>" + obj["UNDDES"] + "<br/></div>");
                 pu.data("codund", obj["CODUND"]); pu.data("coddiv", obj["CODDIV"]); pu.data("codper", obj["CODPER"]);
                 pu.append($("<div class='percorto'>" + obj["PERCORTO"] + "</div>"));
                 pu.on("click", function () {
+                    if (pu.hasClass("und-fact")) {return alert("ERROR: Acceso denegado, el consumo est\u00E1 en el proceso de facturaci\u00F3n");}
                     if (parpwd == "S") {
                         var m = $("#modal-ingresar");
                         m.find("input").val("");

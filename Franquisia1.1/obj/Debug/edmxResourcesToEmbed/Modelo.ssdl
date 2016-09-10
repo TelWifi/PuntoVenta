@@ -114,6 +114,7 @@
     <Property Name="FECHA" Type="date" />
     <Property Name="HORA" Type="char" MaxLength="8" />
     <Property Name="USER" Type="char" MaxLength="6" />
+    <Property Name="FACTURANDO" Type="char" MaxLength="1" />
     <Property Name="SITUACION" Type="char" MaxLength="1" />
   </EntityType>
   <EntityType Name="cond">

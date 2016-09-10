@@ -23,5 +23,6 @@ namespace Franquisia1._1
         public string HORA { get; set; }
         public string SITUACION { get; set; }
         public string USER { get; set; }
+        public string FACTURANDO { get; set; }
     }
 }
