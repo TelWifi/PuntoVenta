@@ -175,26 +175,6 @@ function tecladoNumerico(s, n) {
         useCombos: false,
     });
 }
-function tecladoNumericoDecimal(s, n) {
-    if (!Validar.Dato(n)) { n = 11; }
-
-    s.keyboard({
-        layout: 'custom',
-        customLayout: {
-            'normal': [
-                '1 2 3 ',
-                '4 5 6',
-                '7 8 9',
-                '0 {bksp}',
-                '{a} {c}'
-            ]
-        },
-        maxLength: n,
-        restrictInput: true,
-        restrictInclude: '.',
-        useCombos: false,
-    });
-}
 $(document).ready(function () {
     $("input[name=control-teclado-opciones]:checked").parent().siblings('.btn').removeClass("active");
     $("input[name=control-teclado-opciones]:checked").parent().addClass("active");  

@@ -24,31 +24,128 @@ function obtenerIGV() {
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function mostrarAnexo(a, d) {
-    d.find(".anexo-desane").val(a.desane); d.find(".anexo-nrodoc").val(a.nrodoc); d.find(".anexo-refane").val(a.refane);
+var Form = {
+    getInput: function (id, t, l, p) {
+        return $("<div class='form-group'><label for='" + id + "'>" + l + "</label><input id='" + id + "' type='" + t + "' class='form-control' placeholder='" + p + "' /></div>");
+    },
+    getTextArea: function (id, l, r, p) {
+        return $("<div class='form-group'><label for='" + id + "'>" + l + "</label><textarea id='" + id + "' rows='" + r + "' class='form-control' placeholder='" + p + "'></textarea></div>");
+    }
 }
-function clearAnexo(d) {
-    mostrarAnexo({ "desane": "", "nrodoc": "", "refane": "" }, d);
-}
-function obtenerAnexo(d) {
-    return { desane: d.find(".anexo-desane").val(), nrodoc: d.find(".anexo-nrodoc").val(), refane: d.find(".anexo-refane").val() };
-}
-function actualizarAnexo(a, d) {
-    if (!Validar.Anexo(a) ) {return;}
-    $.ajax({
-        type: "post", dataType: 'json', cache: false, url: "/Anexos/Actualizar",
-        data: { desane: a.desane, nrodoc: a.nrodoc, refane: a.refane },
-        success: function (response, textStatus, jqXHR) {
-            if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-            else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
-                mostrarAnexo({ "desane": "", "nrodoc": "", "refane": "" }, d);
-                console.log(response.respuesta);
-            }
-            else if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, d);}
-        },
-        error: function (xhr, status) { errorAjax(xhr, status); }
-    });
-}
+var Anexo = {
+    FormBody: "#modal-crearane-body",
+    BtnSubmit: "#modal-crear-anexo-submit",
+    initForm: function () {
+        var grnt = $("input[name='tipo-cm']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-info");
+        Anexo.updateForm(grnt.first());
+    },
+    updateForm: function (i) {
+        $(Anexo.FormBody).empty();
+        $(Anexo.FormBody).append(Anexo.getFieldNrodoc(i.data("desc")));
+        switch (i.data("codigo")) {
+            case "01":
+                $(Anexo.FormBody).append(Anexo.getFieldNombres());
+                $(Anexo.FormBody).append(Anexo.getFieldApe());
+                break;
+            case "04":
+                break;
+            case "06":
+                $(Anexo.FormBody).append(Anexo.getFieldRS());
+                break;
+            case "07":
+                break;
+        }
+        $(Anexo.FormBody).append(Anexo.getFieldRefane());
+        if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
+            $(Anexo.FormBody).find("input[type=text]").keyboard();
+            $(Anexo.FormBody).find("textarea").keyboard();
+        }
+    },
+    getFieldNrodoc: function (t) {
+        return Form.getInput('input-nrodoc', 'text', t, 'INGRESE SU ' + t);
+    },
+    getFieldRefane: function () {
+        return Form.getTextArea('input-refane', 'Direcci\u00F3n', 2, 'Ingrese su Direcci\u00F3n');
+    },
+    getFieldApe: function () {
+        return Form.getInput('input-ape', 'text', 'Apellidos', 'Ingrese sus apellidos');
+    },
+    getFieldNombres: function () {
+        var d = $("<div></div>"); d.append(Form.getInput('input-nom1', 'text', 'Nombre 1', 'Ingrese su primer nombre')); d.append(Form.getInput('input-nom2', 'text', 'Nombre 2', 'Ingrese su segundo nombre'));
+        return d;
+    },
+    getFieldRS: function () {
+        return Form.getTextArea('input-desane', 'Raz\u00F3n social', 2, '');
+    },
+
+    show: function (a, d) {
+        d.find(".anexo-desane").val(a.desane); d.find(".anexo-nrodoc").val(a.nrodoc); d.find(".anexo-refane").val(a.refane);
+    },
+    clear: function (d) { Anexo.show({ "desane": "", "nrodoc": "", "refane": "" }, d); },
+    get: function (d) { return { desane: d.find(".anexo-desane").val(), nrodoc: d.find(".anexo-nrodoc").val(), refane: d.find(".anexo-refane").val() }; },
+    updateDB: function (a, d) {
+        if (!Validar.Anexo(a)) { return; }
+        $.ajax({
+            type: "post", dataType: 'json', cache: false, url: "/Anexos/Actualizar",
+            data: { desane: a.desane, nrodoc: a.nrodoc, refane: a.refane },
+            success: function (response, textStatus, jqXHR) {
+                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+                else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
+                    Anexo.clear(d); console.log(response.respuesta);
+                }
+                else if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, d); }
+            },
+            error: function (xhr, status) { errorAjax(xhr, status); }
+        });
+    },
+    getDB: function (div, m) {//por corregir
+        var a = Anexo.get(div);
+        var input = "input[name=tipo-documentos]:checked";
+        if ($(input).val() == "01" && !Validar.RUC(a.nrodoc)) { Anexo.clear(div); return; }
+        else if ($(input).val() == "03" && !Validar.DNI(a.nrodoc)) { Anexo.clear(div); return; }
+        $.ajax({
+            type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
+            success: function (response, textStatus, jqXHR) {
+                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+                else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
+                    Anexo.show({ "nrodoc": a.nrodoc, "refane": "", "desane": "" }, div);
+                    var m = "#modal-actualizar-anexo-dni";
+                    if ($(input).val() == "01") {
+                        m = "#modal-actualizar-anexo-ruc";
+                        $(m).find("input[type='text']").val("");
+
+                        $(m).find("#actualizar-ruc-titulo").text("Agregar cliente");
+                        $(m).find("#form-actruc-nrodoc").val(a.nrodoc);
+                        $(m).modal('show');
+                        $(m).find("#form-actruc-refane").focus();
+                    } else {
+                        $(m).find("input[type='text']").val("");
+
+                        $(m).find("#actualizar-dni-titulo").text("Agregar cliente");
+                        $(m).find("#form-actdni-nrodoc").val(a.nrodoc);
+                        $(m).modal('show');
+                        $(m).find("#form-actdni-refane").focus();
+                    }
+                }
+                else if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, div); }
+            }, error: function (xhr, status) { errorAjax(xhr, status); }
+        });
+    },
+    createDB: function (a, d, m) {
+        if (a.tipdoc == "RUC" && a.nrodoc.length != 11) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
+        if (a.tipdoc == "DNI" && a.nrodoc.length != 8) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
+        if (!Validar.Anexo(a)) { return; }
+        $.ajax({
+            type: "get", dataType: 'json', cache: false, url: '/Anexos/Crear', data: { desane: a.desane, tipdoc: a.tipdoc, nrodoc: a.nrodoc, refane: a.refane },
+            success: function (response, textStatus, jqXHR) {
+                if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
+                if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, d); m.modal('hide'); }
+            }, error: function (xhr, status) { errorAjax(xhr, status); }
+        });
+    }
+
+
+};
 function actualizarAnexoDNI(a, d) {
     if (!Validar.Anexo(a)) { return; }
     $.ajax({
@@ -57,9 +154,9 @@ function actualizarAnexoDNI(a, d) {
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
             else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
-                mostrarAnexo({ "desane": "", "nrodoc": a.nroane, "refane": "" }, d);
+                Anexo.show({ "desane": "", "nrodoc": a.nroane, "refane": "" }, d);
             }
-            else if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, d); }
+            else if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, d); }
         },
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
@@ -72,60 +169,16 @@ function actualizarAnexoRUC(a, d) {
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
             else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
-                mostrarAnexo({ "desane": "", "nrodoc": a.nroane, "refane": "" }, d);
+                Anexo.show({ "desane": "", "nrodoc": a.nroane, "refane": "" }, d);
             }
-            else if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, d); }
+            else if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, d); }
         },
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function getBDAnexo(div,m) {
-    var a = obtenerAnexo(div);
-    var input = "input[name=tipo-documentos]:checked";
-    if ($(input).val() == "01" && !Validar.RUC(a.nrodoc)) { clearAnexo(div); return; }
-    else if ($(input).val() == "03" && !Validar.DNI(a.nrodoc)) { clearAnexo(div); return; }
-    $.ajax({
-        type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
-        success: function (response, textStatus, jqXHR) {
-            if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-            else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
-                mostrarAnexo({"nrodoc":a.nrodoc, "refane":"", "desane":""}, div);
-                var m = "#modal-actualizar-anexo-dni";
-                if ($(input).val() == "01") {
-                    m = "#modal-actualizar-anexo-ruc";
-                    $(m).find("input[type='text']").val("");
 
-                    $(m).find("#actualizar-ruc-titulo").text("Agregar cliente");
-                    $(m).find("#form-actruc-nrodoc").val(a.nrodoc);
-                    $(m).modal('show');
-                    $(m).find("#form-actruc-refane").focus();
-                } else {
-                    $(m).find("input[type='text']").val("");
-
-                    $(m).find("#actualizar-dni-titulo").text("Agregar cliente");
-                    $(m).find("#form-actdni-nrodoc").val(a.nrodoc);
-                    $(m).modal('show');
-                    $(m).find("#form-actdni-refane").focus();
-                }
-            }
-            else if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, div); }
-        }, error: function (xhr, status) { errorAjax(xhr, status); }
-    });
-}
-function crearAnexo(a, d, m) {
-    if (a.tipdoc == "RUC" && a.nrodoc.length != 11) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
-    if (a.tipdoc == "DNI" && a.nrodoc.length != 8) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
-    if (!Validar.Anexo(a)) { return; }
-    $.ajax({
-        type: "get", dataType: 'json', cache: false, url: '/Anexos/Crear', data: { desane: a.desane, tipdoc: a.tipdoc, nrodoc: a.nrodoc, refane: a.refane },
-        success: function (response, textStatus, jqXHR) {
-            if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
-            if (response.respuesta.toString().split(":")[0] == "EXITO") { mostrarAnexo(response.anexo, d); m.modal('hide'); }
-        }, error: function (xhr, status) { errorAjax(xhr, status); }
-    });
-}
 function resetTabla(t) {
-    mostrarAnexo({ "desane": "", "nrodoc": "", "refane": "" }, $(t + "-anexo")); $(t).find("tbody tr").remove();$(t).data("codigo", "");$(t + "-items").text("-");$(t + "-igv").text("-");$(t + "-total").text("-");
+    Anexo.clear( $(t + "-anexo")); $(t).find("tbody tr").remove(); $(t).data("codigo", ""); $(t + "-items").text("-"); $(t + "-igv").text("-"); $(t + "-total").text("-");
 }
 function printFactura(t, a, r) {
     var itd = "Nro. Items: ".concat(t.find("tbody tr").length);
@@ -236,34 +289,6 @@ function agregarProducto(pp) {
         else { $(this).val(1); alert(MSG_NO_PUEDE_SER_MENOR_QUE.replace("{text}", "una unidad")); }
     });
 }
-function obtenerTarjetas(p) {
-    $.ajax({
-        type: "get", dataType: 'json', cache: false, url: "/Tarjetas/Obtener", data: {},
-        success: function (response, textStatus, jqXHR) {
-            p.empty();
-            if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta);}
-            if (response.respuesta.toString().split(":")[0] == "EXITO") {
-                $.each(response.lista, function (idx, obj) {
-                    var d = $("<div class=\"btn\" data-descripcion=\"" + obj["descripcion"] + "\" data-codigo=\"" + obj["codigo"] + "\"></div>");
-                    var i = $("<input name=\"tipo-tarjeta\" value=\""+obj["codigo"]+"\" class=\"hide\" type=\"radio\">");
-                    var img;
-                    if (obj["foto64"]!=null) {
-                        img = $("<img class=\"img-responsive img-thumbnail \" src=\"data:image/gif;base64," + decBase64(obj["foto64"]) + "\" style=\"height:40px;\" />");
-                    } else {d.append(obj["descripcion"]);}
-                    d.append(i);d.append(img);p.append(d);
-                });
-                p.find(".btn").on("click", function () {
-                    $(this).siblings(".btn").removeClass("btn-success");
-                    $(this).addClass("btn-success");
-                    $(this).children("input[type=radio]").prop('checked', true);
-                    p.parent().find(".tarjeta").text($(this).data("descripcion"));
-                    p.parent().find(".tarjeta").data("codigo", $(this).data("codigo"));
-                });
-            }
-        }, error: function (xhr, status) { errorAjax(xhr, status); }
-    });
-}
-
 function changeUndAtencion(txt) {
     if (Validar.Dato($("#divatencion").val())) {
         if(Validar.Dato(txt.val())){
@@ -285,92 +310,183 @@ function initTipDoc(n) {
         error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function getIsTarjeta(p,s) {
-    var html = $("<div class='form-group'><label>Tarjeta: </label><label class='tarjeta'></label></div>");
-    p.append(html);
-    obtenerTarjetas(s);
-    var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text()));
-    if (aux > 0) { $("#input-importe").val(aux.toFixed(2)); }
-    $("#input-importe").attr('disabled', false);
-}
-function getIsNroReferencia(p,s) {
-    var i = $("<input type='number' placeholder='Ingrese Nro. de referencia' class='txt-nro-ref form-control-static'>");
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
-        tecladoNumerico(i);
+
+var FormPago = {
+    GroupFV:"#group-forventa",
+    InputGroupFV: "input[name='forma-venta']",
+    BtnFV: "btn-warning",
+    LblFV: "#forventa",
+    GroupFP: "#group-forpago",
+    InputGroupFP: "input[name='forma-pago']",
+    BtnFP: "btn-primary",
+    LblFP: "#forpago",
+    Importe: "#input-importe",
+    TotalPagar: "#form-pagar-total",
+    TotalPagado:"#forma-pago-total",
+    initForm: function() {
+        var grnt = $(FormPago.InputGroupFV+":radio"); grnt.first().parent().siblings("div").removeClass(FormPago.BtnFV);
+        grnt.first().prop('checked', true); grnt.first().parent().addClass(FormPago.BtnFV);
+        $(FormPago.LblFV).text(grnt.first().data("desc"));
+        this.updateForm();
+    },
+    updateForm: function (i) {
+        var o = $(this.InputGroupFV+":checked");
+        var p = $("#modal-pagar-principal");
+        var s = $("#modal-pagar-secundario");
+        p.empty(); s.empty();
+        $(this.Importe).val("00.00");
+        switch (o.val()) {
+            case "C":
+                $(this.GroupFP+", "+this.LblFP).removeClass("hide");
+                $(this.LblFP).siblings("label").removeClass("hide");
+                if (!Validar.Dato(i) || !Validar.Dato(i.val())) {
+                    i = $(this.InputGroupFP).first(); i.prop('checked', true); i.parent().addClass(this.BtnFP);
+                }
+                if (i.data("istarjeta") == "S") { this.isTarjeta(p, s); }
+                if (i.data("isreferencia") == "S") { this.isNroRef(p, s); }
+                if (i.data("isefectivo") == "S") { this.isEfectivo(p, s); }
+                $(this.LblFP).text(i.data("desc"));
+                break;
+            case "P":
+                $(this.GroupFP+", "+this.LblFP).addClass("hide");
+                $(this.LblFP).siblings("label").addClass("hide");
+                $(this.Importe).prop("disabled", false);
+                i.prop('checked', false);
+                i.parent().removeClass(this.BtnFP);
+                var aux = (parseFloat($(this.TotalPagar).text()) - parseFloat($(this.TotalPagado).text()));
+                if (aux > 0) { $(this.Importe).val(aux.toFixed(2)); }
+                break;
+        }
+    },
+    isTarjeta: function (p,s) {
+        var html = $("<div class='form-group'><label>Tarjeta:</label> <label class='tarjeta'></label></div>");
+        p.append(html);
+        this.getTarjetas(s);
+        var aux = (parseFloat($(this.TotalPagar).text()) - parseFloat($(this.TotalPagado).text()));
+        if (aux > 0) { $(this.Importe).val(aux.toFixed(2)); }
+        $(this.Importe).attr('disabled', false);
+    },
+    isNroRef: function (p,s) {
+        var i = $("<input type='number' placeholder='Ingrese Nro. de referencia' class='txt-nro-ref form-control-static'>");
+        if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {tecladoNumerico(i);}
+        p.append($("<div class='form-group'><label>Nro. referencia: </label></div>").append(i));
+        var aux = (parseFloat($(this.TotalPagar).text()) - parseFloat($(this.TotalPagado).text()));
+        if (aux > 0) { $(this.Importe).val(aux.toFixed(2)); }
+        $(this.Importe).attr('disabled', false);
+    },
+    isEfectivo: function (p,s) {
+        html = $("<div id='denominaciones'><label>Denominaciones</label><div class='efectivo text-center'><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 200</a><a>S/. 100</a><a>S/. 50</a><a>S/. 20</a></div><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 10</a><a>S/. 5</a><a>S/. 2</a><a>S/. 1</a></div><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 0.50</a><a>S/. 0.20</a><a>S/. 0.10</a><aux class='btn btn-danger input-reset'>Limpiar</aux></div></div></div>;");
+        html.find("a").addClass("btn btn-secundario btn-secundario-bordes");
+        s.append(html);
+        p.append("<div class='form-group'><label>Vuelto: </label> <label id='lbl-vuelto'>00.00</label></div>");
+        $(this.Importe).val("0.00");
+        html.find('a').on("click", function () {
+            var ipI = $(FormPago.Importe); var ipC = p.find("#lbl-vuelto"); var e = parseFloat($(this).text().split(' ')[1]); var ef = parseFloat(ipI.val());
+            if (isNaN(ef)) { ef = 0; } var nef = e + ef; ipI.val(parseFloat(nef).toFixed(2));
+            var nc = nef - (parseFloat($(FormPago.TotalPagar).text()) - parseFloat($(FormPago.TotalPagado).text())).toFixed(2);
+            if (nc >= 0) { ipC.text(nc.toFixed(2)); }
+        });
+        html.find(".input-reset").on("click", function () {$(FormPago.Importe).val("00.00"); p.find("#lbl-vuelto").text("00.00");});
+        var aux = (parseFloat($(this.TotalPagar).text()) - parseFloat($(this.TotalPagado).text()));
+        if (aux > 0) { $(this.Importe).val(aux.toFixed(2)); }
+        $(this.Importe).attr('disabled', true);
+    },
+    getTarjetas:function (p) {
+        $.ajax({
+            type: "get", dataType: 'json', cache: false, url: "/Tarjetas/Obtener", data: {},
+            success: function (response, textStatus, jqXHR) {
+                p.empty();
+                if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
+                if (response.respuesta.toString().split(":")[0] == "EXITO") {
+                    $.each(response.lista, function (idx, obj) {
+                        var d = $("<div class=\"btn\" data-descripcion=\"" + obj["descripcion"] + "\" data-codigo=\"" + obj["codigo"] + "\"></div>");
+                        var i = $("<input name=\"tipo-tarjeta\" value=\"" + obj["codigo"] + "\" class=\"hide\" type=\"radio\">");
+                        var img;
+                        if (obj["foto64"] != null) {
+                            img = $("<img class=\"img-responsive img-thumbnail \" src=\"data:image/gif;base64," + decBase64(obj["foto64"]) + "\" style=\"height:40px;\" />");
+                        } else { d.append(obj["descripcion"]); }
+                        d.append(i); d.append(img); p.append(d);
+                    });
+                    p.find(".btn").on("click", function () {
+                        $(this).siblings(".btn").removeClass("btn-success");
+                        $(this).addClass("btn-success");
+                        $(this).children("input[type=radio]").prop('checked', true);
+                        p.parent().find(".tarjeta").text($(this).data("descripcion"));
+                        p.parent().find(".tarjeta").data("codigo", $(this).data("codigo"));
+                    });
+                }
+            }, error: function (xhr, status) { errorAjax(xhr, status); }
+        });
     }
-    p.append($("<div class='form-group'><label>Nro. referencia: </label></div>").append(i));
-    $("#input-importe").attr('disabled', false);
-}
-function getIsEfectivo(p,s) {
-    html = $("<div id='denominaciones'><label>Denominaciones</label><div class='efectivo text-center'><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 200</a><a>S/. 100</a><a>S/. 50</a><a>S/. 20</a></div><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 10</a><a>S/. 5</a><a>S/. 2</a><a>S/. 1</a></div><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 0.50</a><a>S/. 0.20</a><a>S/. 0.10</a><aux class='btn btn-danger input-reset'>Limpiar</aux></div></div></div>;");
-    html.find("a").addClass("btn btn-secundario btn-secundario-bordes");
-    s.append(html);
-    p.append("<div class='form-group'><label>Vuelto: </label> <label id='lbl-vuelto'>00.00</label></div>");
-    $("#input-importe").val("0.00");
-    html.find('a').on("click", function () {
-        var ipI = $("#input-importe"); var ipC = p.find("#lbl-vuelto"); var e = parseFloat($(this).text().split(' ')[1]); var ef = parseFloat(ipI.val());
-        if (isNaN(ef)) { ef = 0; } var nef = e + ef; ipI.val(parseFloat(nef).toFixed(2));
-        var nc = nef - (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())).toFixed(2);
-        if (nc >= 0) { ipC.text(nc.toFixed(2)); }
-    });
-    html.find(".input-reset").on("click", function () {
-        $("#input-importe").val("00.00"); p.find("#lbl-vuelto").text("00.00");
-    });
-    $("#input-importe").attr('disabled', true);
-}
-function actFormPago(i) {
-    var o = $("input[name=forma-venta]:checked");
-    var p = $("#modal-pagar-principal");
-    var s = $("#modal-pagar-secundario");
-    p.empty(); s.empty();
-    $("#input-importe").val("00.00");
-    switch (o.val()) {
+};
+
+
+function agregarPago() {
+    var ifv = $("input[name=forma-venta]:checked");
+    var ifp = $("input[name=forma-pago]:checked");
+    if (!Validar.Dato(ifv.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de venta")); }
+    var t = $("#tabla-forma-pago");
+    var e = new Array();
+    var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text()));
+    e.push(ifv.data("desc"));
+    switch (ifv.val()) {
         case "C":
-            if (i.val() == undefined) {
-                i = $("input[name=forma-pago]").first();
-                i.prop('checked', true);
-                i.parent().addClass("btn-primary");
-            }
-            if (i.data("istarjeta") == "S") { getIsTarjeta(p, s); }
-            if (i.data("isreferencia") == "S") { getIsNroReferencia(p, s); }
-            if (i.data("isefectivo") == "S") { getIsEfectivo(p, s); }
-            $("#forpago").text(i.data("desc"));
+            if (ifv.val() == "C" && !Validar.Dato(ifp.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de pago")); }
+            if (aux > 0) {
+                e.push(ifp.data("desc"));
+                var pp = $("#modal-pagar-principal");
+                if (ifp.data("istarjeta") == "S") {
+                    var tt = pp.find(".tarjeta");
+                    if (!Validar.Dato(tt.text())) { return alert("ERROR: Seleccione un tipo de tarjeta"); }
+                    e.push(tt.text()); tt.text("");
+                }
+                else { e.push(""); }
+                if (ifp.data("isreferencia") == "S") {
+                    var nroref = pp.find(".txt-nro-ref"); e.push(nroref.val()); nroref.val("");
+                }
+                else { e.push(""); }
+                var importe = parseFloat($("#input-importe").val().replace(',', '.'));
+                if (importe == 0) { return alert("ERROR: El Importe No puede ser 00.00"); }
+                if (importe > parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())) {
+                    importe = parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text());
+                    console.log("dawd");
+                }
+                e.push(importe.toFixed(2));
+                $("#input-importe").val("00.00");
+                var f = addRow(t, e);
+                if (ifp.data("isefectivo") == "S") { f.data("cambio", $("#lbl-vuelto").text()); $("#lbl-vuelto").text("00.00"); }
+                else { f.data("cambio", "0"); }
+                f.data("fv", ifv.data("codigo")); f.data("fp", ifp.val()); f.data("tt", pp.find(".tarjeta").data("codigo"));
+                $("#forma-pago-total").text(sumar(t, COLIMPORTE).toFixed(2));
+            } else { alert("ERROR: No se puede agregar, porque el total a pagar ya coincide con la suma de los montos agregado"); }
             break;
         case "P":
-            $("#input-importe").prop("disabled", false);
-            i.prop('checked', false);
-            i.parent().removeClass("btn-primary");
-            var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text()));
-            if (aux > 0) { $("#input-importe").val(aux.toFixed(2));}
-            $("#forpago").text("");
+            if (aux > 0) {
+                e.push(""); e.push(""); e.push("");
+                e.push($("#input-importe").val());
+                var f = addRow(t, e);
+                f.data("cambio", "0");
+                $("#forma-pago-total").text(sumar(t, COLIMPORTE).toFixed(2));
+                $("#input-importe").val("00.00");
+            } else { alert("ERROR: No se puede agregar, porque el total a pagar ya coincide con la suma de los montos agregado"); }
             break;
     }
-}
-function initFormPago() {
-    var grnt = $("input[name='forma-venta']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-success");
-    $("#forventa").text(grnt.first().data("desc"));
-    grnt = $("input[name='forma-pago']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-primary");
-    $("#forpago").text(grnt.first().data("desc"));
-    actFormPago(grnt.first());
-    grnt = $("input[name='tipo-anexo']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-info");
-    //actFormCrearAnexo(grnt.first());
 }
 $(document).ready(function () {
     IGV = obtenerIGV();
     initTipDoc("tipo-documentos");
     obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) {; });
-    initFormPago();
-    
+    Anexo.initForm();
 
     $("#divatencion").on("change", function () { $("#undatencion").val(""); resetTabla("#tabla-factura"); clearDesc("#peratencion-desc", "#undatencion-desc");});
     $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
     if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { $("input[type='text']").keyboard(); tecladoNumerico($("input[type='number']"));}
-    $(".anexo").find(".anexo-nrodoc").bind('accepted', function (e, keyboard, el) { getBDAnexo($(this).parent().parent()); });
-    $(".anexo").find(".anexo-nrodoc").keypress(function (e) { if (e.which == 13) { getBDAnexo($(this).parent().parent()); } });
+    $(".anexo").find(".anexo-nrodoc").bind('accepted', function (e, keyboard, el) { Anexo.getDB($(this).parent().parent()); });
+    $(".anexo").find(".anexo-nrodoc").keypress(function (e) { if (e.which == 13) { Anexo.getDB($(this).parent().parent()); } });
 
-    $(".anexo").find(".anexo-desane, .anexo-refane").bind('accepted', function (e, keyboard, el) { actualizarAnexo(obtenerAnexo($(this).parent()), $("tabla-factura-anexo")); });
-    $(".anexo").find(".anexo-desane, .anexo-refane").keypress(function (e) { if (e.which == 13) { actualizarAnexo(obtenerAnexo($(this).parent()), $("tabla-factura-anexo")); } });
+    $(".anexo").find(".anexo-desane, .anexo-refane").bind('accepted', function (e, keyboard, el) { Anexo.updateDB(Anexo.get($(this).parent()), $("tabla-factura-anexo")); });
+    $(".anexo").find(".anexo-desane, .anexo-refane").keypress(function (e) { if (e.which == 13) { Anexo.updateDB(Anexo.get($(this).parent()), $("tabla-factura-anexo")); } });
 
     $(".btn-seleccionar-anexo").on("click", function () {
         $(".modal").modal("hide");
@@ -379,7 +495,7 @@ $(document).ready(function () {
         modal.modal('show');
     });
     $(".btn-actualizar-anexo").on("click", function () {
-        a = obtenerAnexo($("#tabla-factura-anexo"));
+        a = Anexo.get($("#tabla-factura-anexo"));
         if (Validar.Anexo(a)) {
             $.ajax({
                 type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
@@ -414,7 +530,7 @@ $(document).ready(function () {
         }
     });
     $("#btn-actdni").on("click", function () {
-        a = obtenerAnexo($("#tabla-factura-anexo"));
+        a = Anexo.get($("#tabla-factura-anexo"));
         a.refane = $("#form-actdni-refane").val();
         a.nombre1 = $("#form-actdni-nom1").val();
         a.nombre2 = $("#form-actdni-nom2").val();
@@ -436,7 +552,7 @@ $(document).ready(function () {
     $("#form-anexo-btn-crear").on("click", function () {
         var modal = $("#modal-crear-anexo");var fa = "#form-anexo";
         var a = {desane: $(fa+"-desane").val(), tipdoc: $("input[name='form-anexo-tipdoc']:checked").val(),nrodoc: $(fa+"-nrodoc").val(), refane: $(fa+"-refane").val()}
-        crearAnexo(a, $(modal.data("anexo")), modal);
+        Anexo.createDB(a, $(modal.data("anexo")), modal);
     });
 
     $("#btn-buscar-razon").on("click", function () {
@@ -455,7 +571,7 @@ $(document).ready(function () {
                 }
 
                 var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(2).innerHTML, refane: f.find('td').get(3).innerHTML};
-                mostrarAnexo(a, $(m.data("anexo")));m.modal('hide');
+                Anexo.show(a, $(m.data("anexo"))); m.modal('hide');
             });
         });
     });
@@ -474,7 +590,7 @@ $(document).ready(function () {
                     return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc"));
                 }
                 var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(2).innerHTML, refane: f.find('td').get(3).innerHTML};
-                mostrarAnexo(a, $(m.data("anexo")));
+                Anexo.show(a, $(m.data("anexo")));
                 m.modal('hide');
             });
         });
@@ -485,11 +601,12 @@ $(document).ready(function () {
         if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
         if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
         if (t.find("tbody tr").length <= 0) { return alert(MSG_SIN_ELEMENTOS); }
-        if (!Validar.Anexo( obtenerAnexo($("#tabla-factura-anexo")))) { return;}
+        if (!Validar.Anexo(Anexo.get($("#tabla-factura-anexo")))) { return; }
         var m = $("#modal-pagar");
         m.data("tabla", "#tabla-factura");m.data("anexo", "#tabla-factura-anexo");
         $("#form-pagar-total").text(parseFloat($("#tabla-factura-total").text()).toFixed(2));
-        $("#forma-pago-total").text("0.00");$("#tabla-forma-pago").find("tbody tr").remove();
+        $("#forma-pago-total").text("0.00"); $("#tabla-forma-pago").find("tbody tr").remove();
+        FormPago.initForm();
         m.modal('show');
     });
    
@@ -566,114 +683,64 @@ $(document).ready(function () {
         if (!$(this).hasClass("active")) {
             $("#tipos-comprobantes .btn").removeClass("active");
             $(this).addClass("active"); $(this).children("input[type=radio]").prop('checked', true);
-            clearAnexo($("#tabla-factura-anexo"));
+            Anexo.clear($("#tabla-factura-anexo"));
         }   
     });
-    $("#group-forventa .btn").on("click", function () {
-        $(this).siblings(".btn").removeClass("btn-success");
-        $(this).addClass("btn-success");
+    $(FormPago.GroupFV+" .btn").on("click", function () {
+        $(this).siblings(".btn").removeClass(FormPago.BtnFV);
+        $(this).addClass(FormPago.BtnFV);
         var input = $(this).children("input[type=radio]");input.prop('checked', true);
-        $("#forventa").text(input.data("desc"));
-        actFormPago($("input[name=forma-pago]:checked"));
+        $(FormPago.LblFV).text(input.data("desc"));
+        FormPago.updateForm($(FormPago.InputGroupFP+":checked"));
     });
-    $("#group-forpago .btn").on("click", function () {
-        $(this).siblings(".btn").removeClass("btn-primary");
-        $(this).addClass("btn-primary");
+    $(FormPago.GroupFP + " .btn").on("click", function () {
+        $(this).siblings(".btn").removeClass(FormPago.BtnFP);
+        $(this).addClass(FormPago.BtnFP);
         var input = $(this).children("input[type=radio]"); input.prop('checked', true);
-        actFormPago(input);
+        FormPago.updateForm(input);
     });
     $("#group-tipane .btn").on("click", function () {
         $(this).siblings(".btn").removeClass("btn-info");
         $(this).addClass("btn-info");
         var input = $(this).children("input[type=radio]"); input.prop('checked', true);
-        //actFormCrearAnexo;
+        Anexo.updateForm(input);
     });
-
-    $("#forma-pago-agregar").on("click", function () {
-        var ifv = $("input[name=forma-venta]:checked");
-        var ifp = $("input[name=forma-pago]:checked");
-        if (!Validar.Dato(ifv.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de venta"));}
-        var t = $("#tabla-forma-pago");
-        var e = new Array();
-        var aux = (parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text()));
-        e.push(ifv.data("desc"));
-        switch (ifv.val()) {
-            case "C":
-                if (ifv.val() == "C" && !Validar.Dato(ifp.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de pago")); }
-                if (aux > 0) {
-                    e.push(ifp.data("desc"));
-                    var pp = $("#modal-pagar-principal");
-                    if (ifp.data("istarjeta") == "S") {
-                        var tt = pp.find(".tarjeta");
-                        if (!Validar.Dato(tt.text())) { return alert("ERROR: Seleccione un tipo de tarjeta"); }
-                        e.push(tt.text()); tt.text("");
-                    }
-                    else { e.push(""); }
-                    if (ifp.data("isreferencia") == "S") {
-                        var nroref = pp.find(".txt-nro-ref");
-                        if (!Validar.Dato(nroref.val())) {return alert("ERROR: El N\u00FAmero de referenc\u00EDa No puede estar vac\u00EDo");}
-                        e.push(nroref.val()); nroref.val("");
-                    }
-                    else { e.push(""); }
-                    var importe = parseFloat($("#input-importe").val().replace(',', '.'));
-                    if (importe == 0) {return alert("ERROR: El Importe No puede ser 00.00");}
-                    if (importe > parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text())) {
-                        importe = parseFloat($("#form-pagar-total").text()) - parseFloat($("#forma-pago-total").text());
-                        console.log("dawd");
-                    }
-                    e.push(importe.toFixed(2));
-                    $("#input-importe").val("00.00");
-                    var f = addRow(t, e);
-                    if (ifp.data("isefectivo") == "S") { f.data("cambio", $("#lbl-vuelto").text()); $("#lbl-vuelto").text("00.00"); }
-                    else { f.data("cambio", "0"); }
-                    f.data("fv", ifv.data("codigo")); f.data("fp", ifp.val()); f.data("tt", pp.find(".tarjeta").data("codigo"));
-                    $("#forma-pago-total").text(sumar(t,COLIMPORTE).toFixed(2));
-                } else {alert("ERROR: No se puede agregar, porque el total a pagar ya coincide con la suma de los montos agregado");}
-                break;
-            case "P":
-                if (aux > 0) {
-                    e.push(""); e.push(""); e.push("");
-                    e.push($("#input-importe").val());
-                    var f = addRow(t, e);
-                    f.data("cambio", "0");
-                    $("#forma-pago-total").text(sumar(t, COLIMPORTE).toFixed(2));
-                    $("#input-importe").val("00.00");
-                } else {alert("ERROR: No se puede agregar, porque el total a pagar ya coincide con la suma de los montos agregado");}
-                break;
-        }
-    });
-
     $("#form-pagar-btn-aceptar").on("click", function () {
-        var ifv = $("input[name=forma-venta]:checked");
-        var ifp = $("input[name=forma-pago]:checked");
-        if (parseFloat($("#forma-pago-total").text()) == parseFloat($("#form-pagar-total").text())) {
-            var conc = $("#tabla-factura").data("codigo");
-            var anexo = obtenerAnexo($("#tabla-factura-anexo"));
-            var td = $("input[name=tipo-documentos]:checked").val();
-            var fp = new Array();
-            $("#tabla-forma-pago").find("tbody tr").each(function (index) {
-                var f = $(this);
-                var i = {
-                    "FORVENTA":f.data("fv") ,"FORPAGO": f.data("fp"),"TARJETA": f.data("tt"), "REFERENCIA": f.find("td").get(COLNROREF).innerHTML, "IMPORTE": f.find("td").get(COLIMPORTE).innerHTML, "VUELTO": f.data("cambio"),
-                };
-                fp.push(i);
-            });
-            $.ajax({
-                type: "post", dataType: 'json', cache: false, url: "/Conc/Facturar",
-                data: { codconc: conc, nroane: anexo.nrodoc, desane: anexo.desane, refane: anexo.refane, tipdoc: td, vp: JSON.stringify(fp) },
-                success: function (response, textStatus, jqXHR) {
-                    if (response.respuesta.split(":")[0] == "ERROR") { alert(response.respuesta); }
-                    if (response.respuesta.split(":")[0] == "EXITO") {
-                        printFactura($("#tabla-factura"), anexo, response);
-                        $("#undatencion").val("");
-                        clearDesc("#peratencion-desc", "#undatencion-desc");
-                        resetTabla("#tabla-factura");
-                        window.location = "/UndAtencion/Index";
-                    }
-                }, error: function (xhr, status) { errorAjax(xhr, status); }
-            });
-            $("#modal-pagar").modal("hide");
-        } else {alert("ERROR: Para poder realizar la transacci\u00F3n los totales debe coincidir");}
+        var faltante = parseFloat($("#forma-pago-total").text()) < parseFloat($("#form-pagar-total").text());
+        if (faltante) { agregarPago(); }
+        var faltante = parseFloat($("#forma-pago-total").text()) < parseFloat($("#form-pagar-total").text());
+        if (!faltante) {
+            var ifv = $("input[name=forma-venta]:checked");
+            var ifp = $("input[name=forma-pago]:checked");
+            if (parseFloat($("#forma-pago-total").text()) == parseFloat($("#form-pagar-total").text())) {
+                var conc = $("#tabla-factura").data("codigo");
+                var anexo = Anexo.get($("#tabla-factura-anexo"));
+                var td = $("input[name=tipo-documentos]:checked").val();
+                var fp = new Array();
+                $("#tabla-forma-pago").find("tbody tr").each(function (index) {
+                    var f = $(this);
+                    var i = {
+                        "FORVENTA": f.data("fv"), "FORPAGO": f.data("fp"), "TARJETA": f.data("tt"), "REFERENCIA": f.find("td").get(COLNROREF).innerHTML, "IMPORTE": f.find("td").get(COLIMPORTE).innerHTML, "VUELTO": f.data("cambio"),
+                    };
+                    fp.push(i);
+                });
+                $.ajax({
+                    type: "post", dataType: 'json', cache: false, url: "/Conc/Facturar",
+                    data: { codconc: conc, nroane: anexo.nrodoc, desane: anexo.desane, refane: anexo.refane, tipdoc: td, vp: JSON.stringify(fp) },
+                    success: function (response, textStatus, jqXHR) {
+                        if (response.respuesta.split(":")[0] == "ERROR") { alert(response.respuesta); }
+                        if (response.respuesta.split(":")[0] == "EXITO") {
+                            printFactura($("#tabla-factura"), anexo, response);
+                            $("#undatencion").val("");
+                            clearDesc("#peratencion-desc", "#undatencion-desc");
+                            resetTabla("#tabla-factura");
+                            window.location = "/UndAtencion/Index";
+                        }
+                    }, error: function (xhr, status) { errorAjax(xhr, status); }
+                });
+                $("#modal-pagar").modal("hide");
+            } else { alert("ERROR: Para poder realizar la transacci\u00F3n los totales debe coincidir"); }
+        } 
     });
 
     $("#conventa-btn-buscar").on("click", function () {

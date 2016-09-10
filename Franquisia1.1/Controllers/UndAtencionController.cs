@@ -117,6 +117,10 @@ namespace Franquisia1._1.Controllers
                    }
                    ViewBag.tipdocs = tipdocs.ToList();
 
+                   List<string> tdtipdoc = db.tdtipdoc.ToList().Select(b=>b.TIPDOC).ToList();
+                   var cm = db.maesgen.Where(a => a.idmaesgen.Equals("002") && tdtipdoc.Contains(a.clavemaesgen)).ToList();
+
+                   ViewBag.cm = cm.ToList();
                    conc c = db.conc.Where(a=>a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.UNDATENCION.Equals(und)).FirstOrDefault();
                    c.FACTURANDO = "S";
                    db.SaveChanges();
