@@ -188,31 +188,30 @@ function printFactura(t, a, r) {
     var s2 = "<pre class='text-left'>Tienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha}   Hora: {hora}\n************************************\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n************************************\nARTICULO\t|CANT|PRECIO|IMPORTE\n************************************\n<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>====================================<table><tr><td>\t\tTOTAL	S/.</td><td id='total'></td></tr><tr></tr><tr><td>Op. Exonerada\tS/.</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\tS/.</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\tS/.</td><td id='gravada'></td></tr><tr><td>IGV\t\tS/.</td><td id='igv'></td></tr><tr><td>Importe Total\tS/.</td><td id='importe-total'></td></tr></table><div id='resumen'></div></pre>";
     var s3 = "<pre>{cod-gen}\n\nPresentación impresa del Comprobante de Venta Electrónica, esta puede ser consultada en {pag-web} autorizado mediante resolución de intendencia {resol-inten} / SUNAT\n\n{pag-web}\nGRACIAS POR SU COMPRA</pre>";
     var su = $("<div></div>");
-    s1 = s1.replace("{cia-desc}", "");
-    s1 = s1.replace("{slogan}", "");
-    s1 = s1.replace("{cia-nom}", "");
-    s1 = s1.replace("{ruc}", "");
-    s1 = s1.replace("{dir-central}", "");
-    s1 = s1.replace("{telefono}", "");
+    s1 = s1.replace("{cia-desc}", r.cia.descia);
+    s1 = s1.replace("{slogan}", r.cia.slogan);
+    s1 = s1.replace("{cia-nom}", r.cia.shortcia);
+    s1 = s1.replace("{ruc}", r.cia.ruccia);
+    s1 = s1.replace("{dir-central}", r.cia.dircia);
+    s1 = s1.replace("{telefono}", r.cia.telefonos);
     s1 = s1.replace("{cod1}", "");
     s1 = s1.replace("{cod2}", "");
 
-    s2 = s2.replace("{tienda}", "");
-    s2 = s2.replace("{direccion}", "");
-    s2 = s2.replace("{distrito}", "");
-    s2 = s2.replace("{departamento}", "");
-    s2 = s2.replace("{fecha}", "");
-    s2 = s2.replace("{hora}", "");
-    s2 = s2.replace("{correlativo}", "");
-    s2 = s2.replace("{caja}", "");
-    s2 = s2.replace("{moneda}", "");
-    s2 = s2.replace("{cliente}", "");
-    s2 = s2.replace("{tipdoc}", "");
-    s2 = s2.replace("{nro-doc}", "");
-
+    s2 = s2.replace("{tienda}", r.suc.descripcion);
+    s2 = s2.replace("{direccion}", r.suc.direccion);
+    s2 = s2.replace("{distrito}", r.suc.distrito);
+    s2 = s2.replace("{departamento}", r.suc.departamento);
+    s2 = s2.replace("{fecha}", r.fecha);
+    s2 = s2.replace("{hora}", r.hora);
+    s2 = s2.replace("{correlativo}", r.venc.CODIGO);
+    s2 = s2.replace("{caja}", r.venc.PUNEMI);
+    s2 = s2.replace("{moneda}", r.venc.CODMON);
+    s2 = s2.replace("{cliente}", r.anex.desane);
+    s2 = s2.replace("{tipdoc}", r.tipdoc);
+    s2 = s2.replace("{nro-doc}", r.anexo.nrodoc);
 
     s3 = s3.replace("{cod-gen}", "");
-    s3 = replaceAll(s3, "{pag-web}", "");
+    s3 = replaceAll(s3, "{pag-web}", r.cia.website);
     s3 = s3.replace("{resol-inten}", "");
 
     s2 = $(s2);
@@ -226,13 +225,20 @@ function printFactura(t, a, r) {
         nf.append($("<td></td>").append($(this).find("td").get(Form.CSUBT).innerHTML));
         ti.append(nf);
     });
-    var r = s2.find("#resumen");
+    var res = s2.find("#resumen");
     $.each(r.resumen, function (idx, obj) {
         s = "SON: "+"\n";
         s += obj["descripcion"] + " " + obj["RECIBIDO"] + " NUEVOS SOLES\n";
         if (obj["tarjeta"] != "S") { s += "VUELTO: " + parseFloat(obj["VUELTO"]).toFixed(2) + " NUEVOS SOLES";}
-        r.append(s);
+        res.append(s);
     });
+    res.append(r.cajero);
+    s2.find("#total").append(r.total);
+    s2.find("#gravada").append(r.gravado);
+    s2.find("#inafecta").append(r.inafecto);
+    s2.find("#exonerada").append(r.exonerado);
+    s2.find("#igv").append(r.igv);
+    s2.find("#importe-total").append(r.total);
     su.append($(s1)); su.append(s2); su.append($(s3));
     if (!print(su)) { alert("ERROR: Error al imprimir"); }
 }

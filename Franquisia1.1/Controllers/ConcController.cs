@@ -158,16 +158,20 @@ namespace Franquisia1._1.Controllers
                     }
                     db.venc.Add(venc);
                     db.SaveChanges();
+                    ciafile ciafile = db.ciafile.Where(a=>a.idcia.Equals(codcia)).FirstOrDefault();
                     string codaux = punemi + tmp.ToString().PadLeft(8, '0');
-                    sucursal suc = db.sucursal.Where(a=>a.codcia.Equals(codcia) && a.codigo.Equals(sucursal) && a.situa.Equals("V")).FirstOrDefault();
-                    var u =(from a in db.forpago join b in db.venpag on a.codigo equals b.FORPAGO
-                           where b.CODCIA.Equals(codcia) && b.CODIGO.Equals(codaux)
-                                select new {a.descripcion, a.is_tarjeta, b.IMPORTE, b.RECIBIDO, b.VUELTO  }
-                                ).ToList();
+                    var u = (from a in db.venpag join b in db.forventa on a.FORVENTA equals b.codigo
+                             from c in db.forpago.Where(d=>d.codigo.Equals(a.FORPAGO)).DefaultIfEmpty()
+                             from d in db.tarjetas.Where(t=>t.codigo.Equals(a.TARJETA)).DefaultIfEmpty()
+                             where a.CODIGO.Equals(codaux)
+                             select new{codigo=a.CODIGO, importe=a.IMPORTE, recibido=a.RECIBIDO,
+                             vuelto=a.VUELTO, forventa=b.descripcion, forpago=c.descripcion, tarjeta=d.descripcion                             }
+                                 ).ToList();
                     string codper = conc.PERATENCION;
                     peratencion per = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(codper)).FirstOrDefault();
-                    return Json(new { respuesta = "EXITO: Exito", gravado=sumagra, exonerado=sumaexo, inafecto = sumaina,
-                        direccion=suc.direccion, igv=sumaigv,total=total, resumen=u, cajero=desusr, vendedor=per.descripcion
+                    return Json(new { respuesta = "EXITO: Exito", cia=ciafile, suc=suc, fecha=DateTime.Now.ToString("dd/MM/yyyy"),
+                        hora= DateTime.Now.ToString("hh:mm tt"),venc=venc, anexo=anexo, tipdoc="DNI", gravado=sumagra, exonerado=sumaexo, inafecto = sumaina,
+                        igv=sumaigv, total=total, resumen=u, cajero=desusr,
                     }, JsonRequestBehavior.AllowGet); 
                 }
                 else { return Json(new { respuesta = "ERROR: Error el consumo est\u00E1 cerrado" }, JsonRequestBehavior.AllowGet); }
