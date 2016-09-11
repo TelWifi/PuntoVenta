@@ -1,6 +1,6 @@
 var MSG_SELECCIONE_UNDATENCION = "RECOMENDACION: Seleccione una unidad de atenci\u00F3n";var MSG_SELECCIONE_DIVATENCION = "RECOMENDACION: Seleccione una divisi\u00F3n de atenci\u00F3n";var MSG_DESEA_APERTURAR = "La unidad de atenci\u00F3n No est\u00E1 aperturada\n\u00BFDesea aperturarla?";var MSG_ERROR_SOLO_NUMEROS = "ERROR: <attr> solo debe contener caracteres num\u00E9ricos";var MSG_DESEA_ANULAR = "\u00BFDesea anular el consumo?";var MSG_NO_PUEDE_SER_MENOR_QUE = "ERROR: La cantidad ingresada no puede ser menor que {text}";var MSG_CAMPOS_NULOS_VACIOS = "ERROR: Los campos no pueden ser nulos o vac\u00EDos";var MSG_NO_NULO_VACIO = "ERROR: <attr> no puede ser nulo o vac\u00EDo";var MSG_SIN_ELEMENTOS = "ERROR: No existen elementos";var MSG_NO_EXISTE = "ERROR: No existe <attr>";var MSG_DESEA_CAMBIAR_UNDATENCION = "\u00BFSeguro que desea cambiar a otra unidad de atenci\u00F3n";var MSG_ANEXO_NROCAR_NRODOC = "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres";
 var IMG_DEFAULT = "iVBORw0KGgoAAAANSUhEUgAAACUAAAAdCAYAAAAtt6XDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA0SURBVFhH7c4xAQAwDASh+jf9tcCY4VDA20GlVClVSpVSpVQpVUqVUqVUKVVKlVKlVCmzffdHtC3tn87PAAAAAElFTkSuQmCC";
-var ANCHO_IMPRESION = "264px"; var TAMANO_FUENTE = "13px"; var CARSUBSTR = 3;
+var CARSUBSTR = 3;
 var Validar = {
     RUC: function (ruc) {
         var r = /\d{11}/;
@@ -48,6 +48,7 @@ function removeRow(fila) { fila.remove();}
 function actualizarSubtotal(f, inc, clp, cls) {var p = f.find("td").get(clp);var sb = f.find("td").get(cls);sb.innerHTML = (parseFloat(p.innerHTML) * parseFloat(inc.val())).toFixed(2);}
 function actualizarTotal(t, cs) {var s = 0;$(t).find("tbody tr").each(function (index) {s += parseFloat($(this).find("td").get(cs).innerHTML);});$(t + "-total").text(s.toFixed(2));}
 function actualizarItems(t, ci) {$(t).find("tbody tr").each(function (index) {$(this).find("td").get(ci).innerHTML = index + 1;});$(t+"-items").text($(t).find("tbody tr").length);}
+function replaceAll(str, find, replace) { return str.replace(new RegExp(find, 'g'), replace); }
 function buscarAjax(dir, clv, t, attr, f) {
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: dir,data: { clave: clv },
@@ -58,13 +59,14 @@ function buscarAjax(dir, clv, t, attr, f) {
     });
 }
 function print(div) {
-    var mw = window.open('', 'Imprimir Factura', 'height=500,width=' + ANCHO_IMPRESION);
+    var WIDTHPRINT = "280px", FONT_SIZE = "14px";
+    var mw = window.open('', 'Imprimir Factura', 'height=500,width=' + WIDTHPRINT);
     if (!mw.print) { return false; }
-    mw.document.write('<html><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><title>Imprimir Factura</title>');
-    mw.document.write('</head><body style=\"font-family: Arial;font-size:' + TAMANO_FUENTE + '; width:' + ANCHO_IMPRESION + ';\">');
+    var s = "<html lang='es'><head><meta charset='utf-8'><style>	body{width:" + WIDTHPRINT + ";font-size:" + FONT_SIZE + ";text-align:center;}	pre{white-space: pre-wrap;}	table{text-align: right;width: 100%;}	table>tbody>tr>td:nth-child(1) {text-align: left;}	.text-left{		text-align: left;	}</style></head><body>";
+    mw.document.write(s);
     mw.document.write($(div).html());
-    mw.document.write("<script>window.onload = function() { print(); close(); };</script>");
-    mw.document.write('</body></html>');
+    mw.document.write("<script type='text/javascript'>window.onload = function() { print(); close(); } </script>");
+    mw.document.write("</body></html>");
     mw.document.close(); // necessary for IE >= 10
     mw.focus(); // necessary for IE >= 10
     return true;

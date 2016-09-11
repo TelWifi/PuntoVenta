@@ -183,39 +183,58 @@ function resetTabla(t) {
     Anexo.clear( $(t + "-anexo")); $(t).find("tbody tr").remove(); $(t).data("codigo", ""); $(t + "-items").text("-"); $(t + "-igv").text("-"); $(t + "-total").text("-");
 }
 function printFactura(t, a, r) {
-    var itd = "Nro. Items: ".concat(t.find("tbody tr").length);
-    var ttld = "Total: ".concat(sumar(t, Form.CSUBT).toFixed(2));
-    var tp = $("<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\"><thead><tr> <th>Cant.</th> <th style=\"text-align:left;\">Producto</th><th style='text-align:right;'>Total</th></tr></thead><tbody></tbody></table>");
-    
+
+    var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\nBOLETA DE VENTA ELECTRÓNICA\n{cod1}-{cod2}</pre>";
+    var s2 = "<pre class='text-left'>Tienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha}   Hora: {hora}\n************************************\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n************************************\nARTICULO\t|CANT|PRECIO|IMPORTE\n************************************\n<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>====================================<table><tr><td>\t\tTOTAL	S/.</td><td id='total'></td></tr><tr></tr><tr><td>Op. Exonerada\tS/.</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\tS/.</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\tS/.</td><td id='gravada'></td></tr><tr><td>IGV\t\tS/.</td><td id='igv'></td></tr><tr><td>Importe Total\tS/.</td><td id='importe-total'></td></tr></table><div id='resumen'></div></pre>";
+    var s3 = "<pre>{cod-gen}\n\nPresentación impresa del Comprobante de Venta Electrónica, esta puede ser consultada en {pag-web} autorizado mediante resolución de intendencia {resol-inten} / SUNAT\n\n{pag-web}\nGRACIAS POR SU COMPRA</pre>";
+    var su = $("<div></div>");
+    s1 = s1.replace("{cia-desc}", "");
+    s1 = s1.replace("{slogan}", "");
+    s1 = s1.replace("{cia-nom}", "");
+    s1 = s1.replace("{ruc}", "");
+    s1 = s1.replace("{dir-central}", "");
+    s1 = s1.replace("{telefono}", "");
+    s1 = s1.replace("{cod1}", "");
+    s1 = s1.replace("{cod2}", "");
+
+    s2 = s2.replace("{tienda}", "");
+    s2 = s2.replace("{direccion}", "");
+    s2 = s2.replace("{distrito}", "");
+    s2 = s2.replace("{departamento}", "");
+    s2 = s2.replace("{fecha}", "");
+    s2 = s2.replace("{hora}", "");
+    s2 = s2.replace("{correlativo}", "");
+    s2 = s2.replace("{caja}", "");
+    s2 = s2.replace("{moneda}", "");
+    s2 = s2.replace("{cliente}", "");
+    s2 = s2.replace("{tipdoc}", "");
+    s2 = s2.replace("{nro-doc}", "");
+
+
+    s3 = s3.replace("{cod-gen}", "");
+    s3 = replaceAll(s3, "{pag-web}", "");
+    s3 = s3.replace("{resol-inten}", "");
+
+    s2 = $(s2);
+
+    var ti = s2.find("#t-i");
     t.find("tbody tr").each(function () {
         var nf = $("<tr></tr>");
-        nf.append($("<td style='text-align:center;'></td>").append($(this).find("td input[type=number]").val()));
         nf.append($("<td></td>").append($(this).find("td").get(Form.CPRODUCTO).innerHTML));
-        nf.append($("<td style='text-align:right;'></td>").append($(this).find("td").get(Form.CSUBT).innerHTML));
-        tp.find("tbody").append(nf);
+        nf.append($("<td></td>").append($(this).find("td input[type=number]").val()));
+        nf.append($("<td></td>").append($(this).find("td").get(Form.CPRECIO).innerHTML));
+        nf.append($("<td></td>").append($(this).find("td").get(Form.CSUBT).innerHTML));
+        ti.append(nf);
     });
-    var separador = "<hr />";
-    var dp = $("<div><h4 align=center>EL CHALAN S.A.C.</h4><h5 align=center>" + r.direccion + "</h5><div>");
-    dp.append("Raz\u00F3n Social/Ape. y Nombres: " + a.desane + "<br/>RUC/DNI: " + a.nrodoc + "<br/>Direcci\u00F3n: " + a.refane + "<br/>"); dp.append(tp);
-    var strf = "<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\" ><tr><td>Op. Gravadas</td><td style='text-align:right;'>{gravado}</td></tr><tr><td>Op. Exoneradas</td><td style='text-align:right;'>{exonerado}</td></tr><tr><td>Op. Inafectas</td><td style='text-align:right;'>{inafecto}</td></tr><tr><td>I.G.V. S./</td><td style='text-align:right;'>{IGV}</td></tr><tr><td>Importe Total a Pagar S./</td><td style='text-align:right;'>{TOTAL}</td></tr></table>";
-    strf = strf.replace("{gravado}", parseFloat(r.gravado).toFixed(2));
-    strf = strf.replace("{exonerado}", parseFloat(r.exonerado).toFixed(2));
-    strf = strf.replace("{inafecto}", parseFloat(r.inafecto).toFixed(2));
-    strf = strf.replace("{IGV}", parseFloat(r.igv).toFixed(2));
-    strf = strf.replace("{TOTAL}", parseFloat(r.total).toFixed(2));
-    taux = $(strf)
-    var s = "";
+    var r = s2.find("#resumen");
     $.each(r.resumen, function (idx, obj) {
-        s += "<tr><td>SON: </tr></td>";
-        s += "<tr><td>" + obj["descripcion"] + " " + obj["RECIBIDO"] + " (Soles)</td></tr>";
-        s += "<tr><td>Vuelto: S/." + parseFloat(obj["VUELTO"]).toFixed(2) + "</td></tr>";
+        s = "SON: "+"\n";
+        s += obj["descripcion"] + " " + obj["RECIBIDO"] + " NUEVOS SOLES\n";
+        if (obj["tarjeta"] != "S") { s += "VUELTO: " + parseFloat(obj["VUELTO"]).toFixed(2) + " NUEVOS SOLES";}
+        r.append(s);
     });
-    s += "<tr><td colspan='2'>Cajero: " + r.cajero + "</td></tr>";
-    s += "<tr><td colspan='2'>Vendedor: " + r.vendedor + "</td></tr>";
-    taux.append($(s))
-    dp.append($(separador));
-    dp.append(taux);
-    if (!print(dp)) { alert("ERROR: Error al imprimir"); }
+    su.append($(s1)); su.append(s2); su.append($(s3));
+    if (!print(su)) { alert("ERROR: Error al imprimir"); }
 }
 function guardarFactura(t) {
     if (!Validar.Dato(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
