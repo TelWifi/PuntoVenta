@@ -23,7 +23,7 @@ function updateRow(f, t) {
 }
 function resetTabla(t) { $(t).find("tbody tr").remove(); $(t).data("codigo", ""); $(t + "-items").text("-"); $(t + "-igv").text("-"); $(t + "-total").text("-"); $(t + "-sel-items").text("-"); $(t + "-sel-total").text("-"); $(t + "-sel-igv").text("-"); }
 function guardarFactura(t) {
-    if (!Validar.Dato(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
+    if (!Validar.Dato(t.data("codigo"))) { return alert(Msg.NO_EXISTE.replace("el c\u00F3digo del consumo")); }
     var cod = t.data("codigo"); var arr = new Array();
     t.find("tbody tr").each(function (index) {
         var cond = {"CANTIDAD": parseFloat($(this).find("td input[type=number]").val()), "CONVENTA": $(this).data("codigo"), "ITEM": $(this).find("td").get(COLITEMS).innerHTML,};
@@ -37,7 +37,7 @@ function guardarFactura(t) {
 }
 function agregarProducto(pp) {
     var txtc = $("<input type=\"number\"  min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { tecladoNumerico(txtc); }
+    if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Crear",
         data: { codigo: $("#tabla-factura").data("codigo"), cantidad: txtc.val() , conventa: pp.data("codigo")  },
@@ -53,14 +53,14 @@ function agregarProducto(pp) {
             btn_eliminar.on('click', function () { removeRow(nf, tf);});
             txtc.change(function () {
                 var cant = parseFloat($(this).val());
-                if (cant > 0) { updateRow(nf, "#tabla-factura"); } else { $(this).val(1); updateRow(nf, "#tabla-factura"); alert(MSG_NO_PUEDE_SER_MENOR_QUE.replace("{text}", "una unidad")); }
+                if (cant > 0) { updateRow(nf, "#tabla-factura"); } else { $(this).val(1); updateRow(nf, "#tabla-factura"); alert(Msg.CANT_NO_MENOR_A.replace("{text}", "una unidad")); }
             });
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
 function obtenerDetalle(sl, cd, t, pa, ua, f) {
     if (!Validar.Dato(sl.val()) || !Validar.Dato(cd) || !Validar.Dato(t)) { return; }
-    if (!Validar.StrSoloNum(sl.val())) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "La unidad de atenci\u00F3n")); }
+    if (!Validar.StrSoloNum(sl.val())) { return alert(Msg.ERROR_CAMPO_NUMERICO.replace("<attr>", "La unidad de atenci\u00F3n")); }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Obtener", data: { codund: sl.val(), coddiv: cd },
         success: function (response, textStatus, jqXHR) {
@@ -76,14 +76,14 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
                 $(pa).text(response.peratencion.descripcion);
                 $.each(response.lista, function (idx, obj) {
                     var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"" + obj["CANTIDAD"] + "\" class=\"numero\" />");
-                    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { tecladoNumerico(txtc); }
+                    if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
                     var btne = $("<button class='close remove-producto red'>&times;</button>");
                     var el = [$(t).find("tr").length, obj["DESCRIPCION"], parseFloat(obj["PREUNI"]).toFixed(2), txtc, parseFloat(obj["TOTAL"]).toFixed(2), btne];
                     var nf = addRow($(t), el); nf.data("codigo", obj["CONVENTA"]); nf.data("item", obj["ITEM"]);
                     btne.on('click', function () {removeRow(nf, t);});
                     txtc.change(function () {
                         var cant = parseFloat($(this).val());
-                        if (cant > 0) { updateRow(nf, t); } else { $(this).val(1); updateRow(nf, t); alert(MSG_NO_PUEDE_SER_MENOR_QUE.replace("{text}", "una unidad")); }
+                        if (cant > 0) { updateRow(nf, t); } else { $(this).val(1); updateRow(nf, t); alert(Msg.CANT_NO_MENOR_A.replace("{text}", "una unidad")); }
                     });
                     $(t).append(nf);
                 });
@@ -100,8 +100,8 @@ function changeUndAtencion(txt) {
                 function (select) {
                     if (confirm(MSG_DESEA_APERTURAR)) { $("#modal-seleccionar-peratencion").modal('show'); }
                 });
-        } else { alert(MSG_SELECCIONE_UNDATENCION); }
-    } else { $(this).val(""); alert(MSG_SELECCIONE_DIVATENCION); }
+        } else { alert(Msg.SELECCION_UND); }
+    } else { $(this).val(""); alert(Msg.SELECCION_DIV); }
 }
 $(document).ready(function () {
     $("#divatencion").on("change", function () {
@@ -112,13 +112,13 @@ $(document).ready(function () {
     $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this));}});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
     obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) { console.log("sdsa"); });
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
+    if ($(App.ControlTeclado + ":checked").val() == "ACT") {
         $("input[type='text']").keyboard();
         tecladoNumerico($("input[type='number']"));
     }
     $("#cambiar-undatencion").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(Msg.SELECCION_DIV); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(Msg.SELECCION_UND); }
         $("#modal-cambiar-undatencion").modal("show");
         $("#modal-cambiar-divatencion").val($("#divatencion").val());
         $("#modal-cambiar-divatencion").change();
@@ -139,10 +139,10 @@ $(document).ready(function () {
     });
 
     $("#factura-pre-factura").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(Msg.SELECCION_DIV); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(Msg.SELECCION_UND); }
         var t = $("#tabla-factura");
-        if (t.find("tbody tr").length <= 0) { return alert(MSG_SIN_ELEMENTOS); }
+        if (t.find("tbody tr").length <= 0) { return alert(Msg.SIN_ELEMENTOS); }
         printPreFactura(t)
     });
 
@@ -171,8 +171,8 @@ $(document).ready(function () {
     });
 
     $("#factura-btn-guardar").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($("#divatencion").val())) { return alert(Msg.SELECCION_DIV); }
+        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(Msg.SELECCION_UND); }
         guardarFactura($("#tabla-factura"));
     });
     

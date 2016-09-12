@@ -37,6 +37,42 @@ var Validar = {
     Dato: function (d) {return d != undefined && Validar.StrValido(d);},
 
 };
+var Msg = {
+    UNDATENCION: "unidad de atenci\u00F3n",
+    DIVATENCION: "divisi\u00F3n de atenci\u00F3n",
+
+    APERTURAR_UND: "La " + Msg.UNDATENCION + " No est\u00E1 aperturada\n\u00BFDesea aperturarla?",
+    ANULAR_CONSUMO: "\u00BFDesea anular el consumo?",
+    CANT_NO_MENOR_A: "ERROR: La cantidad ingresada no puede ser menor que <attr>",
+    CAMPOS_NULOS_O_VACIOS: "ERROR: Los campos no pueden ser nulos o vac\u00EDos",
+    CAMBIAR_UND: "\u00BFSeguro que desea cambiar a otra " + Msg.UNDATENCION,
+    ERROR_CAMPO_NUMERICO: "ERROR: <attr> solo debe contener caracteres num\u00E9ricos",
+    ERROR_IMPRIMIR: "ERROR: Error al imprimir",
+    NO_NULO_O_VACIO: "ERROR: <attr> no puede ser nulo o vac\u00EDo",
+    NO_EXISTE: "ERROR: No existe <attr>",
+    NRODOC_INVALIDO: "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres",    
+    SELECCIONE_ATTR: "RECOMENDACION: Seleccione <attr>",
+    SELECCION_UND: Msg.SELECCIONE_ATTR.replace("<attr>", "una " + Msg.UNDATENCION),
+    SELECCION_DIV: Msg.SELECCIONE_ATTR.replace("<attr>", "una " + Msg.DIVATENCION),
+    SIN_ELEMENTOS: "ERROR: No existen elementos",
+};
+var App = {
+    ControlTeclado: "input[name=control-teclado-opciones]",
+    CARSUBSTR: 3,
+    getImageText: function (t, cl) {
+        var c = $("<canvas height='250px' width='300px'></canvas>");
+        var ctx = c.getContext("2d");
+        ctx.font = "bold 15px sans-serif"; ctx.fillText(t, 50, 50);
+        var img = c.toDataURL("image/png");
+        return $('<img src="' + img + '" class="img-responsive img-thumbnail '+cl+'"/>');
+    },
+    getImageArr: function (arr,cl) {
+        return $("<img class=\"img-responsive img-thumbnail "+cl+"\" src=\"data:image/gif;base64," + decBase64(arr) + "\" />");
+    },
+    getPanelServ: function () {
+        return $("<div class=\"col-xs-4 col-sm-3 col-md-2 panel-servicio\"></div>")
+    }
+};
 function decBase64(a) { var s = ""; l = a.length; for (var i = 0; i < l; i++) { s += String.fromCharCode(a[i]); } return s; }
 function sumar(t, c) {var s = 0; t.find("tbody tr").each(function (index) { s += parseFloat($(this).find("td").get(c).innerHTML); }); return s;}
 function clearDesc(p,u) {$(p).data("codigo", ""); $(p).text(""); $(u).data("codigo", ""); $(u).text("");}
@@ -88,10 +124,10 @@ function printPreFactura(t, f) {
     taux = $(strf)
     dp.append($(separador));
     dp.append(taux);
-    if (!print(dp)) { alert("ERROR: Error al imprimir"); }
+    if (!print(dp)) { alert(Msg.ERROR_IMPRIMIR); }
 }
 function cambiarUndatencion(cd,su, sd, nu, nd, udes){
-    if (!Validar.Dato(cd) || !Validar.Dato(su.val()) || !Validar.Dato(sd.val()) || !Validar.Dato(nu) || !Validar.Dato(nd)){ return alert(MSG_CAMPOS_NULOS_VACIOS); }
+    if (!Validar.Dato(cd) || !Validar.Dato(su.val()) || !Validar.Dato(sd.val()) || !Validar.Dato(nu) || !Validar.Dato(nd)){ return alert(Msg.CAMPOS_NULOS_O_VACIOS); }
   $.ajax({
         type: "post", dataType: 'json', cache: false, url: '/UndAtencion/Cambiar', data: { codigo: cd, nuevound: nu, nuevodiv: nd },
         success: function (response, textStatus, jqXHR) {
@@ -111,14 +147,14 @@ function buscarConventaDescripcion(d, p) {
             if (response.respuesta.toString().split(":")[0] == "EXITO") {
                 $.each(response.lista, function (idx, obj) {
                     var img;
-                    if (obj["foto64"] != null) { img = $("<img class=\"img-responsive img-thumbnail img-servicio \" src=\"data:image/gif;base64," + decBase64(obj["foto64"]) + "\" />"); }
-                    else { img = $("<img class=\"img-responsive img-thumbnail img-servicio \" src=\" data:image/png;base64,"+IMG_DEFAULT+"\"/>"); }
-                    var ps = $("<div class=\"col-xs-4 col-sm-3 col-md-2 panel-servicio\"></div>");
+                    if (obj["foto64"] != null) { img = App.getImageArr(obj["foto64"], "img-servicio"); }
+                    else { img = App.getImageText(obj["descripcion"], "img-servicio"); }
+                    var ps = App.getPanelServ();
                     ps.data("codigo", obj["codigo"]); ps.data("precio", obj["precio"]); ps.data("tipovv", obj["tipovalorventa"]);
                     var n = $("<div class=\"nombre\">" + obj["descripcion"] + "</div>");
                     ps.append(img); ps.append(n); p.append(ps);
                     img.on("click", function () {
-                        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { alert(MSG_SELECCIONE_UNDATENCION); } else { agregarProducto(ps); }
+                        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { alert(Msg.SELECCION_UND); } else { agregarProducto(ps); }
                     });
                 });
             } else { alert(response.respuesta); }
@@ -126,7 +162,7 @@ function buscarConventaDescripcion(d, p) {
     });
 }
 function buscarConventaClaserv(c, p) {
-    if (!Validar.Dato(c)) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "El c\u00F3digo de claserv")); }
+    if (!Validar.Dato(c)) { return alert(Msg.NO_NULO_O_VACIO.replace("<attr>", "El c\u00F3digo de claserv")); }
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: '/Conventa/Obtener', data: { claserv: c },
         success: function (response, textStatus, jqXHR) {
@@ -134,14 +170,14 @@ function buscarConventaClaserv(c, p) {
             if (response.respuesta.toString().split(":")[0] == "EXITO") {
                 $.each(response.lista, function (idx, obj) {
                     var img;
-                    if (obj["foto64"] != null) { img = $("<img class=\"img-responsive img-thumbnail img-servicio \" src=\"data:image/gif;base64," + decBase64(obj["foto64"]) + "\" />"); }
-                    else { img = $("<img class=\"img-responsive img-thumbnail img-servicio \" src=\" data:image/png;base64,"+IMG_DEFAULT+"\"/>"); }
-                    var ps = $("<div class=\"col-xs-4 col-sm-3 col-md-2 panel-servicio\"></div>");
+                    if (obj["foto64"] != null) { img = App.getImageArr(obj["foto64"], "img-servicio"); }
+                    else { img = App.getImageText(obj["descripcion"], "img-servicio"); }
+                    var ps = App.getPanelServ();
                     ps.data("codigo", obj["codigo"]); ps.data("precio", obj["precio"]); ps.data("tipovv", obj["tipovalorventa"]);
                     var n = $("<div class=\"nombre\">" + obj["descripcion"] + "</div>");
                     ps.append(img); ps.append(n); p.append(ps);
                     img.on("click", function () {
-                        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { alert(MSG_SELECCIONE_UNDATENCION); } else { agregarProducto(ps); }
+                        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { alert(Msg.SELECCION_UND); } else { agregarProducto(ps); }
                     });
                 });
             } else { alert(response.respuesta); }
@@ -160,7 +196,6 @@ function aperturarUndAtencion(d, u, p, c, f) {
 }
 function tecladoNumerico(s, n) {
     if (!Validar.Dato(n)) { n = 11; }
-
     s.keyboard({
         layout: 'custom',
         customLayout: {
@@ -177,12 +212,13 @@ function tecladoNumerico(s, n) {
         useCombos: false,
     });
 }
+
 $(document).ready(function () {
-    $("input[name=control-teclado-opciones]:checked").parent().siblings('.btn').removeClass("active");
-    $("input[name=control-teclado-opciones]:checked").parent().addClass("active");  
+    $(App.ControlTeclado+":checked").parent().siblings('.btn').removeClass("active");
+    $(App.ControlTeclado+":checked").parent().addClass("active");  
     $("#control-teclado .btn").on("click", function () {
         $(this).siblings('.btn').removeClass("active");$(this).addClass("active");$(this).children("input[type=radio]").prop('checked', true);
-        if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
+        if ($(App.ControlTeclado + ":checked").val() == "ACT") {
             tecladoNumerico($("input[type=number]")); $("input[type=text]").keyboard();
         } else {
             $("input[type=number]").each(function () {var t = $(this).keyboard().getkeyboard();t.destroy();});
@@ -191,14 +227,5 @@ $(document).ready(function () {
     });
     $("#btn-update").on("click", function () {
         changeUndAtencion($('#undatencion'));
-    });
-    $("#puntos-emision").on("change", function () {
-        var v = $(this).val();
-        $.ajax({
-            type: "post", dataType: 'json', cache: false,
-            url: '/Punemi/Cambiar', data: { codigo: v },
-            success: function (response, textStatus, jqXHR) {if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-            }, error: function (xhr, status) {errorAjax(xhr,status)}
-        });
     });
 });

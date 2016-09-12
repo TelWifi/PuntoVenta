@@ -2,6 +2,12 @@ var Form = {
     CITEMS: 0, CPRODUCTO: 1, CPRECIO: 2, CTIPOVV: 3, CCANT: 4, CSUBT: 5, CBTNELI: 6,
     CFV: 0, CFP: 1, CTTAR: 2, CNROREF: 3, CIMPORTE: 4,
     IGV: 18,
+    Tabla: "#tabla-factura",
+    Und: "#undatencion",
+    Div: "#divatencion",
+    UndDesc: Form.Und + "-desc",
+    PerDesc: "#peratencion-desc",
+    Anexo:Form.Tabla+"-anexo",
     updateTotalCheckbox: function (t, cs, r) {
         var s = 0;
         $(t).find("tbody tr").each(function (index) { if ($(this).find("input[type=checkbox]").prop("checked")) { s += parseFloat($(this).find("td").get(cs).innerHTML); } });
@@ -58,31 +64,21 @@ var Anexo = {
                 $(Anexo.FormBody).append(Anexo.getFieldRefane());
                 break;
         }
-        if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {
+        if ($(App.ControlTeclado+":checked").val() == "ACT") {
             $(Anexo.FormBody).find("input[type=text]").keyboard();
             $(Anexo.FormBody).find("textarea").keyboard();
         }
     },
-    getFieldNrodoc: function (t) {
-        return Form.getInput('input-nrodoc', 'text', t, 'INGRESE SU ' + t);
-    },
-    getFieldRefane: function () {
-        return Form.getTextArea('input-refane', 'Direcci\u00F3n', 2, 'Ingrese su Direcci\u00F3n');
-    },
-    getFieldApe: function () {
-        return Form.getInput('input-ape', 'text', 'Apellidos', 'Ingrese sus apellidos');
-    },
+    getFieldNrodoc: function (t) {return Form.getInput('input-nrodoc', 'text', t, 'INGRESE SU ' + t);},
+    getFieldRefane: function () {return Form.getTextArea('input-refane', 'Direcci\u00F3n', 2, 'Ingrese su Direcci\u00F3n');},
+    getFieldApe: function () {return Form.getInput('input-ape', 'text', 'Apellidos', 'Ingrese sus apellidos');},
     getFieldNombres: function () {
         var d = $("<div></div>"); d.append(Form.getInput('input-nom1', 'text', 'Nombre 1', 'Ingrese su primer nombre')); d.append(Form.getInput('input-nom2', 'text', 'Nombre 2', 'Ingrese su segundo nombre'));
         return d;
     },
-    getFieldRS: function () {
-        return Form.getTextArea('input-desane', 'Raz\u00F3n social', 2, '');
-    },
+    getFieldRS: function () { return Form.getTextArea('input-desane', 'Raz\u00F3n social', 2, '');},
 
-    show: function (a, d) {
-        d.find(".anexo-desane").val(a.desane); d.find(".anexo-nrodoc").val(a.nrodoc); d.find(".anexo-refane").val(a.refane);
-    },
+    show: function (a, d) {d.find(".anexo-desane").val(a.desane); d.find(".anexo-nrodoc").val(a.nrodoc); d.find(".anexo-refane").val(a.refane);},
     clear: function (d) { Anexo.show({ "desane": "", "nrodoc": "", "refane": "" }, d); },
     get: function (d) { return { desane: d.find(".anexo-desane").val(), nrodoc: d.find(".anexo-nrodoc").val(), refane: d.find(".anexo-refane").val() }; },
     updateDB: function (a, d) {
@@ -134,8 +130,8 @@ var Anexo = {
         });
     },
     createDB: function (a, d, m) {
-        if (a.tipdoc == "RUC" && a.nrodoc.length != 11) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
-        if (a.tipdoc == "DNI" && a.nrodoc.length != 8) { return alert(MSG_ANEXO_NROCAR_NRODOC); }
+        if (a.tipdoc == "RUC" && a.nrodoc.length != 11) { return alert(Msg.NRODOC_INVALIDO); }
+        if (a.tipdoc == "DNI" && a.nrodoc.length != 8) { return alert(Msg.NRODOC_INVALIDO); }
         if (!Validar.Anexo(a)) { return; }
         $.ajax({
             type: "get", dataType: 'json', cache: false, url: '/Anexos/Crear', data: { desane: a.desane, tipdoc: a.tipdoc, nrodoc: a.nrodoc, refane: a.refane },
@@ -194,8 +190,8 @@ function printFactura(t, a, r) {
     s1 = s1.replace("{ruc}", r.cia.ruccia);
     s1 = s1.replace("{dir-central}", r.cia.dircia);
     s1 = s1.replace("{telefono}", r.cia.telefonos);
-    s1 = s1.replace("{cod1}", "");
-    s1 = s1.replace("{cod2}", "");
+    s1 = s1.replace("{cod1}", r.cod1);
+    s1 = s1.replace("{cod2}", r.cod2);
 
     s2 = s2.replace("{tienda}", r.suc.descripcion);
     s2 = s2.replace("{direccion}", r.suc.direccion);
@@ -240,10 +236,10 @@ function printFactura(t, a, r) {
     s2.find("#igv").append(r.igv);
     s2.find("#importe-total").append(r.total);
     su.append($(s1)); su.append(s2); su.append($(s3));
-    if (!print(su)) { alert("ERROR: Error al imprimir"); }
+    if (!print(su)) { alert(Msg.ERROR_IMPRIMIR); }
 }
 function guardarFactura(t) {
-    if (!Validar.Dato(t.data("codigo"))) { return alert(MSG_NO_EXISTE.replace("el c\u00F3digo del consumo")); }
+    if (!Validar.Dato(t.data("codigo"))) { return alert(Msg.NO_EXISTE.replace("el c\u00F3digo del consumo")); }
     var cod = t.data("codigo"); var ar = new Array(); var cond;
     t.find("tbody tr").each(function (index) {
         cond = {
@@ -259,7 +255,7 @@ function guardarFactura(t) {
 }
 function obtenerDetalle(sl, cd, t, pa, ua, f) {
     if (!Validar.Dato(sl.val()) || !Validar.Dato(cd) || !Validar.Dato(t)) { return; }
-    if (!Validar.StrSoloNum(sl.val())) { return alert(MSG_ERROR_SOLO_NUMEROS.replace("<attr>", "La unidad de atenci\u00F3n")); }
+    if (!Validar.StrSoloNum(sl.val())) { return alert(Msg.ERROR_CAMPO_NUMERICO.replace("<attr>", Msg.UNDATENCION)); }
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Obtener", data: { codund: sl.val(), coddiv: cd },
         success: function (response, textStatus, jqXHR) {
@@ -277,7 +273,7 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
                 $(pa).text(response.peratencion.descripcion);
                 $.each(response.lista, function (idx, obj) {
                     var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"" + obj["CANTIDAD"] + "\" class=\"numero\"/>");
-                    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { tecladoNumerico(txtc); }
+                    if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
                     var btne = $("<button class='close remove-producto red'>&times;</button>");
                     var el = [$(t).find("tr").length, obj["DESCRIPCION"], parseFloat(obj["PREUNI"]).toFixed(2), obj["tipovalorventa"].substring(0, CARSUBSTR), txtc, parseFloat(obj["TOTAL"]).toFixed(2), btne];
 
@@ -290,7 +286,7 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
                         var cant = parseFloat($(this).val());
                         if (cant>0) {
                             actualizarSubtotal(nf, txtc, Form.CPRECIO, Form.CSUBT); actualizarTotal(t, Form.CSUBT); actualizarIGV(t);
-                        } else { $(this).val(1); alert(MSG_NO_PUEDE_SER_MENOR_QUE.replace("{text}", "una unidad"));}
+                        } else { $(this).val(1); alert(Msg.CANT_NO_MENOR_A.replace("<attr>", "una unidad")); }
                     });
                     $(t).append(nf);
                 });
@@ -300,10 +296,10 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
     });
 }
 function agregarProducto(pp) {
-    var tf = '#tabla-factura';
+    var tf = Form.Tabla;
     var btne = $("<button class='close remove-producto red'>&times;</button>");
     var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { tecladoNumerico(txtc); }
+    if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
     var n = pp.find(".nombre").first().text();var p = parseFloat(pp.data("precio")).toFixed(2);
     var el = [$(tf).find("tr").length, n, p, pp.data("tipovv").substring(0, CARSUBSTR), txtc, p, btne]; var nf = addRow($(tf), el); nf.data("codigo", pp.data("codigo"));
     actualizarTotal(tf, Form.CSUBT); actualizarItems(tf, Form.CITEMS); actualizarIGV(tf);
@@ -313,18 +309,18 @@ function agregarProducto(pp) {
     txtc.change(function () {
         var cant = parseFloat($(this).val());
         if (cant > 0) { actualizarSubtotal(nf, txtc, Form.CPRECIO, Form.CSUBT); actualizarTotal(tf, Form.CSUBT); actualizarIGV(tf); actualizarIGV(tf); }
-        else { $(this).val(1); alert(MSG_NO_PUEDE_SER_MENOR_QUE.replace("{text}", "una unidad")); }
+        else { $(this).val(1); alert(Msg.CANT_NO_MENOR_A.replace("<attr>", "una unidad")); }
     });
 }
 function changeUndAtencion(txt) {
-    if (Validar.Dato($("#divatencion").val())) {
+    if (Validar.Dato($(Form.Div).val())) {
         if(Validar.Dato(txt.val())){
-            obtenerDetalle(txt, $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc",
+            obtenerDetalle(txt, $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc,
                 function (select) {
                     if (confirm(MSG_DESEA_APERTURAR)) { $("#modal-seleccionar-peratencion").modal('show'); }
                 });
-        } else { alert(MSG_SELECCIONE_UNDATENCION); }
-    } else { $(this).val(""); alert(MSG_SELECCIONE_DIVATENCION); }
+        } else { alert(Msg.SELECCION_UND); }
+    } else { $(this).val(""); alert(Msg.SELECCION_DIV); }
 }
 function initTipDoc(n) {
     $.ajax({
@@ -339,6 +335,9 @@ function initTipDoc(n) {
 }
 
 var FormPago = {
+    Name: "#modal-pagar",
+    DivP: FormPago.Name + "-principal",
+    DivS: FormPago.Name + "-secundario",
     GroupFV:"#group-forventa",
     InputGroupFV: "input[name='forma-venta']",
     BtnFV: "btn-warning",
@@ -359,8 +358,8 @@ var FormPago = {
     },
     updateForm: function (i) {
         var o = $(this.InputGroupFV+":checked");
-        var p = $("#modal-pagar-principal");
-        var s = $("#modal-pagar-secundario");
+        var p = $(this.DivP);
+        var s = $(this.DivS);
         p.empty(); s.empty();
         $(this.Importe).val("00.00");
         switch (o.val()) {
@@ -396,7 +395,7 @@ var FormPago = {
     },
     isNroRef: function (p,s) {
         var i = $("<input type='number' placeholder='Ingrese Nro. de referencia' class='txt-nro-ref form-control-static'>");
-        if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {tecladoNumerico(i);}
+        if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(i); }
         p.append($("<div class='form-group'><label>Nro. referencia: </label></div>").append(i));
         var aux = (parseFloat($(this.TotalPagar).text()) - parseFloat($(this.TotalPagado).text()));
         if (aux > 0) { $(this.Importe).val(aux.toFixed(2)); }
@@ -449,17 +448,17 @@ var FormPago = {
     add:function () {
         var ifv = $(this.InputGroupFV+":checked");
         var ifp = $(this.InputGroupFP+":checked");
-        if (!Validar.Dato(ifv.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de venta")); }
+        if (!Validar.Dato(ifv.val())) { return alert(Msg.NO_NULO_O_VACIO.replace("<attr>", "La forma de venta")); }
         var t = $(this.Tabla);
         var e = new Array();
         var aux = (parseFloat($(this.TotalPagar).text()) - parseFloat($(this.TotalPagado).text()));
         e.push(ifv.data("desc"));
         switch (ifv.val()) {
             case "C":
-                if (ifv.val() == "C" && !Validar.Dato(ifp.val())) { return alert(MSG_NO_NULO_VACIO.replace("<attr>", "La forma de pago")); }
+                if (ifv.val() == "C" && !Validar.Dato(ifp.val())) { return alert(Msg.NO_NULO_O_VACIO.replace("<attr>", "La forma de pago")); }
                 if (aux > 0) {
                     e.push(ifp.data("desc"));
-                    var pp = $("#modal-pagar-principal");
+                    var pp = $(this.DivP);
                     if (ifp.data("istarjeta") == "S") {
                         var tt = pp.find(".tarjeta");
                         if (!Validar.Dato(tt.text())) { return alert("ERROR: Seleccione un tipo de tarjeta"); }
@@ -500,8 +499,8 @@ var FormPago = {
         var ifv = $(this.InputGroupFV+":checked");
         var ifp = $(this.InputGroupFP+":checked");
         if (parseFloat($(this.TotalPagar).text()) == parseFloat($(this.TotalPagado).text())) {
-            var conc = $("#tabla-factura").data("codigo");
-            var anexo = Anexo.get($("#tabla-factura-anexo"));
+            var conc = $(Form.Tabla).data("codigo");
+            var anexo = Anexo.get($(Form.Anexo));
             var td = $("input[name=tipo-documentos]:checked").val();
             var fp = new Array();
             $(this.Tabla).find("tbody tr").each(function (index) {
@@ -517,33 +516,33 @@ var FormPago = {
                 success: function (response, textStatus, jqXHR) {
                     if (response.respuesta.split(":")[0] == "ERROR") { alert(response.respuesta); }
                     if (response.respuesta.split(":")[0] == "EXITO") {
-                        printFactura($("#tabla-factura"), anexo, response);
-                        $("#undatencion").val("");
-                        clearDesc("#peratencion-desc", "#undatencion-desc");
-                        resetTabla("#tabla-factura");
+                        printFactura($(Form.Tabla), anexo, response);
+                        $(Form.Und).val("");
+                        clearDesc(Form.PerDesc, Form.UndDesc);
+                        resetTabla(Form.Tabla);
                         window.location = "/UndAtencion/Index";
                     }
                 }, error: function (xhr, status) { errorAjax(xhr, status); }
             });
-            $("#modal-pagar").modal("hide");
+            $(FormPago.Name).modal("hide");
         } else { alert("ERROR: Para poder realizar la transacci\u00F3n los totales debe coincidir"); }
     }
 };
 $(document).ready(function () {
     Form.IGV = obtenerIGV();
     initTipDoc("tipo-documentos");
-    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) {; });
+    obtenerDetalle($(Form.Und), $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc, function (s) {; });
     Anexo.initForm();
 
-    $("#divatencion").on("change", function () { $("#undatencion").val(""); resetTabla("#tabla-factura"); clearDesc("#peratencion-desc", "#undatencion-desc");});
-    $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
-    $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
-    if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") { $("input[type='text']").keyboard(); tecladoNumerico($("input[type='number']"));}
+    $(Form.Div).on("change", function () { $(Form.Und).val(""); resetTabla(Form.Tabla); clearDesc(Form.PerDesc, Form.UndDesc); });
+    $(Form.Und).keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
+    $(Form.Und).bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
+    if ($(App.ControlTeclado + ":checked").val() == "ACT") { $("input[type='text']").keyboard(); tecladoNumerico($("input[type='number']")); }
     $(".anexo").find(".anexo-nrodoc").bind('accepted', function (e, keyboard, el) { Anexo.getDB($(this).parent().parent()); });
     $(".anexo").find(".anexo-nrodoc").keypress(function (e) { if (e.which == 13) { Anexo.getDB($(this).parent().parent()); } });
 
-    $(".anexo").find(".anexo-desane, .anexo-refane").bind('accepted', function (e, keyboard, el) { Anexo.updateDB(Anexo.get($(this).parent()), $("tabla-factura-anexo")); });
-    $(".anexo").find(".anexo-desane, .anexo-refane").keypress(function (e) { if (e.which == 13) { Anexo.updateDB(Anexo.get($(this).parent()), $("tabla-factura-anexo")); } });
+    $(".anexo").find(".anexo-desane, .anexo-refane").bind('accepted', function (e, keyboard, el) { Anexo.updateDB(Anexo.get($(this).parent()), $(Form.Anexo)); });
+    $(".anexo").find(".anexo-desane, .anexo-refane").keypress(function (e) { if (e.which == 13) { Anexo.updateDB(Anexo.get($(this).parent()), $(Form.Anexo)); } });
 
     $(".btn-seleccionar-anexo").on("click", function () {
         $(".modal").modal("hide");
@@ -552,7 +551,7 @@ $(document).ready(function () {
         modal.modal('show');
     });
     $(".btn-actualizar-anexo").on("click", function () {
-        a = Anexo.get($("#tabla-factura-anexo"));
+        a = Anexo.get($(Form.Anexo));
         if (Validar.Anexo(a)) {
             $.ajax({
                 type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
@@ -587,20 +586,20 @@ $(document).ready(function () {
         }
     });
     $("#btn-actdni").on("click", function () {
-        a = Anexo.get($("#tabla-factura-anexo"));
+        a = Anexo.get($(Form.Anexo));
         a.refane = $("#form-actdni-refane").val();
         a.nombre1 = $("#form-actdni-nom1").val();
         a.nombre2 = $("#form-actdni-nom2").val();
         a.apepat = $("#form-actdni-ape").val().split(" ")[0];
         a.apemat = $("#form-actdni-ape").val().split(" ")[1];
-        actualizarAnexoDNI(a, $("#tabla-factura-anexo"));
+        actualizarAnexoDNI(a, $(Form.Anexo));
         $("#modal-actualizar-anexo-dni").modal('hide');
     });
     $("#btn-actruc").on("click", function () {
         a.nrodoc = $("#form-actruc-nrodoc").val();
         a.desane = $("#form-actruc-desane").val();
         a.refane = $("#form-actruc-refane").val();
-        actualizarAnexoRUC(a, $("#tabla-factura-anexo"));
+        actualizarAnexoRUC(a, $(Form.Anexo));
         $("#modal-actualizar-anexo-ruc").modal('hide');
     });
     $("#modal-crear-anexo").on("show.bs.modal", function () {
@@ -654,13 +653,13 @@ $(document).ready(function () {
     });
 
     $("#factura-btn-pagar").on("click", function () {
-        var t = $("#tabla-factura");
-        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
-        if (t.find("tbody tr").length <= 0) { return alert(MSG_SIN_ELEMENTOS); }
-        if (!Validar.Anexo(Anexo.get($("#tabla-factura-anexo")))) { return; }
-        var m = $("#modal-pagar");
-        m.data("tabla", "#tabla-factura");m.data("anexo", "#tabla-factura-anexo");
+        var t = $(Form.Tabla);
+        if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCION_UND); }
+        if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_DIV); }
+        if (t.find("tbody tr").length <= 0) { return alert(Msg.SIN_ELEMENTOS); }
+        if (!Validar.Anexo(Anexo.get($(Form.Anexo)))) { return; }
+        var m = $(FormPago.Name);
+        m.data("tabla", Form.Tabla); m.data("anexo", Form.Anexo);
         $("#form-pagar-total").text(parseFloat($("#tabla-factura-total").text()).toFixed(2));
         $("#forma-pago-total").text("0.00"); $("#tabla-forma-pago").find("tbody tr").remove();
         FormPago.initForm();
@@ -668,10 +667,10 @@ $(document).ready(function () {
     });
    
     $("#cambiar-undatencion").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCIONE_DIV); }
+        if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }
         $("#modal-cambiar-undatencion").modal("show");
-        $("#modal-cambiar-divatencion").val($("#divatencion").val());
+        $("#modal-cambiar-divatencion").val($(Form.Div).val());
         $("#modal-cambiar-divatencion").change();
     });
     $("#modal-cambiar-divatencion").on("change", function () {
@@ -681,31 +680,31 @@ $(document).ready(function () {
                     if (confirm(MSG_DESEA_CAMBIAR_UNDATENCION)) {
                         var nuevocod = $(this).find("td").get(0).innerHTML
                         var divate = $("#modal-cambiar-divatencion").val();
-                        var codigo = $("#tabla-factura").data("codigo");
-                        cambiarUndatencion(codigo, $("#undatencion"), $("#divatencion"), nuevocod, divate, $("#undatencion-desc"));
+                        var codigo = $(Form.Tabla).data("codigo");
+                        cambiarUndatencion(codigo, $(Form.Und), $(Form.Div), nuevocod, divate, $(Form.UndDesc));
                         $("#modal-cambiar-undatencion").modal("hide");
                     }
                 });
             });
     });
     $("#factura-pre-factura").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
-        var t = $("#tabla-factura");
-        if (t.find("tbody tr").length <= 0) { return alert(MSG_SIN_ELEMENTOS); }
+        if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCION_DIV); }
+        var t = $(Form.Tabla);
+        if (!Validar.Dato(t.data("codigo"))) { return alert(Msg.SELECCION_UND); }
+        if (t.find("tbody tr").length <= 0) { return alert(Msg.SIN_ELEMENTOS); }
         printPreFactura(t, Form)
     });
 
     $("#anular-factura").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
+        if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCION_DIV); }
+        if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }
         if (confirm(MSG_DESEA_ANULAR)) {
-            var cod = $("#tabla-factura").data("codigo");
+            var cod = $(Form.Tabla).data("codigo");
             $.ajax({
                 type: "post", dataType: 'json', cache: false, url: '/Conc/Anular', data: { codigo: cod },
                 success: function (response, textStatus, jqXHR) {
                     if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
-                    else { resetTabla("#tabla-factura"); $("#undatencion").val(""); clearDesc("#peratencion-desc", "#undatencion-desc"); window.location = "/UndAtencion/Index";}
+                    else { resetTabla(Form.Tabla); $(Form.Und).val(""); clearDesc(Form.PerDesc, Form.UndDesc); window.location = "/UndAtencion/Index"; }
                 }, error: function (xhr, status) { errorAjax(xhr, status); }
             });
         }
@@ -716,31 +715,31 @@ $(document).ready(function () {
         var sld = $(this);
         $.ajax({
             type: "post", dataType: 'json', cache: false, url: "/UndAtencion/Aperturar",
-            data: { codigo: $("#undatencion").val(), idperatencion: $(this).data("codigo"), divate: $("#divatencion").val() },
+            data: { codigo: $(Form.Und).val(), idperatencion: $(this).data("codigo"), divate: $(Form.Div).val() },
             success: function (response, textStatus, jqXHR) {
                 if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
                 else {
-                    $("#tabla-factura").data("codigo", response.cabecera.CODIGO);
-                    $("#undatencion-desc").text(response.undatencion.DESCRIPCION);
-                    $("#undatencion-desc").data("codigo", response.undatencion.CODIGO);
-                    $("#peratencion-desc").data("codigo", $(this).data("codigo"));
-                    $("#peratencion-desc").text(sld.data("desc"));
+                    $(Form.Tabla).data("codigo", response.cabecera.CODIGO);
+                    $(Form.UndDesc).text(response.undatencion.DESCRIPCION);
+                    $(Form.UndDesc).data("codigo", response.undatencion.CODIGO);
+                    $(Form.PerDesc).data("codigo", $(this).data("codigo"));
+                    $(Form.PerDesc).text(sld.data("desc"));
                 }
             }, error: function (xhr, status) { errorAjax(xhr, status); }
         });
     });
 
     $("#factura-btn-guardar").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(MSG_SELECCIONE_DIVATENCION); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(MSG_SELECCIONE_UNDATENCION); }
-        guardarFactura($("#tabla-factura"));
+        if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCION_DIV); }
+        if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }
+        guardarFactura($(Form.Tabla));
     });
 
     $("#tipos-comprobantes .btn").on("click", function () {
         if (!$(this).hasClass("active")) {
             $("#tipos-comprobantes .btn").removeClass("active");
             $(this).addClass("active"); $(this).children("input[type=radio]").prop('checked', true);
-            Anexo.clear($("#tabla-factura-anexo"));
+            Anexo.clear($(Form.Anexo));
         }   
     });
     $(FormPago.GroupFV+" .btn").on("click", function () {
@@ -768,7 +767,16 @@ $(document).ready(function () {
         var faltante = parseFloat($("#forma-pago-total").text()) < parseFloat($("#form-pagar-total").text());
         if (!faltante) { FormPago.aceptar();}
     });
-
+    $("#puntos-emision").on("change", function () {
+        var v = $(this).val();
+        $.ajax({
+            type: "post", dataType: 'json', cache: false,
+            url: '/Punemi/Cambiar', data: { codigo: v },
+            success: function (response, textStatus, jqXHR) {
+                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+            }, error: function (xhr, status) { errorAjax(xhr, status) }
+        });
+    });
     $("#conventa-btn-buscar").on("click", function () {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
     });

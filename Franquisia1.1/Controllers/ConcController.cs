@@ -65,15 +65,15 @@ namespace Franquisia1._1.Controllers
 
                 string numdoc = GenerarNumDoc(tipdoc);
                 if (String.IsNullOrWhiteSpace(numdoc)) { return Json(new { respuesta = "ERROR: Error al generar el n\u00FAmero del documento" }, JsonRequestBehavior.AllowGet); }
-                int? tmp = generar(codcia, punemi);
-                if (tmp==null){return Json(new { respuesta = "ERROR: Error al generar el c\u00F3digo "}, JsonRequestBehavior.AllowGet);}
+                string codvenc = genCodVenc(codcia, punemi);
+                if (codvenc == null) { return Json(new { respuesta = "ERROR: Error al generar el c\u00F3digo de la venta" }, JsonRequestBehavior.AllowGet); }
                 
                 List<venpag> lista = JsonConvert.DeserializeObject<List<venpag>>(vp);
                 int index = 1;
                 foreach (venpag item in lista)
                 {
                     item.CODCIA = codcia;
-                    item.CODIGO = punemi + tmp.ToString().PadLeft(8, '0');
+                    item.CODIGO = codvenc;
                     item.ITEM = index.ToString().PadLeft(3, '0');
                     item.RECIBIDO = item.VUELTO + item.IMPORTE;
                     if (String.IsNullOrWhiteSpace(item.FORPAGO)) { item.TARJETA = null; }
@@ -84,7 +84,7 @@ namespace Franquisia1._1.Controllers
                 }    
                 venc venc = new venc();
                 venc.CODCIA = codcia;
-                venc.CODIGO = punemi + tmp.ToString().PadLeft(8, '0');
+                venc.CODIGO = codvenc;
                 venc.SUCURSAL = sucursal;
                 venc.PUNEMI = punemi;
                 venc.PROC_VENTA = "VD";
@@ -159,11 +159,11 @@ namespace Franquisia1._1.Controllers
                     db.venc.Add(venc);
                     db.SaveChanges();
                     ciafile ciafile = db.ciafile.Where(a=>a.idcia.Equals(codcia)).FirstOrDefault();
-                    string codaux = punemi + tmp.ToString().PadLeft(8, '0');
+                    sucursal suc = db.sucursal.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(sucursal)).FirstOrDefault();
                     var u = (from a in db.venpag join b in db.forventa on a.FORVENTA equals b.codigo
                              from c in db.forpago.Where(d=>d.codigo.Equals(a.FORPAGO)).DefaultIfEmpty()
                              from d in db.tarjetas.Where(t=>t.codigo.Equals(a.TARJETA)).DefaultIfEmpty()
-                             where a.CODIGO.Equals(codaux)
+                             where a.CODCIA.Equals(codcia) && a.CODIGO.Equals(codvenc)
                              select new{codigo=a.CODIGO, importe=a.IMPORTE, recibido=a.RECIBIDO,
                              vuelto=a.VUELTO, forventa=b.descripcion, forpago=c.descripcion, tarjeta=d.descripcion                             }
                                  ).ToList();
@@ -171,7 +171,7 @@ namespace Franquisia1._1.Controllers
                     peratencion per = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(codper)).FirstOrDefault();
                     return Json(new { respuesta = "EXITO: Exito", cia=ciafile, suc=suc, fecha=DateTime.Now.ToString("dd/MM/yyyy"),
                         hora= DateTime.Now.ToString("hh:mm tt"),venc=venc, anexo=anexo, tipdoc="DNI", gravado=sumagra, exonerado=sumaexo, inafecto = sumaina,
-                        igv=sumaigv, total=total, resumen=u, cajero=desusr,
+                        igv=sumaigv, total=total, resumen=u, cajero=desusr,cod1=venc.SERIE, cod2=venc.NRODOC,
                     }, JsonRequestBehavior.AllowGet); 
                 }
                 else { return Json(new { respuesta = "ERROR: Error el consumo est\u00E1 cerrado" }, JsonRequestBehavior.AllowGet); }
@@ -179,12 +179,12 @@ namespace Franquisia1._1.Controllers
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
         }
-        private int? generar(string codcia, string punemi )
+        private string genCodVenc(string codcia, string punemi)
         {
             try
             {
                 int? codigo = 1;
-                numpos np =  db.numpos.Where(a => a.CODCIA.Equals(codcia) && a.PUNEMI.Equals(punemi)).FirstOrDefault();
+                numpos np = db.numpos.Where(a => a.CODCIA.Equals(codcia) && a.PUNEMI.Equals(punemi)).FirstOrDefault();
                 if (np != null) { np.NUMERO++; codigo = np.NUMERO; db.SaveChanges(); }
                 else
                 {
@@ -192,7 +192,7 @@ namespace Franquisia1._1.Controllers
                     np.CODCIA = codcia; np.PUNEMI = punemi; np.NUMERO = codigo;
                     db.numpos.Add(np); db.SaveChanges();
                 }
-                return codigo;
+                return punemi+codigo.ToString().PadLeft(8,'0');
             }
             catch (System.Data.EntityException ex) { return null; }
             catch (Exception ex) { return null; }
