@@ -14,6 +14,20 @@ namespace Franquisia1._1.Controllers
         {
             return View();
         }
+        public ActionResult Consulta()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Consulta(string nrodoc, string tipdoc, string ruc, string fecha, string importe)
+        {
+            ViewBag.nrodoc = nrodoc;
+            ViewBag.tipdoc = tipdoc;
+            ViewBag.ruc = ruc;
+            ViewBag.fecha = fecha;
+            ViewBag.importe = importe;
+            return View();
+        }
         public ActionResult Login()
         {
            

@@ -1,12 +1,33 @@
-var COLITEMS = 0; var COLPRODUCTO = 1; var COLPRECIO = 2; var COLCANTIDAD = 3; var COLSUBTOTAL = 4; var COLBTNELIMINAR = 5;
+var Form = {
+    CITEMS: 0, CPRODUCTO: 1, CPRECIO: 2, CCANT: 3, CSUBT: 4, CBTNELI: 5,
+    Tabla: "#tabla-factura",
+    Und: "#undatencion",
+    Div: "#divatencion",
+    UndDesc: Form.Und + "-desc",
+    PerDesc: "#peratencion-desc",
+    FormCambiarUnd: Form.FormCambiarUnd,
+    FormSelectDiv:Form.FormSelectDiv,
+    getIGV: function () {
+        $.ajax({
+            type: "post", dataType: 'json', cache: false, url: "/Parreg/ObtenerIGV", data: {},
+            success: function (response, textStatus, jqXHR) {
+                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+                else if (response.respuesta.toString().split(":")[0] == "EXITO") {
+                    parseFloat(response.igv) != undefined ? Form.IGV = parseFloat(response.igv) : Form.IGV = 18;
+                }
+            },
+            error: function (xhr, status) { errorAjax(xhr, status); }
+        });
+    },
+};
 function removeRow(fila, t) {
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Eliminar",
-        data: { codigo: $("#tabla-factura").data("codigo"), item: fila.data("item") },
+        data: { codigo: $(Form.Tabla).data("codigo"), item: fila.data("item") },
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
             fila.remove();
-            actualizarTotal(t, COLSUBTOTAL); actualizarItems(t, COLITEMS);
+            actualizarTotal(t, Form.CSUBT); actualizarItems(t, Form.CITEMS);
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
@@ -14,10 +35,10 @@ function updateRow(f, t) {
     var txtc = f.find("td input[type=number]");
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Actualizar",
-        data: { codigo: $("#tabla-factura").data("codigo"), item: f.data("item"), cantidad: txtc.val(), },
+        data: { codigo: $(Form.Tabla).data("codigo"), item: f.data("item"), cantidad: txtc.val(), },
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
-            actualizarSubtotal(f, txtc, COLPRECIO, COLSUBTOTAL); actualizarTotal(t, COLSUBTOTAL);
+            actualizarSubtotal(f, txtc, Form.CPRECIO, Form.CSUBT); actualizarTotal(t, Form.CSUBT);
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
@@ -26,7 +47,7 @@ function guardarFactura(t) {
     if (!Validar.Dato(t.data("codigo"))) { return alert(Msg.NO_EXISTE.replace("el c\u00F3digo del consumo")); }
     var cod = t.data("codigo"); var arr = new Array();
     t.find("tbody tr").each(function (index) {
-        var cond = {"CANTIDAD": parseFloat($(this).find("td input[type=number]").val()), "CONVENTA": $(this).data("codigo"), "ITEM": $(this).find("td").get(COLITEMS).innerHTML,};
+        var cond = {"CANTIDAD": parseFloat($(this).find("td input[type=number]").val()), "CONVENTA": $(this).data("codigo"), "ITEM": $(this).find("td").get(Form.CITEMS).innerHTML,};
         arr.push((cond));
     });
     $.ajax({
@@ -36,24 +57,23 @@ function guardarFactura(t) {
     });
 }
 function agregarProducto(pp) {
-    var txtc = $("<input type=\"number\"  min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
-    if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
+    var txtc = App.getInputCantidad();
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Crear",
-        data: { codigo: $("#tabla-factura").data("codigo"), cantidad: txtc.val() , conventa: pp.data("codigo")  },
+        data: { codigo: $(Form.Tabla).data("codigo"), cantidad: txtc.val() , conventa: pp.data("codigo")  },
         success: function (response, textStatus, jqXHR) {
             if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
             var tf = '#tabla-factura';
-            var btn_eliminar = $("<button class='close remove-producto red'>&times;</button>");
+            var btn_eliminar = App.getBtnRemove();
             var n = pp.find(".nombre").first().text();
             var p = parseFloat(pp.data("precio")).toFixed(2);
             var el = [$(tf).find("tr").length, n, p, txtc, p, btn_eliminar];
             var nf = addRow($(tf), el); nf.data("item", response.item);
-            nf.data("codigo", pp.data("codigo")); actualizarTotal(tf, COLSUBTOTAL); actualizarItems(tf, COLITEMS);
+            nf.data("codigo", pp.data("codigo")); actualizarTotal(tf, Form.CSUBT); actualizarItems(tf, Form.CITEMS);
             btn_eliminar.on('click', function () { removeRow(nf, tf);});
             txtc.change(function () {
                 var cant = parseFloat($(this).val());
-                if (cant > 0) { updateRow(nf, "#tabla-factura"); } else { $(this).val(1); updateRow(nf, "#tabla-factura"); alert(Msg.CANT_NO_MENOR_A.replace("{text}", "una unidad")); }
+                if (cant > 0) { updateRow(nf, Form.Tabla); } else { $(this).val(1); updateRow(nf, Form.Tabla); alert(Msg.CANT_NO_MENOR_A.replace("{text}", "una unidad")); }
             });
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
@@ -64,20 +84,19 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Obtener", data: { codund: sl.val(), coddiv: cd },
         success: function (response, textStatus, jqXHR) {
-            $(t).find("tbody tr").remove();
-            if (response.respuesta.toString().split(":")[0] == "ERROR") {
-                clearDesc(pa, ua);resetTabla(t);if (response.respuesta.toString().split(":")[1] == " NO EXISTE LA CABECERA DEL CONSUMO") {f(sl);} else { alert(response.respuesta); }
+            clearDesc(pa, ua); resetTabla(t);
+            if (App.isError(response.respuesta)) {
+                alert(response.respuesta);
             }
-            if (response.respuesta.toString().split(":")[0] == "EXITO") {
+            else if (App.isExito(response.respuesta)) {
                 $(ua).data("codigo", response.undatencion.CODIGO);
                 $(ua).text(response.undatencion.DESCRIPCION);
                 $(t).data("codigo", response.cabecera.CODIGO);
                 $(pa).data("codigo", response.peratencion.codigo);
                 $(pa).text(response.peratencion.descripcion);
                 $.each(response.lista, function (idx, obj) {
-                    var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"" + obj["CANTIDAD"] + "\" class=\"numero\" />");
-                    if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
-                    var btne = $("<button class='close remove-producto red'>&times;</button>");
+                    var txtc = App.getInputCantidad();
+                    var btne = App.getBtnRemove();
                     var el = [$(t).find("tr").length, obj["DESCRIPCION"], parseFloat(obj["PREUNI"]).toFixed(2), txtc, parseFloat(obj["TOTAL"]).toFixed(2), btne];
                     var nf = addRow($(t), el); nf.data("codigo", obj["CONVENTA"]); nf.data("item", obj["ITEM"]);
                     btne.on('click', function () {removeRow(nf, t);});
@@ -87,16 +106,16 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
                     });
                     $(t).append(nf);
                 });
-                actualizarTotal(t, COLSUBTOTAL); actualizarItems(t, COLITEMS);
-            }
+                actualizarTotal(t, Form.CSUBT); actualizarItems(t, Form.CITEMS);
+            } else if (App.isAdvert(response.respuesta)) { f(sl); }
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
 
 function changeUndAtencion(txt) {
-    if (Validar.Dato($("#divatencion").val())) {
+    if (Validar.Dato($(Form.Div).val())) {
         if (Validar.Dato(txt.val())) {
-            obtenerDetalle(txt, $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc",
+            obtenerDetalle(txt, $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc,
                 function (select) {
                     if (confirm(MSG_DESEA_APERTURAR)) { $("#modal-seleccionar-peratencion").modal('show'); }
                 });
@@ -104,51 +123,46 @@ function changeUndAtencion(txt) {
     } else { $(this).val(""); alert(Msg.SELECCION_DIV); }
 }
 $(document).ready(function () {
-    $("#divatencion").on("change", function () {
-        $("#undatencion").val("");
-        resetTabla("#tabla-factura");
-        clearDesc("#peratencion-desc", "#undatencion-desc");
+    $(Form.Div).on("change", function () {
+        $(Form.Und).val("");
+        resetTabla(Form.Tabla);
+        clearDesc(Form.PerDesc, Form.UndDesc);
     });
-    $("#undatencion").keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this));}});
+    $(Form.Und).keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this));}});
     $('#undatencion').bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
-    obtenerDetalle($("#undatencion"), $("#divatencion").val(), "#tabla-factura", "#peratencion-desc", "#undatencion-desc", function (s) { console.log("sdsa"); });
+    obtenerDetalle($(Form.Und), $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc, function (s) { console.log("sdsa"); });
     if ($(App.ControlTeclado + ":checked").val() == "ACT") {
         $("input[type='text']").keyboard();
         tecladoNumerico($("input[type='number']"));
     }
     $("#cambiar-undatencion").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(Msg.SELECCION_DIV); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(Msg.SELECCION_UND); }
-        $("#modal-cambiar-undatencion").modal("show");
-        $("#modal-cambiar-divatencion").val($("#divatencion").val());
-        $("#modal-cambiar-divatencion").change();
+        if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCION_DIV); }
+        if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }
+        $(Form.FormCambiarUnd).modal("show");
+        $(Form.FormSelectDiv).val($(Form.Div).val());
+        $(Form.FormSelectDiv).change();
     });
-    $("#modal-cambiar-divatencion").on("change", function () {
+    $(Form.FormSelectDiv).on("change", function () {
         buscarAjax("/UndAtencion/ObtenerLibres", $(this).val(), $("#tabla-cambiar-undatencion"), ["CODIGO", "DESCRIPCION"],
             function (fila) {
                 fila.on("click", function () {
                     if (confirm(MSG_DESEA_CAMBIAR_UNDATENCION)) {
                         var nuevocod = $(this).find("td").get(0).innerHTML
-                        var divate = $("#modal-cambiar-divatencion").val();
-                        var codigo = $("#tabla-factura").data("codigo");
-                        cambiarUndatencion(codigo, $("#undatencion"), $("#divatencion"), nuevocod, divate, $("#undatencion-desc"));
-                        $("#modal-cambiar-undatencion").modal("hide");
+                        var divate = $(Form.FormSelectDiv).val();
+                        var codigo = $(Form.Tabla).data("codigo");
+                        cambiarUndatencion(codigo, $(Form.Und), $(Form.Div), nuevocod, divate, $(Form.UndDesc));
+                        $(Form.FormCambiarUnd).modal("hide");
                     }
                 });
             });
     });
 
     $("#factura-pre-factura").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(Msg.SELECCION_DIV); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(Msg.SELECCION_UND); }
-        var t = $("#tabla-factura");
+        if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCION_DIV); }
+        if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }
+        var t = $(Form.Tabla);
         if (t.find("tbody tr").length <= 0) { return alert(Msg.SIN_ELEMENTOS); }
         printPreFactura(t)
-    });
-
-    $(".seleccion-categoria").on("click", function () {
-        var codigo = $(this).data("codigo");
-        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo));
     });
 
     $("#empleados li").on("click", function () {
@@ -156,33 +170,36 @@ $(document).ready(function () {
         var selected = $(this);
         $.ajax({
             type: "post", dataType: 'json', cache: false, url: "/UndAtencion/Aperturar",
-            data: { codigo: $("#undatencion").val(), idperatencion: $(this).data("codigo"), divate: $("#divatencion").val() },
+            data: { codigo: $(Form.Und).val(), idperatencion: $(this).data("codigo"), divate: $(Form.Div).val() },
             success: function (response, textStatus, jqXHR) {
                 if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
                 else {
-                    $("#tabla-factura").data("codigo", response.cabecera.CODIGO);
-                    $("#undatencion-desc").text(response.undatencion.DESCRIPCION);
-                    $("#undatencion-desc").data("codigo", response.undatencion.CODIGO);
-                    $("#peratencion-desc").data("codigo", $(this).data("codigo"));
-                    $("#peratencion-desc").text(selected.data("desc"));
+                    $(Form.Tabla).data("codigo", response.cabecera.CODIGO);
+                    $(Form.UndDesc).text(response.undatencion.DESCRIPCION);
+                    $(Form.UndDesc).data("codigo", response.undatencion.CODIGO);
+                    $(Form.PerDesc).data("codigo", $(this).data("codigo"));
+                    $(Form.PerDesc).text(selected.data("desc"));
                 }
             }, error: function (xhr, status) { errorAjax(xhr, status); }
         });
     });
 
     $("#factura-btn-guardar").on("click", function () {
-        if (!Validar.Dato($("#divatencion").val())) { return alert(Msg.SELECCION_DIV); }
-        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { return alert(Msg.SELECCION_UND); }
-        guardarFactura($("#tabla-factura"));
+        if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCION_DIV); }
+        if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }
+        guardarFactura($(Form.Tabla));
     });
-    
+    $(".seleccion-categoria").on("click", function () {
+        var codigo = $(this).data("codigo");
+        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo));
+    });
     $("#conventa-btn-buscar").on("click", function () {
-        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
     });
     $("#conventa-texto").on("keyup", function (evt) {
-        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
     });
     $('#conventa-texto').bind('accepted', function (e, keyboard, el) {
-        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
     });
 });

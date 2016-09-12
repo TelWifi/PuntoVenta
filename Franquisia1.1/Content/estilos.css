@@ -7,10 +7,12 @@ html,body{
 }
 header{
     padding:0;
+    padding-top:5px;
     margin:0; 
     background-color:#F2F1EF;
     font-size:2em;
     border-bottom: 3px solid #c0392b;
+    text-align:center;
 }
 textarea{
     resize: none;

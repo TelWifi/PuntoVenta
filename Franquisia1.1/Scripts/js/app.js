@@ -1,6 +1,4 @@
-var MSG_SELECCIONE_UNDATENCION = "RECOMENDACION: Seleccione una unidad de atenci\u00F3n";var MSG_SELECCIONE_DIVATENCION = "RECOMENDACION: Seleccione una divisi\u00F3n de atenci\u00F3n";var MSG_DESEA_APERTURAR = "La unidad de atenci\u00F3n No est\u00E1 aperturada\n\u00BFDesea aperturarla?";var MSG_ERROR_SOLO_NUMEROS = "ERROR: <attr> solo debe contener caracteres num\u00E9ricos";var MSG_DESEA_ANULAR = "\u00BFDesea anular el consumo?";var MSG_NO_PUEDE_SER_MENOR_QUE = "ERROR: La cantidad ingresada no puede ser menor que {text}";var MSG_CAMPOS_NULOS_VACIOS = "ERROR: Los campos no pueden ser nulos o vac\u00EDos";var MSG_NO_NULO_VACIO = "ERROR: <attr> no puede ser nulo o vac\u00EDo";var MSG_SIN_ELEMENTOS = "ERROR: No existen elementos";var MSG_NO_EXISTE = "ERROR: No existe <attr>";var MSG_DESEA_CAMBIAR_UNDATENCION = "\u00BFSeguro que desea cambiar a otra unidad de atenci\u00F3n";var MSG_ANEXO_NROCAR_NRODOC = "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres";
 var IMG_DEFAULT = "iVBORw0KGgoAAAANSUhEUgAAACUAAAAdCAYAAAAtt6XDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA0SURBVFhH7c4xAQAwDASh+jf9tcCY4VDA20GlVClVSpVSpVQpVUqVUqVUKVVKlVKlVCmzffdHtC3tn87PAAAAAElFTkSuQmCC";
-var CARSUBSTR = 3;
 var Validar = {
     RUC: function (ruc) {
         var r = /\d{11}/;
@@ -50,11 +48,16 @@ var Msg = {
     ERROR_IMPRIMIR: "ERROR: Error al imprimir",
     NO_NULO_O_VACIO: "ERROR: <attr> no puede ser nulo o vac\u00EDo",
     NO_EXISTE: "ERROR: No existe <attr>",
-    NRODOC_INVALIDO: "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres",    
+    NRODOC_INVALIDO: "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres",
+    ANEXO_INVALIDO:"ERROR: Los datos ingresados son incorrectos",
     SELECCIONE_ATTR: "RECOMENDACION: Seleccione <attr>",
     SELECCION_UND: Msg.SELECCIONE_ATTR.replace("<attr>", "una " + Msg.UNDATENCION),
     SELECCION_DIV: Msg.SELECCIONE_ATTR.replace("<attr>", "una " + Msg.DIVATENCION),
     SIN_ELEMENTOS: "ERROR: No existen elementos",
+    EXITO:"EXITO",
+    ERROR: "ERROR",
+    ADVERTENCIA: "ADVERTENCIA",
+    RECOMENDACION:"RECOMENDACION",
 };
 var App = {
     ControlTeclado: "input[name=control-teclado-opciones]",
@@ -71,7 +74,19 @@ var App = {
     },
     getPanelServ: function () {
         return $("<div class=\"col-xs-4 col-sm-3 col-md-2 panel-servicio\"></div>")
-    }
+    },
+    getInputCantidad: function () {
+        var i = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
+        if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
+        return i;
+    },
+    getBtnRemove:function(){
+        return $("<button class='close remove-producto red'>&times;</button>");
+    },
+    isExito: function (t) { return t.split(":")[0] == Msg.EXITO;},
+    isError: function (t) { return t.split(":")[0] == Msg.ERROR;},
+    isAdvert: function (t) { return t.split(":")[0] == Msg.ADVERTENCIA; },
+    isRecomen: function (t) { return t.split(":")[0] == Msg.RECOMENDACION; },
 };
 function decBase64(a) { var s = ""; l = a.length; for (var i = 0; i < l; i++) { s += String.fromCharCode(a[i]); } return s; }
 function sumar(t, c) {var s = 0; t.find("tbody tr").each(function (index) { s += parseFloat($(this).find("td").get(c).innerHTML); }); return s;}
@@ -138,7 +153,7 @@ function cambiarUndatencion(cd,su, sd, nu, nd, udes){
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function buscarConventaDescripcion(d, p) {
+function buscarConventaDescripcion(d, p, t) {
     p.empty();
     if (!Validar.Dato(d)) { return; }
     $.ajax({
@@ -154,14 +169,14 @@ function buscarConventaDescripcion(d, p) {
                     var n = $("<div class=\"nombre\">" + obj["descripcion"] + "</div>");
                     ps.append(img); ps.append(n); p.append(ps);
                     img.on("click", function () {
-                        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { alert(Msg.SELECCION_UND); } else { agregarProducto(ps); }
+                        if (!Validar.Dato($(t).data("codigo"))) { alert(Msg.SELECCION_UND); } else { agregarProducto(ps); }
                     });
                 });
             } else { alert(response.respuesta); }
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function buscarConventaClaserv(c, p) {
+function buscarConventaClaserv(c, p, t) {
     if (!Validar.Dato(c)) { return alert(Msg.NO_NULO_O_VACIO.replace("<attr>", "El c\u00F3digo de claserv")); }
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: '/Conventa/Obtener', data: { claserv: c },
@@ -177,7 +192,7 @@ function buscarConventaClaserv(c, p) {
                     var n = $("<div class=\"nombre\">" + obj["descripcion"] + "</div>");
                     ps.append(img); ps.append(n); p.append(ps);
                     img.on("click", function () {
-                        if (!Validar.Dato($("#tabla-factura").data("codigo"))) { alert(Msg.SELECCION_UND); } else { agregarProducto(ps); }
+                        if (!Validar.Dato($(t).data("codigo"))) { alert(Msg.SELECCION_UND); } else { agregarProducto(ps); }
                     });
                 });
             } else { alert(response.respuesta); }

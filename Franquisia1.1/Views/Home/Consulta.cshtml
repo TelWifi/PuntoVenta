@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Consulta";
+}
+<header>
+    El Chalan S.A.C.
+    <div class="pull-right"><img src="/Content/images/logo.png" alt="Neinco" class="img-responsive center-block" /></div>
+
+</header>
+<div class="container">
+
+    <div class="row">
+       
+        <h3 class="text-center">Consultar Factura Electrónica</h3>
+        <div class="col-xs-10 col-sm-7 center-block no-float">
+            
+            <form action="/Home/Consulta" method="post" class="form form-horizontal">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="">Número de documento</label>
+                            <input type="text" name="nrodoc" class="form-control" required/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="">Tipo de documento</label>
+                            <input type="text" name="tipdoc" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="">RUC</label>
+                            <input type="number" name="ruc" class="form-control" required/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="">Fecha</label>
+                            <input type="date" name="fecha" class="form-control" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="">Importe</label>
+                            <input type="number" min="0" name="importe" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Consultar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    @if (ViewBag.nrodoc!=null)
+    {
+        <div class="row">
+            @ViewBag.nrodoc
+            @ViewBag.tipdoc, @ViewBag.ruc, @ViewBag.fecha, @ViewBag.importe
+            <label>dadawdawda</label>
+        </div>
+    }
+    
+
+</div>

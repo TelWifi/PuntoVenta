@@ -445,6 +445,7 @@
     <Content Include="Views\Error\ErrorBD.cshtml" />
     <Content Include="Views\Error\ErrorPermiso.cshtml" />
     <Content Include="Views\UndAtencion\Index.cshtml" />
+    <Content Include="Views\Home\Consulta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

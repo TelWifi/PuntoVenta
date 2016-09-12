@@ -7,7 +7,12 @@ var Form = {
     Div: "#divatencion",
     UndDesc: Form.Und + "-desc",
     PerDesc: "#peratencion-desc",
-    Anexo:Form.Tabla+"-anexo",
+    Anexo: Form.Tabla + "-anexo",
+    GroupTipDocEmi: "input[name=tipo-documentos]",
+    FormAnexo: "#modal-crear-anexo",
+    FormSelPerAte: "#modal-seleccionar-peratencion",
+    FormCambiarUnd: "#modal-cambiar-undatencion",
+    SelectCambiarDiv: "#modal-cambiar-divatencion",
     updateTotalCheckbox: function (t, cs, r) {
         var s = 0;
         $(t).find("tbody tr").each(function (index) { if ($(this).find("input[type=checkbox]").prop("checked")) { s += parseFloat($(this).find("td").get(cs).innerHTML); } });
@@ -25,8 +30,8 @@ var Form = {
         $.ajax({
             type: "post", dataType: 'json', cache: false, url: "/Parreg/ObtenerIGV", data: {},
             success: function (response, textStatus, jqXHR) {
-                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-                else if (response.respuesta.toString().split(":")[0] == "EXITO") {
+                if (App.isError(response.respuesta)) { alert(response.respuesta); }
+                else if (App.isExito(response.respuesta)) {
                     parseFloat(response.igv) != undefined ? Form.IGV = parseFloat(response.igv) : Form.IGV = 18;
                 }
             },
@@ -47,8 +52,18 @@ var Form = {
 var Anexo = {
     FormBody: "#modal-crearane-body",
     BtnSubmit: "#modal-crear-anexo-submit",
+    GroupTipDoc: "#group-tipane",
+    InputGroupTD:"input[name=tipo-cm]",
+    BtnTipDoc: "btn-info",
     initForm: function () {
-        var grnt = $("input[name='tipo-cm']:radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass("btn-info");
+        var grnt = $(Anexo.InputGroupTD+":radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass(Anexo.BtnTipDoc);
+        Anexo.updateForm(grnt.first());
+    },
+    initForm: function(v){
+        $(Anexo.InputGroupTD + ":checked").prop('checked', false);
+        $(Anexo.InputGroupTD + ":checked").removeClass(Anexo.BtnTipDoc);
+        $(Anexo.InputGroupTD + "[value='" + v + "']").prop('checked', true);
+        $(Anexo.InputGroupTD).parent().addClass(Anexo.BtnTipDoc);
         Anexo.updateForm(grnt.first());
     },
     updateForm: function (i) {
@@ -85,99 +100,48 @@ var Anexo = {
         if (!Validar.Anexo(a)) { return; }
         $.ajax({
             type: "post", dataType: 'json', cache: false, url: "/Anexos/Actualizar",
-            data: { desane: a.desane, nrodoc: a.nrodoc, refane: a.refane },
+            data: { a:JSON.stringify(a)},
             success: function (response, textStatus, jqXHR) {
-                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-                else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
-                    Anexo.clear(d); console.log(response.respuesta);
-                }
-                else if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, d); }
+                if (App.isError(response.respuesta) || App.isAdvert(response.respuesta)) { alert(response.respuesta); }
+                else if (App.isExito(response.respuesta)) { Anexo.show(response.anexo, d); }
             },
             error: function (xhr, status) { errorAjax(xhr, status); }
         });
     },
-    getDB: function (div, m) {//por corregir
+    getDB: function (div, f) {
         var a = Anexo.get(div);
-        var input = "input[name=tipo-documentos]:checked";
-        if ($(input).val() == "01" && !Validar.RUC(a.nrodoc)) { Anexo.clear(div); return; }
-        else if ($(input).val() == "03" && !Validar.DNI(a.nrodoc)) { Anexo.clear(div); return; }
+        var input = Form.GroupTipDocEmi+":checked";
+        if (!Validar.Anexo(a)) {return alert("ERROR: Anexo incorrecto");}
         $.ajax({
             type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
             success: function (response, textStatus, jqXHR) {
-                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-                else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
+                if (App.isError(response.respuesta)) { alert(response.respuesta); }
+                else if (App.isAdvert(response.respuesta)) {
                     Anexo.show({ "nrodoc": a.nrodoc, "refane": "", "desane": "" }, div);
-                    var m = "#modal-actualizar-anexo-dni";
-                    if ($(input).val() == "01") {
-                        m = "#modal-actualizar-anexo-ruc";
-                        $(m).find("input[type='text']").val("");
-
-                        $(m).find("#actualizar-ruc-titulo").text("Agregar cliente");
-                        $(m).find("#form-actruc-nrodoc").val(a.nrodoc);
-                        $(m).modal('show');
-                        $(m).find("#form-actruc-refane").focus();
-                    } else {
-                        $(m).find("input[type='text']").val("");
-
-                        $(m).find("#actualizar-dni-titulo").text("Agregar cliente");
-                        $(m).find("#form-actdni-nrodoc").val(a.nrodoc);
-                        $(m).modal('show');
-                        $(m).find("#form-actdni-refane").focus();
-                    }
+                    var m = $(Form.FormAnexo);
+                    m.find("input[type='text']").val("");
+                    m.find("input[type='text']").first().val(a.nrodoc);
+                    m.find(Anexo.BtnSubmit).text("Guardar");
+                    Anexo.initForm();
+                    m.modal("show");
                 }
-                else if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, div); }
+                else if (App.isExito(response.respuesta)) { Anexo.show(response.anexo, div); f == null ? "" : f(response.anexo); }
             }, error: function (xhr, status) { errorAjax(xhr, status); }
         });
     },
     createDB: function (a, d, m) {
-        if (a.tipdoc == "RUC" && a.nrodoc.length != 11) { return alert(Msg.NRODOC_INVALIDO); }
-        if (a.tipdoc == "DNI" && a.nrodoc.length != 8) { return alert(Msg.NRODOC_INVALIDO); }
-        if (!Validar.Anexo(a)) { return; }
+        if (!Validar.Anexo(a)) { return alert(Msg.ANEXO_INVALIDO); }
         $.ajax({
-            type: "get", dataType: 'json', cache: false, url: '/Anexos/Crear', data: { desane: a.desane, tipdoc: a.tipdoc, nrodoc: a.nrodoc, refane: a.refane },
+            type: "get", dataType: 'json', cache: false, url: '/Anexos/Crear', data: { a: JSON.stringify(a) },
             success: function (response, textStatus, jqXHR) {
-                if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
-                if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, d); m.modal('hide'); }
+                if (App.isError(response.respuesta)) { return alert(response.respuesta); }
+                if (App.isExito(response.respuesta) || App.isAdvert(response.respuesta)) { Anexo.show(response.anexo, d); m==null?"":m.modal('hide'); }
             }, error: function (xhr, status) { errorAjax(xhr, status); }
         });
     }
-
-
 };
-function actualizarAnexoDNI(a, d) {
-    if (!Validar.Anexo(a)) { return; }
-    $.ajax({
-        type: "post", dataType: 'json', cache: false, url: "/Anexos/ActualizarDNI",
-        data: { nrodoc: a.nrodoc, refane: a.refane, nom1: a.nombre1, nom2: a.nombre2, apepat: a.apepat, apemat: a.apemat },
-        success: function (response, textStatus, jqXHR) {
-            if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-            else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
-                Anexo.show({ "desane": "", "nrodoc": a.nroane, "refane": "" }, d);
-            }
-            else if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, d); }
-        },
-        error: function (xhr, status) { errorAjax(xhr, status); }
-    });
-}
-function actualizarAnexoRUC(a, d) {
-    if (!Validar.Anexo(a)) { return; }
-    $.ajax({
-        type: "post", dataType: 'json', cache: false, url: "/Anexos/ActualizarRUC",
-        data: { nrodoc: a.nrodoc, refane: a.refane, desane:a.desane},
-        success: function (response, textStatus, jqXHR) {
-            if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-            else if (response.respuesta.toString().split(":")[0] == "ADVERTENCIA") {
-                Anexo.show({ "desane": "", "nrodoc": a.nroane, "refane": "" }, d);
-            }
-            else if (response.respuesta.toString().split(":")[0] == "EXITO") { Anexo.show(response.anexo, d); }
-        },
-        error: function (xhr, status) { errorAjax(xhr, status); }
-    });
-}
+function resetTabla(t) { Anexo.clear($(t + "-anexo")); $(t).find("tbody tr").remove(); $(t).data("codigo", ""); $(t + "-items").text("-"); $(t + "-igv").text("-"); $(t + "-total").text("-"); }
 
-function resetTabla(t) {
-    Anexo.clear( $(t + "-anexo")); $(t).find("tbody tr").remove(); $(t).data("codigo", ""); $(t + "-items").text("-"); $(t + "-igv").text("-"); $(t + "-total").text("-");
-}
 function printFactura(t, a, r) {
 
     var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\nBOLETA DE VENTA ELECTRÓNICA\n{cod1}-{cod2}</pre>";
@@ -208,7 +172,7 @@ function printFactura(t, a, r) {
 
     s3 = s3.replace("{cod-gen}", "");
     s3 = replaceAll(s3, "{pag-web}", r.cia.website);
-    s3 = s3.replace("{resol-inten}", "");
+    s3 = s3.replace("{resol-inten}", r.cia.resintendencia);
 
     s2 = $(s2);
 
@@ -242,8 +206,9 @@ function guardarFactura(t) {
     if (!Validar.Dato(t.data("codigo"))) { return alert(Msg.NO_EXISTE.replace("el c\u00F3digo del consumo")); }
     var cod = t.data("codigo"); var ar = new Array(); var cond;
     t.find("tbody tr").each(function (index) {
+        var f = $(this);
         cond = {
-            "CANTIDAD": parseFloat($(this).find("td input[type=number]").val()), "CONVENTA": $(this).data("codigo"), "ITEM": $(this).find("td").get(Form.CITEMS).innerHTML,
+            "CANTIDAD": parseFloat(f.find("td input[type=number]").val()), "CONVENTA": f.data("codigo"), "ITEM": f.find("td").get(Form.CITEMS).innerHTML,
         };
         ar.push((cond));
     });
@@ -259,29 +224,21 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
     $.ajax({
         type: "post", dataType: 'json', cache: false, url: "/Cond/Obtener", data: { codund: sl.val(), coddiv: cd },
         success: function (response, textStatus, jqXHR) {
-            $(t).find("tbody tr").remove();
-            if (response.respuesta.toString().split(":")[0] == "ERROR") {
-                $(ua).data("codigo", "");$(ua).text("");$(pa).data("codigo", "");$(pa).text("");resetTabla(t);
-                if (response.respuesta.toString().split(":")[1] == " NO EXISTE LA CABECERA DEL CONSUMO") { f(sl); }
-                else { alert(response.respuesta); }
-            }
-            if (response.respuesta.toString().split(":")[0] == "EXITO") {
+            resetTabla(t); clearDesc(pa, ua);
+            if (App.isError(response.respuesta)) { alert(response.respuesta);}
+            else if (App.isExito(response.respuesta)) {
                 $(ua).data("codigo", response.undatencion.CODIGO);
                 $(ua).text(response.undatencion.DESCRIPCION);
                 $(t).data("codigo", response.cabecera.CODIGO);
                 $(pa).data("codigo", response.peratencion.codigo);
                 $(pa).text(response.peratencion.descripcion);
                 $.each(response.lista, function (idx, obj) {
-                    var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"" + obj["CANTIDAD"] + "\" class=\"numero\"/>");
-                    if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
-                    var btne = $("<button class='close remove-producto red'>&times;</button>");
-                    var el = [$(t).find("tr").length, obj["DESCRIPCION"], parseFloat(obj["PREUNI"]).toFixed(2), obj["tipovalorventa"].substring(0, CARSUBSTR), txtc, parseFloat(obj["TOTAL"]).toFixed(2), btne];
-
+                    var txtc = App.getInputCantidad();
+                    var btne = App.getBtnRemove();
+                    var el = [$(t).find("tr").length, obj["DESCRIPCION"], parseFloat(obj["PREUNI"]).toFixed(2), obj["tipovalorventa"].substring(0, App.CARSUBSTR), txtc, parseFloat(obj["TOTAL"]).toFixed(2), btne];
                     var nf = addRow($(t), el);
                     nf.data("codigo", obj["CONVENTA"]);
-                    btne.on('click', function () {
-                        removeRow(nf); actualizarTotal(t, Form.CSUBT);actualizarItems(t, Form.CITEMS); actualizarIGV(t);
-                    });
+                    btne.on('click', function () {removeRow(nf); actualizarTotal(t, Form.CSUBT);actualizarItems(t, Form.CITEMS); actualizarIGV(t);});
                     txtc.change(function () {
                         var cant = parseFloat($(this).val());
                         if (cant>0) {
@@ -291,17 +248,16 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
                     $(t).append(nf);
                 });
                 actualizarTotal(t, Form.CSUBT); actualizarItems(t, Form.CITEMS); actualizarIGV(t);
-            }
+            } else if (App.isAdvert(response.respuesta)) { f(sl);}
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
 function agregarProducto(pp) {
     var tf = Form.Tabla;
-    var btne = $("<button class='close remove-producto red'>&times;</button>");
-    var txtc = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
-    if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
+    var btne = App.getBtnRemove();
+    var txtc = App.getInputCantidad();
     var n = pp.find(".nombre").first().text();var p = parseFloat(pp.data("precio")).toFixed(2);
-    var el = [$(tf).find("tr").length, n, p, pp.data("tipovv").substring(0, CARSUBSTR), txtc, p, btne]; var nf = addRow($(tf), el); nf.data("codigo", pp.data("codigo"));
+    var el = [$(tf).find("tr").length, n, p, pp.data("tipovv").substring(0, App.CARSUBSTR), txtc, p, btne]; var nf = addRow($(tf), el); nf.data("codigo", pp.data("codigo"));
     actualizarTotal(tf, Form.CSUBT); actualizarItems(tf, Form.CITEMS); actualizarIGV(tf);
     btne.on('click', function () {
         removeRow(nf); actualizarTotal(tf, Form.CSUBT); actualizarItems(tf, Form.CITEMS); actualizarIGV(tf);
@@ -317,7 +273,7 @@ function changeUndAtencion(txt) {
         if(Validar.Dato(txt.val())){
             obtenerDetalle(txt, $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc,
                 function (select) {
-                    if (confirm(MSG_DESEA_APERTURAR)) { $("#modal-seleccionar-peratencion").modal('show'); }
+                    if (confirm(MSG_DESEA_APERTURAR)) { $(Form.FormSelPerAte).modal('show'); }
                 });
         } else { alert(Msg.SELECCION_UND); }
     } else { $(this).val(""); alert(Msg.SELECCION_DIV); }
@@ -326,7 +282,7 @@ function initTipDoc(n) {
     $.ajax({
         type: "get", dataType: 'json', cache: false, url: '/Parreg/TipDocDefault', data: { },
         success: function (response, textStatus, jqXHR) {
-            if (response.respuesta.split(":")[0]=="EXITO") {
+            if (App.isExito(response.respuesta)) {
                 var td = $("input[name='" + n + "'][ value='"+response.codigo+"']"); td.prop('checked', true); td.parent().addClass("active");
             }
         },
@@ -401,8 +357,9 @@ var FormPago = {
         if (aux > 0) { $(this.Importe).val(aux.toFixed(2)); }
         $(this.Importe).attr('disabled', false);
     },
-    isEfectivo: function (p,s) {
-        html = $("<div id='denominaciones'><label>Denominaciones</label><div class='efectivo text-center'><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 200</a><a>S/. 100</a><a>S/. 50</a><a>S/. 20</a></div><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 10</a><a>S/. 5</a><a>S/. 2</a><a>S/. 1</a></div><div class='btn-group btn-group-sm btn-group-justified'><a>S/. 0.50</a><a>S/. 0.20</a><a>S/. 0.10</a><aux class='btn btn-danger input-reset'>Limpiar</aux></div></div></div>;");
+    isEfectivo: function (p, s) {
+        var BtnGroupJust = "class='btn-group btn-group-sm btn-group-justified'";
+        html = $("<div id='denominaciones'><label>Nominaciones</label><div class='efectivo text-center'><div "+BtnGroupJust+"><a>S/. 200</a><a>S/. 100</a><a>S/. 50</a><a>S/. 20</a></div><div "+BtnGroupJust+"><a>S/. 10</a><a>S/. 5</a><a>S/. 2</a><a>S/. 1</a></div><div "+BtnGroupJust+"><a>S/. 0.50</a><a>S/. 0.20</a><a>S/. 0.10</a><aux class='btn btn-danger input-reset'>Limpiar</aux></div></div></div>;");
         html.find("a").addClass("btn btn-secundario btn-secundario-bordes");
         s.append(html);
         p.append("<div class='form-group'><label>Vuelto: </label> <label id='lbl-vuelto'>00.00</label></div>");
@@ -423,10 +380,10 @@ var FormPago = {
             type: "get", dataType: 'json', cache: false, url: "/Tarjetas/Obtener", data: {},
             success: function (response, textStatus, jqXHR) {
                 p.empty();
-                if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
-                if (response.respuesta.toString().split(":")[0] == "EXITO") {
+                if (App.isError(response.respuesta)) { return alert(response.respuesta); }
+                if (App.isExito(response.respuesta)) {
                     $.each(response.lista, function (idx, obj) {
-                        var d = $("<div class=\"btn\" data-descripcion=\"" + obj["descripcion"] + "\" data-codigo=\"" + obj["codigo"] + "\"></div>");
+                        var d = $("<div class=\"btn\"></div>"); d.data("desc", obj["descripcion"]); d.data("codigo", obj["codigo"]);
                         var i = $("<input name=\"tipo-tarjeta\" value=\"" + obj["codigo"] + "\" class=\"hide\" type=\"radio\">");
                         var img;
                         if (obj["foto64"] != null) {
@@ -438,7 +395,7 @@ var FormPago = {
                         $(this).siblings(".btn").removeClass("btn-success");
                         $(this).addClass("btn-success");
                         $(this).children("input[type=radio]").prop('checked', true);
-                        p.parent().find(".tarjeta").text($(this).data("descripcion"));
+                        p.parent().find(".tarjeta").text($(this).data("desc"));
                         p.parent().find(".tarjeta").data("codigo", $(this).data("codigo"));
                     });
                 }
@@ -514,8 +471,8 @@ var FormPago = {
                 type: "post", dataType: 'json', cache: false, url: "/Conc/Facturar",
                 data: { codconc: conc, nroane: anexo.nrodoc, desane: anexo.desane, refane: anexo.refane, tipdoc: td, vp: JSON.stringify(fp) },
                 success: function (response, textStatus, jqXHR) {
-                    if (response.respuesta.split(":")[0] == "ERROR") { alert(response.respuesta); }
-                    if (response.respuesta.split(":")[0] == "EXITO") {
+                    if (App.isError(response.respuesta)) { alert(response.respuesta); }
+                    if (App.isError(response.respuesta)) {
                         printFactura($(Form.Tabla), anexo, response);
                         $(Form.Und).val("");
                         clearDesc(Form.PerDesc, Form.UndDesc);
@@ -533,7 +490,6 @@ $(document).ready(function () {
     initTipDoc("tipo-documentos");
     obtenerDetalle($(Form.Und), $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc, function (s) {; });
     Anexo.initForm();
-
     $(Form.Div).on("change", function () { $(Form.Und).val(""); resetTabla(Form.Tabla); clearDesc(Form.PerDesc, Form.UndDesc); });
     $(Form.Und).keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
     $(Form.Und).bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
@@ -541,76 +497,26 @@ $(document).ready(function () {
     $(".anexo").find(".anexo-nrodoc").bind('accepted', function (e, keyboard, el) { Anexo.getDB($(this).parent().parent()); });
     $(".anexo").find(".anexo-nrodoc").keypress(function (e) { if (e.which == 13) { Anexo.getDB($(this).parent().parent()); } });
 
-    $(".anexo").find(".anexo-desane, .anexo-refane").bind('accepted', function (e, keyboard, el) { Anexo.updateDB(Anexo.get($(this).parent()), $(Form.Anexo)); });
-    $(".anexo").find(".anexo-desane, .anexo-refane").keypress(function (e) { if (e.which == 13) { Anexo.updateDB(Anexo.get($(this).parent()), $(Form.Anexo)); } });
+    //$(".anexo").find(".anexo-desane, .anexo-refane").bind('accepted', function (e, keyboard, el) { Anexo.updateDB(Anexo.get($(this).parent()), $(Form.Anexo)); });
+    //$(".anexo").find(".anexo-desane, .anexo-refane").keypress(function (e) { if (e.which == 13) { Anexo.updateDB(Anexo.get($(this).parent()), $(Form.Anexo)); } });
 
     $(".btn-seleccionar-anexo").on("click", function () {
-        $(".modal").modal("hide");
-        var modal = $("#modal-seleccionar-anexo");
-        modal.data("anexo", $(this).data("anexo"));
-        modal.modal('show');
+        $(".modal").modal("hide");var modal = $("#modal-seleccionar-anexo");modal.data("anexo", $(this).data("anexo"));modal.modal('show');
     });
     $(".btn-actualizar-anexo").on("click", function () {
-        a = Anexo.get($(Form.Anexo));
-        if (Validar.Anexo(a)) {
-            $.ajax({
-                type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
-                success: function (response, textStatus, jqXHR) {
-                    if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
-                    else if (response.respuesta.toString().split(":")[0] == "EXITO") {
-                        var input = "input[name=tipo-documentos]:checked";
-                        var m = "#modal-actualizar-anexo-ruc";
-                        if ($(input).val() == "01" && Validar.RUC(a.nrodoc)) {
-                            $(m).find("input[type='text']").val("");
-
-                            $(m).find("#actualizar-ruc-titulo").text("Actualizar cliente");
-                            $("#form-actruc-nrodoc").val(response.anexo.nrodoc);
-                            $("#form-actruc-desane").val(response.anexo.desane);
-                            $("#form-actruc-refane").val(response.anexo.refane);
-                        }
-                        else if ($(input).val() == "03" && Validar.DNI(a.nrodoc)) {
-                            m = "#modal-actualizar-anexo-dni";
-                            $(m).find("input[type='text']").val("");
-
-                            $("#actualizar-dni-titulo").text("Actualizar cliente");
-                            $("#form-actdni-nrodoc").val(response.anexo.nrodoc);
-                            $("#form-actdni-refane").val(response.anexo.refane);
-                            $("#form-actdni-ape").val(response.anexo.apepat + " " + response.anexo.apemat);
-                            $("#form-actdni-nom1").val(response.anexo.nombre1);
-                            $("#form-actdni-nom2").val(response.anexo.nombre2);
-                        }
-                        $(m).modal("show");
-                    }
-                }, error: function (xhr, status) { errorAjax(xhr, status); }
-            });
-        }
+        Anexo.getDB($(Form.Anexo), function (a) {
+            Anexo.initForm(a.tipdoc);
+            var m = $(Form.FormAnexo);
+            m.find("#input-nrodoc").val(a.nrodoc);
+            m.find("#input-refane").val(a.refane);
+            m.find("#input-ape").val(a.ape);
+            m.find("#input-nom1").val(a.nom1);
+            m.find("#input-nom2").val(a.nom2);
+            m.find("#input-desane").val(a.desane);
+            m.find(Anexo.BtnSubmit).text("Actualizar");
+            m.modal("show");
+        } );
     });
-    $("#btn-actdni").on("click", function () {
-        a = Anexo.get($(Form.Anexo));
-        a.refane = $("#form-actdni-refane").val();
-        a.nombre1 = $("#form-actdni-nom1").val();
-        a.nombre2 = $("#form-actdni-nom2").val();
-        a.apepat = $("#form-actdni-ape").val().split(" ")[0];
-        a.apemat = $("#form-actdni-ape").val().split(" ")[1];
-        actualizarAnexoDNI(a, $(Form.Anexo));
-        $("#modal-actualizar-anexo-dni").modal('hide');
-    });
-    $("#btn-actruc").on("click", function () {
-        a.nrodoc = $("#form-actruc-nrodoc").val();
-        a.desane = $("#form-actruc-desane").val();
-        a.refane = $("#form-actruc-refane").val();
-        actualizarAnexoRUC(a, $(Form.Anexo));
-        $("#modal-actualizar-anexo-ruc").modal('hide');
-    });
-    $("#modal-crear-anexo").on("show.bs.modal", function () {
-        $(this).find('input[type=text]').val();
-    });
-    $("#form-anexo-btn-crear").on("click", function () {
-        var modal = $("#modal-crear-anexo");var fa = "#form-anexo";
-        var a = {desane: $(fa+"-desane").val(), tipdoc: $("input[name='form-anexo-tipdoc']:checked").val(),nrodoc: $(fa+"-nrodoc").val(), refane: $(fa+"-refane").val()}
-        Anexo.createDB(a, $(modal.data("anexo")), modal);
-    });
-
     $("#btn-buscar-razon").on("click", function () {
         buscarAjax("/Anexos/BuscarRazon", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane","tipdoc", "nrodoc", "refane"],
         function (f) {
@@ -619,11 +525,11 @@ $(document).ready(function () {
                 var input = "input[name=tipo-documentos]:checked";
                 var aux = "";
                 switch ($(input).val()) {
-                    case "01":aux = "RUC";break;
-                    case "03":aux = "DNI";break;
+                    case "01": aux = "DNI"; break;
+                    case "03": aux = "RUC"; break;
                 }
                 if (aux != f.find('td').get(1).innerHTML) {
-                    return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc"));
+                    return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando se emite una " + $(input).data("desc"));
                 }
 
                 var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(2).innerHTML, refane: f.find('td').get(3).innerHTML};
@@ -669,20 +575,20 @@ $(document).ready(function () {
     $("#cambiar-undatencion").on("click", function () {
         if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCIONE_DIV); }
         if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }
-        $("#modal-cambiar-undatencion").modal("show");
-        $("#modal-cambiar-divatencion").val($(Form.Div).val());
-        $("#modal-cambiar-divatencion").change();
+        $(Form.FormCambiarUnd).modal("show");
+        $(Form.SelectCambiarDiv).val($(Form.Div).val());
+        $(Form.SelectCambiarDiv).change();
     });
-    $("#modal-cambiar-divatencion").on("change", function () {
+    $(Form.SelectCambiarDiv).on("change", function () {
         buscarAjax("/UndAtencion/ObtenerLibres", $(this).val(), $("#tabla-cambiar-undatencion"), ["CODIGO", "DESCRIPCION"],
             function (f) {
                 f.on("click", function () {
                     if (confirm(MSG_DESEA_CAMBIAR_UNDATENCION)) {
                         var nuevocod = $(this).find("td").get(0).innerHTML
-                        var divate = $("#modal-cambiar-divatencion").val();
+                        var divate = $(Form.SelectCambiarDiv).val();
                         var codigo = $(Form.Tabla).data("codigo");
                         cambiarUndatencion(codigo, $(Form.Und), $(Form.Div), nuevocod, divate, $(Form.UndDesc));
-                        $("#modal-cambiar-undatencion").modal("hide");
+                        $(Form.FormCambiarUnd).modal("hide");
                     }
                 });
             });
@@ -703,7 +609,7 @@ $(document).ready(function () {
             $.ajax({
                 type: "post", dataType: 'json', cache: false, url: '/Conc/Anular', data: { codigo: cod },
                 success: function (response, textStatus, jqXHR) {
-                    if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
+                    if (App.isError(response.respuesta)) { return alert(response.respuesta); }
                     else { resetTabla(Form.Tabla); $(Form.Und).val(""); clearDesc(Form.PerDesc, Form.UndDesc); window.location = "/UndAtencion/Index"; }
                 }, error: function (xhr, status) { errorAjax(xhr, status); }
             });
@@ -711,13 +617,13 @@ $(document).ready(function () {
     });
 
     $("#empleados li").on("click", function () {
-        $("#modal-seleccionar-peratencion").modal("hide");
+        $(Form.FormSelPerAte).modal("hide");
         var sld = $(this);
         $.ajax({
             type: "post", dataType: 'json', cache: false, url: "/UndAtencion/Aperturar",
             data: { codigo: $(Form.Und).val(), idperatencion: $(this).data("codigo"), divate: $(Form.Div).val() },
             success: function (response, textStatus, jqXHR) {
-                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+                if (App.isError(response.respuesta)) { alert(response.respuesta); }
                 else {
                     $(Form.Tabla).data("codigo", response.cabecera.CODIGO);
                     $(Form.UndDesc).text(response.undatencion.DESCRIPCION);
@@ -755,9 +661,9 @@ $(document).ready(function () {
         var input = $(this).children("input[type=radio]"); input.prop('checked', true);
         FormPago.updateForm(input);
     });
-    $("#group-tipane .btn").on("click", function () {
-        $(this).siblings(".btn").removeClass("btn-info");
-        $(this).addClass("btn-info");
+    $(Anexo.GroupTipDoc+" .btn").on("click", function () {
+        $(this).siblings(".btn").removeClass(Anexo.BtnTipDoc);
+        $(this).addClass(Anexo.BtnTipDoc);
         var input = $(this).children("input[type=radio]"); input.prop('checked', true);
         Anexo.updateForm(input);
     });
@@ -773,21 +679,41 @@ $(document).ready(function () {
             type: "post", dataType: 'json', cache: false,
             url: '/Punemi/Cambiar', data: { codigo: v },
             success: function (response, textStatus, jqXHR) {
-                if (response.respuesta.toString().split(":")[0] == "ERROR") { alert(response.respuesta); }
+                if (App.isError(response.respuesta)) { alert(response.respuesta); }
             }, error: function (xhr, status) { errorAjax(xhr, status) }
         });
     });
+
+    $(Anexo.BtnSubmit).on("click", function () {
+        var anexo = {};
+        anexo.nrodoc = m.find("#input-nrodoc").val();
+        anexo.refane = m.find("#input-refane").val();
+        anexo.apepat = m.find("#input-ape").val().split(" ")[0];
+        anexo.apemat = m.find("#input-ape").val().split(" ")[1];
+        anexo.nom1 = m.find("#input-nom1").val();
+        anexo.nom2 = m.find("#input-nom2").val();
+        anexo.desane = m.find("#input-desane").val();
+        switch ($(this).text()) {
+            case "Guardar":
+                Anexo.createDB(anexo,$(Form.Anexo));
+                break;
+            case "Actualizar":
+                Anexo.updateDB(anexo,$(Form.Anexo))
+                break;
+        }
+        $(Form.FormAnexo).modal("hide");
+    });
     $("#conventa-btn-buscar").on("click", function () {
-        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
     });
     $("#conventa-texto").on("keyup", function (evt) {
-        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar", Form.Tabla));
     });
     $('#conventa-texto').bind('accepted', function (e, keyboard, el) {
-        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"));
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
     });
     $(".seleccion-categoria").on("click", function () {
         var codigo = $(this).data("codigo");
-        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo));
+        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo), Form.Tabla);
     });
 });

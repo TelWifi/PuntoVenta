@@ -115,7 +115,7 @@ namespace Franquisia1._1.Controllers
                                 if (und != null)
                                 {
                                     conc conc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.UNDATENCION.Equals(codund) && a.SITUACION.Equals("A")).FirstOrDefault();
-                                    if (conc == null) { return Json(new { respuesta = "ERROR: NO EXISTE LA CABECERA DEL CONSUMO" }, JsonRequestBehavior.AllowGet); }
+                                    if (conc == null) { return Json(new { respuesta = "ADVERTENCIA: NO EXISTE EL CONSUMO" }, JsonRequestBehavior.AllowGet); }
                                     else
                                     {
                                         peratencion per = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(conc.PERATENCION) && a.situa.Equals("V")).FirstOrDefault();
