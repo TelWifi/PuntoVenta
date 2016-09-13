@@ -85,6 +85,7 @@ var App = {
     isError: function (t) { return t.split(":")[0] == Msg.ERROR;},
     isAdvert: function (t) { return t.split(":")[0] == Msg.ADVERTENCIA; },
     isRecomen: function (t) { return t.split(":")[0] == Msg.RECOMENDACION; },
+    getStr: function (c, n) { var s = ""; for (var i = 0; i < n; i++) { s += c; } return s;},
 };
 function decBase64(a) { var s = ""; l = a.length; for (var i = 0; i < l; i++) { s += String.fromCharCode(a[i]); } return s; }
 function sumar(t, c) {var s = 0; t.find("tbody tr").each(function (index) { s += parseFloat($(this).find("td").get(c).innerHTML); }); return s;}
@@ -111,7 +112,7 @@ function print(div) {
     var WIDTHPRINT = "270px", FONT_SIZE = "14px";
     var mw = window.open('', 'Imprimir Factura', 'height=500,width=' + WIDTHPRINT);
     if (!mw.print) { return false; }
-    var s = "<html lang='es'><head><meta charset='utf-8'><style>*{padding: 1px;margin: 1px;}	body{width:" + WIDTHPRINT + ";font-size:" + FONT_SIZE + ";text-align:center;}	pre{white-space: pre-wrap;}	table{text-align: right;width: 100%;}	table>tbody>tr>td:nth-child(1) {text-align: left;}	.text-left{		text-align: left;	}</style></head><body>";
+    var s = "<html lang='es'><head><meta charset='utf-8'><style>*{padding: 0px;margin:2px;}	body{width:" + WIDTHPRINT + ";font-size:" + FONT_SIZE + ";text-align:center;}	pre{white-space: pre-wrap;}	table{text-align: right;width: 100%;}	table>tbody>tr>td:nth-child(1) {text-align: left;}	.text-left{		text-align: left;	}</style></head><body>";
     mw.document.write(s);
     mw.document.write($(div).html());
     mw.document.write("<script type='text/javascript'>window.onload = function() { print(); close(); } </script>");
