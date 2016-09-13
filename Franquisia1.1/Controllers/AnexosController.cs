@@ -28,21 +28,25 @@ namespace Franquisia1._1.Controllers
                 if (estado)
                 {
                     string codcia = Session["Loged_usrfile_ciafile"].ToString();
-                    anexos aux = anexo = db.anexos.Where(b => b.idcia.Equals(codcia) && b.tipane.Equals("C") && b.codane.Equals(anexo.nrodoc)).FirstOrDefault();
+                    string idusr = Session["Loged_usrfile_idusr"].ToString();
+                    anexos aux = db.anexos.Where(b => b.idcia.Equals(codcia) && b.tipane.Equals("C") && b.codane.Equals(anexo.nrodoc)).FirstOrDefault();
                     if (aux == null)
                     {
                         anexo.idcia = codcia;
+                        anexo.codane = anexo.nrodoc;
                         anexo.tipane = "C";
-                        aux.refane = anexo.refane != null ? anexo.refane.ToUpper() : "";
-                        aux.tipdoc = anexo.tipdoc != null ? anexo.tipdoc.ToUpper() : "";
-                        aux.nrodoc = anexo.nrodoc != null ? anexo.nrodoc.ToUpper() : "";
-                        aux.rucane = anexo.rucane != null ? anexo.rucane.ToUpper() : "";
-                        aux.nombre1 = anexo.desane != null ? anexo.nombre1.ToUpper() : "";
-                        aux.nombre2 = anexo.desane != null ? anexo.nombre2.ToUpper() : "";
-                        aux.apepat = anexo.desane != null ? anexo.apepat.ToUpper() : "";
-                        aux.apemat = anexo.desane != null ? anexo.apemat.ToUpper() : "";
-                        aux.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", new { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat });
+                        anexo.refane = anexo.refane != null ? anexo.refane.ToUpper() : "";
+                        anexo.tipdoc = anexo.tipdoc != null ? anexo.tipdoc.ToUpper() : "";
+                        anexo.nrodoc = anexo.nrodoc != null ? anexo.nrodoc.ToUpper() : "";
+                        anexo.rucane = anexo.rucane != null ? anexo.rucane.ToUpper() : "";
+                        anexo.nombre1 = anexo.desane != null ? anexo.nombre1.ToUpper() : "";
+                        anexo.nombre2 = anexo.desane != null ? anexo.nombre2.ToUpper() : "";
+                        anexo.apepat = anexo.desane != null ? anexo.apepat.ToUpper() : "";
+                        anexo.apemat = anexo.desane != null ? anexo.apemat.ToUpper() : "";
+                        anexo.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", new { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat });
                         anexo.situane = "V";
+                        anexo.usuario = idusr;
+                        anexo.fcrea = DateTime.Now.ToString("dd/mm/aaaa");
                         db.anexos.Add(anexo);
                         db.SaveChanges();
                         anexo = db.anexos.Where(b => b.idcia.Equals(codcia) && b.tipane.Equals("C") && b.codane.Equals(anexo.nrodoc)
@@ -145,6 +149,7 @@ namespace Franquisia1._1.Controllers
                             aux.apepat = anexo.desane != null ? anexo.apepat.ToUpper() : "";
                             aux.apemat = anexo.desane != null ? anexo.apemat.ToUpper() : "";
                             aux.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", new { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat });
+                            aux.fmod = DateTime.Now.ToString("dd/mm/aaaa");
                             db.SaveChanges();
                             rpta = "EXITO: Anexo actualizado";
                             return Json(new { respuesta = rpta, anexo = anexo }, JsonRequestBehavior.AllowGet);

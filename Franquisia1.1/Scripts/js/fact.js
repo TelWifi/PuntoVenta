@@ -686,9 +686,9 @@ $(document).ready(function () {
 
     $(Anexo.BtnSubmit).on("click", function () {
         var anexo = {};
-        anexo.nrodoc = m.find("#input-nrodoc").val();
-        anexo.refane = m.find("#input-refane").val();
-        anexo.apepat = m.find("#input-ape").val().split(" ")[0];
+        anexo.nrodoc = Validar.Dato(m.find("#input-nrodoc"))?m.find("#input-nrodoc").val():alert(Msg.NRODOC_INVALIDO);
+        anexo.refane =  Validar.Dato(m.find("#input-refane"))?m.find("#input-refane").val():"";
+        anexo.apepat = Validar.Dato(m.find("#input-ape"))?m.find("#input-ape").split(" ")[0]:"";
         anexo.apemat = m.find("#input-ape").val().split(" ")[1];
         anexo.nom1 = m.find("#input-nom1").val();
         anexo.nom2 = m.find("#input-nom2").val();

@@ -48,7 +48,7 @@ var Msg = {
     ERROR_IMPRIMIR: "ERROR: Error al imprimir",
     NO_NULO_O_VACIO: "ERROR: <attr> no puede ser nulo o vac\u00EDo",
     NO_EXISTE: "ERROR: No existe <attr>",
-    NRODOC_INVALIDO: "ERROR: El n\u00FAmero de documento debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres",
+    NRODOC_INVALIDO: "ERROR: El n\u00FAmero de documento no es valido, debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres",
     ANEXO_INVALIDO:"ERROR: Los datos ingresados son incorrectos",
     SELECCIONE_ATTR: "RECOMENDACION: Seleccione <attr>",
     SELECCION_UND: Msg.SELECCIONE_ATTR.replace("<attr>", "una " + Msg.UNDATENCION),
