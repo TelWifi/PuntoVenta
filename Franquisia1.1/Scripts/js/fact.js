@@ -147,8 +147,8 @@ function resetTabla(t) { Anexo.clear($(t + "-anexo")); $(t).find("tbody tr").rem
 
 function printFactura(t, a, r) {
 
-    var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\nBOLETA DE VENTA ELECTR\u00D3NICA\n{cod1}-{cod2}</pre>";
-    var s2 = "<pre class='text-left'>Tienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha}   Hora: {hora}\n************************************\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n************************************\nARTICULO\t|CANT|PRECIO|IMPORTE\n************************************\n<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>====================================<table><tr><td>\t\tTOTAL\t{abr} </td><td id='total'></td></tr><tr></tr><tr><td>Op. Exonerada\t{abr}</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\t{abr}</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\t{abr}</td><td id='gravada'></td></tr><tr><td>IGV\t\t{abr}</td><td id='igv'></td></tr><tr><td>Importe Total\t{abr}</td><td id='importe-total'></td></tr></table><div id='resumen'></div></pre>";
+    var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\n{docemi} ELECTR\u00D3NICA\n{cod1}-{cod2}</pre>";
+    var s2 = "<pre class='text-left'>Tienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha} Hora: {hora}\n************************************\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n************************************\nARTICULO      |CANT|PRECIO|IMPORTE\n************************************\n<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>====================================<table><tr></tr><tr><td>Op. Exonerada\t{abr}</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\t{abr}</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\t{abr}</td><td id='gravada'></td></tr><tr><td>IGV\t\t{abr}</td><td id='igv'></td></tr><tr><td>Importe Total\t{abr}</td><td id='importe-total'></td></tr></table><div id='resumen'></div></pre>";
     var s3 = "<pre>{cod-gen}\n\nPresentaci\u00F3n impresa del Comprobante de Venta Electr\u00F3nica, esta puede ser consultada en {pag-web} autorizado mediante resoluci\u00F3n de intendencia {resol-inten}\n\n{pag-web}\nGRACIAS POR SU COMPRA</pre>";
     var su = $("<div></div>");
     s1 = s1.replace("{cia-desc}", r.cia.nombrecomercial);
@@ -157,6 +157,7 @@ function printFactura(t, a, r) {
     s1 = s1.replace("{ruc}", r.cia.ruccia);
     s1 = s1.replace("{dir-central}", r.cia.dircia);
     s1 = s1.replace("{telefono}", r.cia.telefonos);
+    s1 = s1.replace("{docemi}", r.docemi);
     s1 = s1.replace("{cod1}", r.cod1);
     s1 = s1.replace("{cod2}", r.cod2);
 
@@ -204,7 +205,6 @@ function printFactura(t, a, r) {
         res.append(s);
     });
     res.append(r.cajero);
-    s2.find("#total").append(parseFloat(r.total).toFixed(2));
     s2.find("#gravada").append(parseFloat(r.gravado).toFixed(2));
     s2.find("#inafecta").append(parseFloat(r.inafecto).toFixed(2));
     s2.find("#exonerada").append(parseFloat(r.exonerado).toFixed(2));

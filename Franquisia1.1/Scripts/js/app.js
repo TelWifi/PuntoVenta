@@ -108,10 +108,10 @@ function buscarAjax(dir, clv, t, attr, f) {
     });
 }
 function print(div) {
-    var WIDTHPRINT = "280px", FONT_SIZE = "14px";
+    var WIDTHPRINT = "270px", FONT_SIZE = "14px";
     var mw = window.open('', 'Imprimir Factura', 'height=500,width=' + WIDTHPRINT);
     if (!mw.print) { return false; }
-    var s = "<html lang='es'><head><meta charset='utf-8'><style>	body{width:" + WIDTHPRINT + ";font-size:" + FONT_SIZE + ";text-align:center;}	pre{white-space: pre-wrap;}	table{text-align: right;width: 100%;}	table>tbody>tr>td:nth-child(1) {text-align: left;}	.text-left{		text-align: left;	}</style></head><body>";
+    var s = "<html lang='es'><head><meta charset='utf-8'><style>*{padding: 1px;margin: 1px;}	body{width:" + WIDTHPRINT + ";font-size:" + FONT_SIZE + ";text-align:center;}	pre{white-space: pre-wrap;}	table{text-align: right;width: 100%;}	table>tbody>tr>td:nth-child(1) {text-align: left;}	.text-left{		text-align: left;	}</style></head><body>";
     mw.document.write(s);
     mw.document.write($(div).html());
     mw.document.write("<script type='text/javascript'>window.onload = function() { print(); close(); } </script>");

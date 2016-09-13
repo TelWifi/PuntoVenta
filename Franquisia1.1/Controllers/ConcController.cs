@@ -183,7 +183,7 @@ namespace Franquisia1._1.Controllers
                         hora = DateTime.Now.ToString("hh:mm tt"),
                         venc = venc,
                         anexo = anexo,
-                        tipdoc = mgtd.desmaesgen,
+                        tipdoc = mgtd.parm1maesgen,
                         docemi=emision.desmaesgen,
                         moneda = mgmoneda.parm1maesgen,
                         gravado = sumagra,
