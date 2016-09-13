@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using AppAccounting;
 namespace Franquisia1._1.Controllers
 {
     public class ConcController : Controller
@@ -167,12 +168,36 @@ namespace Franquisia1._1.Controllers
                              select new{codigo=a.CODIGO, importe=a.IMPORTE, recibido=a.RECIBIDO,
                              vuelto=a.VUELTO, forventa=b.descripcion, forpago=c.descripcion, tarjeta=d.descripcion                             }
                                  ).ToList();
-                    string codper = conc.PERATENCION;
-                    peratencion per = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(codper)).FirstOrDefault();
-                    return Json(new { respuesta = "EXITO: Exito", cia=ciafile, suc=suc, fecha=DateTime.Now.ToString("dd/MM/yyyy"),
-                        hora= DateTime.Now.ToString("hh:mm tt"),venc=venc, anexo=anexo, tipdoc="DNI", gravado=sumagra, exonerado=sumaexo, inafecto = sumaina,
-                        igv=sumaigv, total=total, resumen=u, cajero=desusr,cod1=venc.SERIE, cod2=venc.NRODOC,
-                    }, JsonRequestBehavior.AllowGet); 
+                    peratencion per = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(conc.PERATENCION)).FirstOrDefault();
+                    maesgen mgmoneda = db.maesgen.Where(a=>a.idmaesgen.Equals("015") && a.clavemaesgen.Equals(venc.CODMON)).FirstOrDefault();
+                    maesgen emision = db.maesgen.Where(a => a.idmaesgen.Equals("110") && a.clavemaesgen.Equals(tipdoc)).FirstOrDefault();
+                    maesgen mgtd = db.maesgen.Where(a => a.idmaesgen.Equals("002") && a.clavemaesgen.Equals(anexo.tipdoc)).FirstOrDefault();
+                    NumLetras nl = new NumLetras();
+
+                    return Json(new
+                    {
+                        respuesta = "EXITO: Exito",
+                        cia = ciafile,
+                        suc = suc,
+                        fecha = DateTime.Now.ToString("dd/MM/yyyy"),
+                        hora = DateTime.Now.ToString("hh:mm tt"),
+                        venc = venc,
+                        anexo = anexo,
+                        tipdoc = mgtd.desmaesgen,
+                        docemi=emision.desmaesgen,
+                        moneda = mgmoneda.parm1maesgen,
+                        gravado = sumagra,
+                        exonerado = sumaexo,
+                        inafecto = sumaina,
+                        igv = sumaigv,
+                        total = total,
+                        totalstr = nl.Numero_to_Letras(mgmoneda.clavemaesgen, total),
+                        resumen = u,
+                        cajero = desusr,
+                        cod1 = venc.NRODOC,
+                        cod2 = venc.CONSUMO,
+                        abrevia = mgmoneda.abrevia,
+                    }, JsonRequestBehavior.AllowGet);
                 }
                 else { return Json(new { respuesta = "ERROR: Error el consumo est\u00E1 cerrado" }, JsonRequestBehavior.AllowGet); }
             }

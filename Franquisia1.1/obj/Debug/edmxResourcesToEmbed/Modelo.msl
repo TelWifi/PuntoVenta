@@ -4,6 +4,10 @@
     <EntitySetMapping Name="ciafile">
       <EntityTypeMapping TypeName="ModeloAplicacion.ciafile">
         <MappingFragment StoreEntitySet="ciafile">
+          <ScalarProperty Name="resintendencia" ColumnName="resintendencia" />
+          <ScalarProperty Name="linkconsulta" ColumnName="linkconsulta" />
+          <ScalarProperty Name="eslogan" ColumnName="eslogan" />
+          <ScalarProperty Name="nombrecomercial" ColumnName="nombrecomercial" />
           <ScalarProperty Name="ubigeo" ColumnName="ubigeo" />
           <ScalarProperty Name="idcia" ColumnName="idcia" />
           <ScalarProperty Name="descia" ColumnName="descia" />

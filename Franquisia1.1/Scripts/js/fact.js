@@ -148,8 +148,8 @@ function resetTabla(t) { Anexo.clear($(t + "-anexo")); $(t).find("tbody tr").rem
 function printFactura(t, a, r) {
 
     var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\nBOLETA DE VENTA ELECTR\u00D3NICA\n{cod1}-{cod2}</pre>";
-    var s2 = "<pre class='text-left'>Tienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha}   Hora: {hora}\n************************************\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n************************************\nARTICULO\t|CANT|PRECIO|IMPORTE\n************************************\n<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>====================================<table><tr><td>\t\tTOTAL	S/.</td><td id='total'></td></tr><tr></tr><tr><td>Op. Exonerada\tS/.</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\tS/.</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\tS/.</td><td id='gravada'></td></tr><tr><td>IGV\t\tS/.</td><td id='igv'></td></tr><tr><td>Importe Total\tS/.</td><td id='importe-total'></td></tr></table><div id='resumen'></div></pre>";
-    var s3 = "<pre>{cod-gen}\n\nPresentaci\u00F3n impresa del Comprobante de Venta Electr\u00F3nica, esta puede ser consultada en {pag-web} autorizado mediante resoluci\u00F3n de intendencia {resol-inten} / SUNAT\n\n{pag-web}\nGRACIAS POR SU COMPRA</pre>";
+    var s2 = "<pre class='text-left'>Tienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha}   Hora: {hora}\n************************************\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n************************************\nARTICULO\t|CANT|PRECIO|IMPORTE\n************************************\n<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>====================================<table><tr><td>\t\tTOTAL\t{abr} </td><td id='total'></td></tr><tr></tr><tr><td>Op. Exonerada\t{abr}</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\t{abr}</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\t{abr}</td><td id='gravada'></td></tr><tr><td>IGV\t\t{abr}</td><td id='igv'></td></tr><tr><td>Importe Total\t{abr}</td><td id='importe-total'></td></tr></table><div id='resumen'></div></pre>";
+    var s3 = "<pre>{cod-gen}\n\nPresentaci\u00F3n impresa del Comprobante de Venta Electr\u00F3nica, esta puede ser consultada en {pag-web} autorizado mediante resoluci\u00F3n de intendencia {resol-inten}\n\n{pag-web}\nGRACIAS POR SU COMPRA</pre>";
     var su = $("<div></div>");
     s1 = s1.replace("{cia-desc}", r.cia.nombrecomercial);
     s1 = s1.replace("{slogan}", r.cia.eslogan);
@@ -168,13 +168,14 @@ function printFactura(t, a, r) {
     s2 = s2.replace("{hora}", r.hora);
     s2 = s2.replace("{correlativo}", r.venc.CODIGO);
     s2 = s2.replace("{caja}", r.venc.PUNEMI);
-    s2 = s2.replace("{moneda}", r.venc.CODMON);
+    s2 = s2.replace("{moneda}", r.moneda);
     s2 = s2.replace("{cliente}", r.anexo.desane);
     s2 = s2.replace("{tipdoc}", r.tipdoc);
     s2 = s2.replace("{nro-doc}", r.anexo.nrodoc);
 
+    s2 = replaceAll(s2, "{abr}", r.abrevia);
     s3 = s3.replace("{cod-gen}", "sbdasdi832387291ad");
-    s3 = replaceAll(s3, "{pag-web}", r.cia.website);
+    s3 = replaceAll(s3, "{pag-web}", r.cia.linkconsulta);
     s3 = s3.replace("{resol-inten}", r.cia.resintendencia);
 
     s2 = $(s2);
@@ -189,12 +190,17 @@ function printFactura(t, a, r) {
         ti.append(nf);
     });
     var res = s2.find("#resumen");
+    s = "SON: " + r.totalstr + "\n";
+    res.append(s);
     $.each(r.resumen, function (idx, obj) {
-        s = "SON: "+"\n";
-        s += obj["forventa"] + " " + obj["forpago"] + " "; 
-        if (Validar.Dato(obj["tarjeta"])) { s += obj["tarjeta"];}
-        s += obj["recibido"] + " NUEVOS SOLES\n";
-        s+="Vuelto: " + parseFloat(obj["vuelto"]).toFixed(2) + " NUEVOS SOLES\n";
+        s = obj["forventa"] + " " + obj["forpago"] + " "; 
+        if (Validar.Dato(obj["tarjeta"])) {
+            s += obj["tarjeta"]+" ";
+            s += parseFloat(obj["recibido"]).toFixed(2) + " NUEVOS SOLES\n";
+        } else {
+            s += parseFloat(obj["recibido"]).toFixed(2) + " NUEVOS SOLES\n";
+            s += "Vuelto: " + parseFloat(obj["vuelto"]).toFixed(2) + " NUEVOS SOLES\n";
+        }
         res.append(s);
     });
     res.append(r.cajero);
@@ -203,7 +209,7 @@ function printFactura(t, a, r) {
     s2.find("#inafecta").append(parseFloat(r.inafecto).toFixed(2));
     s2.find("#exonerada").append(parseFloat(r.exonerado).toFixed(2));
     s2.find("#igv").append(parseFloat(r.igv).toFixed(2));
-    s2.find("#importe-total").append(r.total);
+    s2.find("#importe-total").append(parseFloat(r.total).toFixed(2));
     su.append($(s1)); su.append(s2); su.append($(s3));
     if (!print(su)) { alert(Msg.ERROR_IMPRIMIR); }
 }
@@ -470,7 +476,7 @@ var FormPago = {
             $(this.Tabla).find("tbody tr").each(function (index) {
                 var f = $(this);
                 var i = {
-                    "FORVENTA": f.data("fv"), "FORPAGO": f.data("fp"), "TARJETA": f.data("tt"), "REFERENCIA": f.find("td").get(Form.CNROREF).innerHTML, "IMPORTE": f.find("td").get(Form.CIMPORTE).innerHTML, "VUELTO": f.data("cambio"),
+                    "FORVENTA": f.data("fv"), "FORPAGO": f.data("fp"), "TARJETA": f.data("tt"), "REFERENCIA": Validar.Dato(f.find("td").get(Form.CNROREF).innerHTML)?f.find("td").get(Form.CNROREF).innerHTML:"000", "IMPORTE": f.find("td").get(Form.CIMPORTE).innerHTML, "VUELTO": f.data("cambio"),
                 };
                 fp.push(i);
             });

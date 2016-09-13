@@ -31,6 +31,10 @@
     <Property Name="kcatalogo" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
     <Property Name="kmetval" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
     <Property Name="ubigeo" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+    <Property Name="nombrecomercial" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="eslogan" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+    <Property Name="linkconsulta" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+    <Property Name="resintendencia" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="divatencion">
     <Key>

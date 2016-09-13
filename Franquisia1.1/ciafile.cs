@@ -41,5 +41,9 @@ namespace Franquisia1._1
         public string kcatalogo { get; set; }
         public string kmetval { get; set; }
         public string ubigeo { get; set; }
+        public string nombrecomercial { get; set; }
+        public string eslogan { get; set; }
+        public string linkconsulta { get; set; }
+        public string resintendencia { get; set; }
     }
 }

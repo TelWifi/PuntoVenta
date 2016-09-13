@@ -86,6 +86,10 @@
           <Property Name="cargorep" Type="varchar" MaxLength="80" />
           <Property Name="kcatalogo" Type="char" MaxLength="4" />
           <Property Name="kmetval" Type="char" MaxLength="4" />
+          <Property Name="nombrecomercial" Type="char" MaxLength="40" />
+          <Property Name="eslogan" Type="varchar" MaxLength="120" />
+          <Property Name="linkconsulta" Type="varchar" MaxLength="120" />
+          <Property Name="resintendencia" Type="varchar" MaxLength="120" />
         </EntityType>
         <EntityType Name="ciausrfile">
           <Key>
@@ -834,6 +838,10 @@
           <Property Name="kcatalogo" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
           <Property Name="kmetval" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
           <Property Name="ubigeo" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="nombrecomercial" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="eslogan" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="linkconsulta" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="resintendencia" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="divatencion">
           <Key>
@@ -1606,6 +1614,10 @@
           <EntitySetMapping Name="ciafile">
             <EntityTypeMapping TypeName="ModeloAplicacion.ciafile">
               <MappingFragment StoreEntitySet="ciafile">
+                <ScalarProperty Name="resintendencia" ColumnName="resintendencia" />
+                <ScalarProperty Name="linkconsulta" ColumnName="linkconsulta" />
+                <ScalarProperty Name="eslogan" ColumnName="eslogan" />
+                <ScalarProperty Name="nombrecomercial" ColumnName="nombrecomercial" />
                 <ScalarProperty Name="ubigeo" ColumnName="ubigeo" />
                 <ScalarProperty Name="idcia" ColumnName="idcia" />
                 <ScalarProperty Name="descia" ColumnName="descia" />
