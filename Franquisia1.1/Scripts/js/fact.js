@@ -5,17 +5,17 @@ var Form = {
     Tabla: "#tabla-factura",
     Und: "#undatencion",
     Div: "#divatencion",
-    UndDesc: Form.Und + "-desc",
+    UndDesc: "#undatencion-desc",
     PerDesc: "#peratencion-desc",
-    Anexo: Form.Tabla + "-anexo",
+    Anexo:"#tabla-factura-anexo",
     GroupTipDocEmi: "input[name=tipo-documentos]",
     FormAnexo: "#modal-crear-anexo",
     FormSelPerAte: "#modal-seleccionar-peratencion",
     FormCambiarUnd: "#modal-cambiar-undatencion",
     SelectCambiarDiv: "#modal-cambiar-divatencion",
-    Total: Form.Tabla + "-total",
-    Items: Form.Tabla + "-items",
-    IGV: Form.Tabla + "-igv",
+    Total: "#tabla-factura-total",
+    Items: "#tabla-factura-items",
+    IGV: "#tabla-factura-igv",
     updateTotalCheckbox: function (t, cs, r) {
         var s = 0;
         $(t).find("tbody tr").each(function (index) { if ($(this).find("input[type=checkbox]").prop("checked")) { s += parseFloat($(this).find("td").get(cs).innerHTML); } });
@@ -35,7 +35,7 @@ var Form = {
             success: function (response, textStatus, jqXHR) {
                 if (App.isError(response.respuesta)) { alert(response.respuesta); }
                 else if (App.isExito(response.respuesta)) {
-                    parseFloat(response.igv) != undefined ? Form.IGV = parseFloat(response.igv) : Form.IGV = 18;
+                    Form.IGV = parseFloat(response.igv) == undefined ? 18 : parseFloat(response.igv);
                 }
             },
             error: function (xhr, status) { errorAjax(xhr, status); }
@@ -67,7 +67,7 @@ var Anexo = {
         $(Anexo.InputGroupTD + ":checked").removeClass(Anexo.BtnTipDoc);
         $(Anexo.InputGroupTD + "[value='" + v + "']").prop('checked', true);
         $(Anexo.InputGroupTD).parent().addClass(Anexo.BtnTipDoc);
-        Anexo.updateForm(grnt.first());
+        Anexo.updateForm($(Anexo.InputGroupTD + ":checked"));
     },
     updateForm: function (i) {
         $(Anexo.FormBody).empty();
@@ -147,13 +147,13 @@ function resetTabla(t) { Anexo.clear($(t + "-anexo")); $(t).find("tbody tr").rem
 
 function printFactura(t, a, r) {
 
-    var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\nBOLETA DE VENTA ELECTRÓNICA\n{cod1}-{cod2}</pre>";
+    var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\nBOLETA DE VENTA ELECTR\u00D3NICA\n{cod1}-{cod2}</pre>";
     var s2 = "<pre class='text-left'>Tienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha}   Hora: {hora}\n************************************\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n************************************\nARTICULO\t|CANT|PRECIO|IMPORTE\n************************************\n<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>====================================<table><tr><td>\t\tTOTAL	S/.</td><td id='total'></td></tr><tr></tr><tr><td>Op. Exonerada\tS/.</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\tS/.</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\tS/.</td><td id='gravada'></td></tr><tr><td>IGV\t\tS/.</td><td id='igv'></td></tr><tr><td>Importe Total\tS/.</td><td id='importe-total'></td></tr></table><div id='resumen'></div></pre>";
-    var s3 = "<pre>{cod-gen}\n\nPresentación impresa del Comprobante de Venta Electrónica, esta puede ser consultada en {pag-web} autorizado mediante resolución de intendencia {resol-inten} / SUNAT\n\n{pag-web}\nGRACIAS POR SU COMPRA</pre>";
+    var s3 = "<pre>{cod-gen}\n\nPresentaci\u00F3n impresa del Comprobante de Venta Electr\u00F3nica, esta puede ser consultada en {pag-web} autorizado mediante resoluci\u00F3n de intendencia {resol-inten} / SUNAT\n\n{pag-web}\nGRACIAS POR SU COMPRA</pre>";
     var su = $("<div></div>");
-    s1 = s1.replace("{cia-desc}", r.cia.descia);
-    s1 = s1.replace("{slogan}", r.cia.slogan);
-    s1 = s1.replace("{cia-nom}", r.cia.shortcia);
+    s1 = s1.replace("{cia-desc}", r.cia.nombrecomercial);
+    s1 = s1.replace("{slogan}", r.cia.eslogan);
+    s1 = s1.replace("{cia-nom}", r.cia.descia);
     s1 = s1.replace("{ruc}", r.cia.ruccia);
     s1 = s1.replace("{dir-central}", r.cia.dircia);
     s1 = s1.replace("{telefono}", r.cia.telefonos);
@@ -169,11 +169,11 @@ function printFactura(t, a, r) {
     s2 = s2.replace("{correlativo}", r.venc.CODIGO);
     s2 = s2.replace("{caja}", r.venc.PUNEMI);
     s2 = s2.replace("{moneda}", r.venc.CODMON);
-    s2 = s2.replace("{cliente}", r.anex.desane);
+    s2 = s2.replace("{cliente}", r.anexo.desane);
     s2 = s2.replace("{tipdoc}", r.tipdoc);
     s2 = s2.replace("{nro-doc}", r.anexo.nrodoc);
 
-    s3 = s3.replace("{cod-gen}", "");
+    s3 = s3.replace("{cod-gen}", "sbdasdi832387291ad");
     s3 = replaceAll(s3, "{pag-web}", r.cia.website);
     s3 = s3.replace("{resol-inten}", r.cia.resintendencia);
 
@@ -191,16 +191,18 @@ function printFactura(t, a, r) {
     var res = s2.find("#resumen");
     $.each(r.resumen, function (idx, obj) {
         s = "SON: "+"\n";
-        s += obj["descripcion"] + " " + obj["RECIBIDO"] + " NUEVOS SOLES\n";
-        if (obj["tarjeta"] != "S") { s += "VUELTO: " + parseFloat(obj["VUELTO"]).toFixed(2) + " NUEVOS SOLES";}
+        s += obj["forventa"] + " " + obj["forpago"] + " "; 
+        if (Validar.Dato(obj["tarjeta"])) { s += obj["tarjeta"];}
+        s += obj["recibido"] + " NUEVOS SOLES\n";
+        s+="Vuelto: " + parseFloat(obj["vuelto"]).toFixed(2) + " NUEVOS SOLES\n";
         res.append(s);
     });
     res.append(r.cajero);
-    s2.find("#total").append(r.total);
-    s2.find("#gravada").append(r.gravado);
-    s2.find("#inafecta").append(r.inafecto);
-    s2.find("#exonerada").append(r.exonerado);
-    s2.find("#igv").append(r.igv);
+    s2.find("#total").append(parseFloat(r.total).toFixed(2));
+    s2.find("#gravada").append(parseFloat(r.gravado).toFixed(2));
+    s2.find("#inafecta").append(parseFloat(r.inafecto).toFixed(2));
+    s2.find("#exonerada").append(parseFloat(r.exonerado).toFixed(2));
+    s2.find("#igv").append(parseFloat(r.igv).toFixed(2));
     s2.find("#importe-total").append(r.total);
     su.append($(s1)); su.append(s2); su.append($(s3));
     if (!print(su)) { alert(Msg.ERROR_IMPRIMIR); }
@@ -241,16 +243,16 @@ function obtenerDetalle(sl, cd, t, pa, ua, f) {
                     var el = [$(t).find("tr").length, obj["DESCRIPCION"], parseFloat(obj["PREUNI"]).toFixed(2), obj["tipovalorventa"].substring(0, App.CARSUBSTR), txtc, parseFloat(obj["TOTAL"]).toFixed(2), btne];
                     var nf = addRow($(t), el);
                     nf.data("codigo", obj["CONVENTA"]);
-                    btne.on('click', function () {removeRow(nf); actualizarTotal(t, Form.CSUBT);actualizarItems(t, Form.CITEMS); actualizarIGV(t);});
+                    btne.on('click', function () {removeRow(nf); actualizarTotal(t, Form.CSUBT);actualizarItems(t, Form.CITEMS);Form.updateIGV(t);});
                     txtc.change(function () {
                         var cant = parseFloat($(this).val());
                         if (cant>0) {
-                            actualizarSubtotal(nf, txtc, Form.CPRECIO, Form.CSUBT); actualizarTotal(t, Form.CSUBT); actualizarIGV(t);
+                            actualizarSubtotal(nf, txtc, Form.CPRECIO, Form.CSUBT); actualizarTotal(t, Form.CSUBT); Form.updateIGV(t);
                         } else { $(this).val(1); alert(Msg.CANT_NO_MENOR_A.replace("<attr>", "una unidad")); }
                     });
                     $(t).append(nf);
                 });
-                actualizarTotal(t, Form.CSUBT); actualizarItems(t, Form.CITEMS); actualizarIGV(t);
+                actualizarTotal(t, Form.CSUBT); actualizarItems(t, Form.CITEMS); Form.updateIGV(t);
             } else if (App.isAdvert(response.respuesta)) { f(sl);}
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
@@ -261,13 +263,13 @@ function agregarProducto(pp) {
     var txtc = App.getInputCantidad();
     var n = pp.find(".nombre").first().text();var p = parseFloat(pp.data("precio")).toFixed(2);
     var el = [$(tf).find("tr").length, n, p, pp.data("tipovv").substring(0, App.CARSUBSTR), txtc, p, btne]; var nf = addRow($(tf), el); nf.data("codigo", pp.data("codigo"));
-    actualizarTotal(tf, Form.CSUBT); actualizarItems(tf, Form.CITEMS); actualizarIGV(tf);
+    actualizarTotal(tf, Form.CSUBT); actualizarItems(tf, Form.CITEMS); Form.updateIGV(tf);
     btne.on('click', function () {
-        removeRow(nf); actualizarTotal(tf, Form.CSUBT); actualizarItems(tf, Form.CITEMS); actualizarIGV(tf);
+        removeRow(nf); actualizarTotal(tf, Form.CSUBT); actualizarItems(tf, Form.CITEMS); Form.updateIGV(tf);
     });
     txtc.change(function () {
         var cant = parseFloat($(this).val());
-        if (cant > 0) { actualizarSubtotal(nf, txtc, Form.CPRECIO, Form.CSUBT); actualizarTotal(tf, Form.CSUBT); actualizarIGV(tf); actualizarIGV(tf); }
+        if (cant > 0) { actualizarSubtotal(nf, txtc, Form.CPRECIO, Form.CSUBT); actualizarTotal(tf, Form.CSUBT); Form.updateIGV(tf); Form.updateIGV(tf); }
         else { $(this).val(1); alert(Msg.CANT_NO_MENOR_A.replace("<attr>", "una unidad")); }
     });
 }
@@ -276,7 +278,7 @@ function changeUndAtencion(txt) {
         if(Validar.Dato(txt.val())){
             obtenerDetalle(txt, $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc,
                 function (select) {
-                    if (confirm(MSG_DESEA_APERTURAR)) { $(Form.FormSelPerAte).modal('show'); }
+                    if (confirm(Msg.CAMBIAR_UND)) { $(Form.FormSelPerAte).modal('show'); }
                 });
         } else { alert(Msg.SELECCION_UND); }
     } else { $(this).val(""); alert(Msg.SELECCION_DIV); }
@@ -295,8 +297,8 @@ function initTipDoc(n) {
 
 var FormPago = {
     Name: "#modal-pagar",
-    DivP: FormPago.Name + "-principal",
-    DivS: FormPago.Name + "-secundario",
+    DivP:"#modal-pagar-principal",
+    DivS: "#modal-pagar-secundario",
     GroupFV:"#group-forventa",
     InputGroupFV: "input[name='forma-venta']",
     BtnFV: "btn-warning",
@@ -477,7 +479,7 @@ var FormPago = {
                 data: { codconc: conc, nroane: anexo.nrodoc, desane: anexo.desane, refane: anexo.refane, tipdoc: td, vp: JSON.stringify(fp) },
                 success: function (response, textStatus, jqXHR) {
                     if (App.isError(response.respuesta)) { alert(response.respuesta); }
-                    if (App.isError(response.respuesta)) {
+                    if (App.isExito(response.respuesta)) {
                         printFactura($(Form.Tabla), anexo, response);
                         $(Form.Und).val("");
                         clearDesc(Form.PerDesc, Form.UndDesc);
@@ -491,7 +493,7 @@ var FormPago = {
     }
 };
 $(document).ready(function () {
-    Form.IGV = obtenerIGV();
+    Form.IGV = Form.getIGV();
     initTipDoc("tipo-documentos");
     obtenerDetalle($(Form.Und), $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc, function (s) {; });
     Anexo.initForm();

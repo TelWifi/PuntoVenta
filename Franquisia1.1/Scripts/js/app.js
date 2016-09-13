@@ -37,11 +37,11 @@ var Msg = {
     UNDATENCION: "unidad de atenci\u00F3n",
     DIVATENCION: "divisi\u00F3n de atenci\u00F3n",
 
-    APERTURAR_UND: "La " + Msg.UNDATENCION + " No est\u00E1 aperturada\n\u00BFDesea aperturarla?",
+    APERTURAR_UND: "La unidad de atenci\u00F3n No est\u00E1 aperturada\n\u00BFDesea aperturarla?",
     ANULAR_CONSUMO: "\u00BFDesea anular el consumo?",
     CANT_NO_MENOR_A: "ERROR: La cantidad ingresada no puede ser menor que <attr>",
     CAMPOS_NULOS_O_VACIOS: "ERROR: Los campos no pueden ser nulos o vac\u00EDos",
-    CAMBIAR_UND: "\u00BFSeguro que desea cambiar a otra " + Msg.UNDATENCION,
+    CAMBIAR_UND: "\u00BFSeguro que desea cambiar a otra unidad de atenci\u00F3n",
     ERROR_CAMPO_NUMERICO: "ERROR: <attr> solo debe contener caracteres num\u00E9ricos",
     ERROR_IMPRIMIR: "ERROR: Error al imprimir",
     NO_NULO_O_VACIO: "ERROR: <attr> no puede ser nulo o vac\u00EDo",
@@ -49,8 +49,8 @@ var Msg = {
     NRODOC_INVALIDO: "ERROR: El n\u00FAmero de documento no es valido, debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres",
     ANEXO_INVALIDO:"ERROR: Los datos ingresados son incorrectos",
     SELECCIONE_ATTR: "RECOMENDACION: Seleccione <attr>",
-    SELECCION_UND: Msg.SELECCIONE_ATTR.replace("<attr>", "una " + Msg.UNDATENCION),
-    SELECCION_DIV: Msg.SELECCIONE_ATTR.replace("<attr>", "una " + Msg.DIVATENCION),
+    SELECCION_UND: "RECOMENDACION: Seleccione <attr>".replace("<attr>", "una unidad de atenci\u00F3n"),
+    SELECCION_DIV: "RECOMENDACION: Seleccione <attr>".replace("<attr>", "una unidad de atenci\u00F3n"),
     SIN_ELEMENTOS: "ERROR: No existen elementos",
     EXITO:"EXITO",
     ERROR: "ERROR",
@@ -75,7 +75,7 @@ var App = {
     },
     getInputCantidad: function () {
         var i = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
-        if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(txtc); }
+        if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(i); }
         return i;
     },
     getBtnRemove:function(){
