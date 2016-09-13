@@ -60,7 +60,7 @@ namespace Franquisia1._1.Controllers
             }catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e.Message }, JsonRequestBehavior.AllowGet); }
         }
-        public ActionResult BuscarRuc(string clave)
+        public ActionResult BuscarNrodoc(string clave)
         {
             try
             {
@@ -72,19 +72,12 @@ namespace Franquisia1._1.Controllers
                 if (!String.IsNullOrWhiteSpace(clave))
                 {
                     clave = clave.Trim();
-                    List<anexos> lista = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C")
-                    && a.nrodoc.Contains(clave) && a.situane.Equals("V")).OrderBy(a => a.nrodoc).ToList();
-                    foreach (var item in lista)
-                    {
-                        switch (item.tipdoc)
-                        {
-                            case "01":
-                                item.tipdoc = "DNI";
-                                break;
-                            case "06": item.tipdoc = "RUC";
-                                break;
-                        }
-                    }
+                    var lista = (from a in db.anexos
+                                 join b in db.maesgen on a.tipdoc equals b.clavemaesgen
+                                 where a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.nrodoc.Contains(clave) && b.idmaesgen.Equals("002") && a.situane.Equals("V") && b.statemaesgen.Equals("V")
+                                 && db.tdtipdoc.ToList().Select(c => c.TIPDOC).Contains(b.clavemaesgen) orderby a.nrodoc
+                                 select new { desane = a.desane, tipdoc = b.parm1maesgen, nrodoc = a.nrodoc, refane = a.refane }
+                                     ).ToList();
                     return Json(new { respuesta ="EXITO: LA PETICION SE REALIZO EXITOSAMENTE",lista = serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
                 }else { return Json(new { respuesta = "ERROR: EL VALOR A BUSCAR NO PUEDE SER NULO O VACIO"}, JsonRequestBehavior.AllowGet); }
             }
@@ -102,19 +95,11 @@ namespace Franquisia1._1.Controllers
 
                 if (!String.IsNullOrWhiteSpace(clave)){
                     clave = clave.Trim();
-                    List<anexos> lista = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C")
-                    && a.desane.Contains(clave) && a.situane.Equals("V")).OrderBy(a => a.desane).ToList();
-                    foreach (var item in lista)
-                    {
-                        switch (item.tipdoc)
-                        {
-                            case "01":
-                                item.tipdoc = "DNI";
-                                break;
-                            case "06": item.tipdoc = "RUC";
-                                break;
-                        }
-                    }
+                    var lista = (from a in db.anexos join b in db.maesgen on a.tipdoc equals b.clavemaesgen
+                                 where a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.desane.Contains(clave) && b.idmaesgen.Equals("002") && a.situane.Equals("V") && b.statemaesgen.Equals("V")
+                                 && db.tdtipdoc.ToList().Select(c=>c.TIPDOC).Contains(b.clavemaesgen) orderby a.desane
+                                 select new { desane=a.desane,tipdoc=b.parm1maesgen, nrodoc=a.nrodoc, refane=a.refane}
+                                     ).ToList();
                     return Json(new { respuesta="EXITO: LA PETICION SE REALIZO EXITOSAMENTE", lista=serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
                 }
                 else { return Json(new { respuesta = "ERROR: EL VALOR A BUSCAR NO PUEDE SER NULO O VACIO"}, JsonRequestBehavior.AllowGet); }

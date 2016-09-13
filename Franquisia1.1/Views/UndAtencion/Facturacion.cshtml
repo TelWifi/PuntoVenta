@@ -32,14 +32,14 @@
                 </div>
                 <div id="tabla-factura-anexo" class="anexo">
                     <div class="input-group">
-                        <input type="number" placeholder="RUC/DNI" class="anexo-nrodoc form-control" required/>
+                        <input type="number" placeholder="RUC/DNI" class="anexo-nrodoc form-control" value="@(ViewBag.anexo!=null?ViewBag.anexo.nrodoc:"")"/>
                         <span class="input-group-btn">
                             <a class="btn-actualizar-anexo btn btn-warning"><span class="glyphicon glyphicon-retweet"></span></a>
                             <a class="btn-seleccionar-anexo btn btn-info" data-anexo="#tabla-factura-anexo"><span class="glyphicon glyphicon-search"></span></a>
                         </span>
                     </div>
-                    <input type="text" placeholder="Cliente" class="anexo-desane form-control" />
-                    <input type="text" placeholder="Dirección" class="anexo-refane form-control" />
+                    <input type="text" placeholder="Cliente" class="anexo-desane form-control" value="@(ViewBag.anexo!=null?ViewBag.anexo.desane:"")" />
+                    <input type="text" placeholder="Dirección" class="anexo-refane form-control" value="@(ViewBag.anexo!=null?ViewBag.anexo.refane:"")" />
                 </div>
             </div>
             <div class="row div-scroll">

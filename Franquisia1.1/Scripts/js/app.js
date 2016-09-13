@@ -1,4 +1,3 @@
-var IMG_DEFAULT = "iVBORw0KGgoAAAANSUhEUgAAACUAAAAdCAYAAAAtt6XDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA0SURBVFhH7c4xAQAwDASh+jf9tcCY4VDA20GlVClVSpVSpVQpVUqVUqVUKVVKlVKlVCmzffdHtC3tn87PAAAAAElFTkSuQmCC";
 var Validar = {
     RUC: function (ruc) {
         var r = /\d{11}/;
@@ -19,14 +18,13 @@ var Validar = {
     },
     DNI: function (dni) {
         var r = /(^([0-9]{8,8})|^)$/;
-        if (!r.test(dni))
-            alert("ERROR: El DNI NO es v\u00E1lido, debe constar de 8 caracteres num\u00E9ricos.");
+        if (!r.test(dni)) alert("ERROR: El DNI NO es v\u00E1lido, debe constar de 8 caracteres num\u00E9ricos.");
         return r.test(dni);
     },
     Anexo: function (a) {
         if (a.nrodoc.length == 11) return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);
         else if (a.nrodoc.length == 8) return Validar.DNI(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);
-        alert("El formato del RUC/DNI es incorrecto");
+        alert("El formato del documento es incorrecto");
         return false;
     },
     StrValido: function (s) { return $.trim(s).length > 0; },
@@ -63,7 +61,7 @@ var App = {
     ControlTeclado: "input[name=control-teclado-opciones]",
     CARSUBSTR: 3,
     getImageText: function (t, cl) {
-        var c = $("<canvas height='250px' width='300px'></canvas>");
+        var c = document.createElement('canvas');;
         var ctx = c.getContext("2d");
         ctx.font = "bold 15px sans-serif"; ctx.fillText(t, 50, 50);
         var img = c.toDataURL("image/png");

@@ -13,6 +13,9 @@ var Form = {
     FormSelPerAte: "#modal-seleccionar-peratencion",
     FormCambiarUnd: "#modal-cambiar-undatencion",
     SelectCambiarDiv: "#modal-cambiar-divatencion",
+    Total: Form.Tabla + "-total",
+    Items: Form.Tabla + "-items",
+    IGV: Form.Tabla + "-igv",
     updateTotalCheckbox: function (t, cs, r) {
         var s = 0;
         $(t).find("tbody tr").each(function (index) { if ($(this).find("input[type=checkbox]").prop("checked")) { s += parseFloat($(this).find("td").get(cs).innerHTML); } });
@@ -111,7 +114,7 @@ var Anexo = {
     getDB: function (div, f) {
         var a = Anexo.get(div);
         var input = Form.GroupTipDocEmi+":checked";
-        if (!Validar.Anexo(a)) {return alert("ERROR: Anexo incorrecto");}
+        if (!Validar.Dato(a.nrodoc)) { return alert(Msg.NRODOC_INVALIDO); }
         $.ajax({
             type: "post", dataType: 'json', cache: false, url: "/Anexos/Obtener", data: { nrodoc: a.nrodoc },
             success: function (response, textStatus, jqXHR) {
@@ -119,23 +122,23 @@ var Anexo = {
                 else if (App.isAdvert(response.respuesta)) {
                     Anexo.show({ "nrodoc": a.nrodoc, "refane": "", "desane": "" }, div);
                     var m = $(Form.FormAnexo);
+                    Anexo.initForm();
                     m.find("input[type='text']").val("");
                     m.find("input[type='text']").first().val(a.nrodoc);
                     m.find(Anexo.BtnSubmit).text("Guardar");
-                    Anexo.initForm();
                     m.modal("show");
                 }
                 else if (App.isExito(response.respuesta)) { Anexo.show(response.anexo, div); f == null ? "" : f(response.anexo); }
             }, error: function (xhr, status) { errorAjax(xhr, status); }
         });
     },
-    createDB: function (a, d, m) {
+    createDB: function (a, d) {
         if (!Validar.Anexo(a)) { return alert(Msg.ANEXO_INVALIDO); }
         $.ajax({
             type: "get", dataType: 'json', cache: false, url: '/Anexos/Crear', data: { a: JSON.stringify(a) },
             success: function (response, textStatus, jqXHR) {
                 if (App.isError(response.respuesta)) { return alert(response.respuesta); }
-                if (App.isExito(response.respuesta) || App.isAdvert(response.respuesta)) { Anexo.show(response.anexo, d); m==null?"":m.modal('hide'); }
+                if (App.isExito(response.respuesta) || App.isAdvert(response.respuesta)) { Anexo.show(response.anexo, d); }
             }, error: function (xhr, status) { errorAjax(xhr, status); }
         });
     }
@@ -306,7 +309,9 @@ var FormPago = {
     TotalPagar: "#form-pagar-total",
     TotalPagado: "#forma-pago-total",
     Tabla:"#tabla-forma-pago",
-    initForm: function() {
+    initForm: function () {
+        $(FormPago.TotalPagar).text(parseFloat($(Form.Total).text()).toFixed(2));
+        $(FormPago.TotalPagado).text("00.00"); $(FormPago.Tabla).find("tbody tr").remove();
         var grnt = $(FormPago.InputGroupFV+":radio"); grnt.first().parent().siblings("div").removeClass(FormPago.BtnFV);
         grnt.first().prop('checked', true); grnt.first().parent().addClass(FormPago.BtnFV);
         $(FormPago.LblFV).text(grnt.first().data("desc"));
@@ -496,10 +501,6 @@ $(document).ready(function () {
     if ($(App.ControlTeclado + ":checked").val() == "ACT") { $("input[type='text']").keyboard(); tecladoNumerico($("input[type='number']")); }
     $(".anexo").find(".anexo-nrodoc").bind('accepted', function (e, keyboard, el) { Anexo.getDB($(this).parent().parent()); });
     $(".anexo").find(".anexo-nrodoc").keypress(function (e) { if (e.which == 13) { Anexo.getDB($(this).parent().parent()); } });
-
-    //$(".anexo").find(".anexo-desane, .anexo-refane").bind('accepted', function (e, keyboard, el) { Anexo.updateDB(Anexo.get($(this).parent()), $(Form.Anexo)); });
-    //$(".anexo").find(".anexo-desane, .anexo-refane").keypress(function (e) { if (e.which == 13) { Anexo.updateDB(Anexo.get($(this).parent()), $(Form.Anexo)); } });
-
     $(".btn-seleccionar-anexo").on("click", function () {
         $(".modal").modal("hide");var modal = $("#modal-seleccionar-anexo");modal.data("anexo", $(this).data("anexo"));modal.modal('show');
     });
@@ -538,7 +539,7 @@ $(document).ready(function () {
         });
     });
     $("#btn-buscar-ruc").on("click", function () {
-        buscarAjax("/Anexos/BuscarRuc", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane", "tipdoc", "nrodoc", "refane"],
+        buscarAjax("/Anexos/BuscarNrodoc", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane", "tipdoc", "nrodoc", "refane"],
         function (f) {
             var m = $("#modal-seleccionar-anexo");
             f.on("click", function () {
@@ -565,9 +566,6 @@ $(document).ready(function () {
         if (t.find("tbody tr").length <= 0) { return alert(Msg.SIN_ELEMENTOS); }
         if (!Validar.Anexo(Anexo.get($(Form.Anexo)))) { return; }
         var m = $(FormPago.Name);
-        m.data("tabla", Form.Tabla); m.data("anexo", Form.Anexo);
-        $("#form-pagar-total").text(parseFloat($("#tabla-factura-total").text()).toFixed(2));
-        $("#forma-pago-total").text("0.00"); $("#tabla-forma-pago").find("tbody tr").remove();
         FormPago.initForm();
         m.modal('show');
     });
@@ -686,19 +684,20 @@ $(document).ready(function () {
 
     $(Anexo.BtnSubmit).on("click", function () {
         var anexo = {};
-        anexo.nrodoc = Validar.Dato(m.find("#input-nrodoc"))?m.find("#input-nrodoc").val():alert(Msg.NRODOC_INVALIDO);
-        anexo.refane =  Validar.Dato(m.find("#input-refane"))?m.find("#input-refane").val():"";
-        anexo.apepat = Validar.Dato(m.find("#input-ape"))?m.find("#input-ape").split(" ")[0]:"";
-        anexo.apemat = m.find("#input-ape").val().split(" ")[1];
+        anexo.nrodoc = m.find("#input-nrodoc").val();
+        anexo.tipdoc = $(Anexo.InputGroupTD+":checked").val();     
+        anexo.refane = m.find("#input-refane").val();
+        anexo.apepat = m.find("#input-ape").val() != null ? m.find("#input-ape").val().split(" ")[0] : null;
+        anexo.apemat = m.find("#input-ape").val() != null ? m.find("#input-ape").val().split(" ")[1] : null;
         anexo.nom1 = m.find("#input-nom1").val();
         anexo.nom2 = m.find("#input-nom2").val();
         anexo.desane = m.find("#input-desane").val();
         switch ($(this).text()) {
             case "Guardar":
-                Anexo.createDB(anexo,$(Form.Anexo));
+                Anexo.createDB(anexo);
                 break;
             case "Actualizar":
-                Anexo.updateDB(anexo,$(Form.Anexo))
+                Anexo.updateDB(anexo)
                 break;
         }
         $(Form.FormAnexo).modal("hide");
