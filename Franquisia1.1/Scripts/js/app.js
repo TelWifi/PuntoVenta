@@ -148,22 +148,31 @@ function print(div) {
     return true;
 }
 function printPreFactura(t, f) {
-    var itd = t.find("tbody tr").length;
-    var tp = $("<table  class='text-left'><thead><tr> <th>Cant.</th> <th>Producto</th></tr></thead><tbody></tbody></table>");
+    var l = 35;
+    var s2 = "<pre >EL CHALAN S.A.C.\nARTICULO\t\t    |CANT|<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th></tr></thead></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Items: \t</td><td id='items'></td></tr></table></pre>";
+    var su = $("<div></div>");
+
+    s2 = $(s2);
+    var cant = 0;
+    var ti = s2.find("#t-i");
     t.find("tbody tr").each(function () {
         var nf = $("<tr></tr>");
-        nf.append($("<td style='text-align:center;'></td>").append($(this).find("td input[type=number]").val()));
-        nf.append($("<td></td>").append($(this).find("td").get(f.CPRODUCTO).innerHTML));
-        tp.find("tbody").append(nf);
+        nf.append($("<td></td>").append($(this).find("td").get(Form.CPRODUCTO).innerHTML));
+        nf.append($("<td></td>").append($(this).find("td input[type=number]").val()));
+        ti.append(nf);
+        cant++;
     });
-    var dp = $("<pre><h4 align='center'>EL CHALAN S.A.C.</h4></pre>");
-    dp.append(tp);
-    var strf = "<table ><tr><td>{ITEMS}</td><td></td></tr></table>";
-    strf = strf.replace("{ITEMS}",  "Items: ".concat(itd));
-    taux = $(strf)
-    dp.append($("<hr />"));
-    dp.append(taux);
-    if (!print(dp)) { alert(Msg.ERROR_IMPRIMIR); }
+    s2.find("#items").append(cant);
+    su.append(s2);
+    if (!print(su)) { alert(Msg.ERROR_IMPRIMIR); }
+    //var dp = $("<pre>EL CHALAN S.A.C. \n Cant.\tProducto</pre>");
+    //dp.append(tp);
+    //var strf = "<table ><tr><td>{ITEMS}</td><td></td></tr></table>";
+    //strf = strf.replace("{ITEMS}",  "Items: ".concat(itd));
+    //taux = $(strf)
+    //dp.append($("<hr />"));
+    //dp.append(taux);
+    if (!print(s)) { alert(Msg.ERROR_IMPRIMIR); }
 }
 function cambiarUndatencion(cd,su, sd, nu, nd, udes){
     if (!Validar.Dato(cd) || !Validar.Dato(su.val()) || !Validar.Dato(sd.val()) || !Validar.Dato(nu) || !Validar.Dato(nd)){ return alert(Msg.CAMPOS_NULOS_O_VACIOS); }

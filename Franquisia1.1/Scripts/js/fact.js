@@ -92,9 +92,13 @@ var Anexo = {
                 $(Anexo.FormBody).append(Anexo.getFieldNombres());
                 $(Anexo.FormBody).append(Anexo.getFieldRefane());
                 break;
-            case "04": case "07":
-                $(Anexo.FormBody).append(Anexo.getFieldApe());
-                $(Anexo.FormBody).append(Anexo.getFieldNombres());
+            case "04":
+                $(Anexo.FormBody).append(Anexo.getFieldRS());
+                $(Anexo.FormBody).append(Anexo.getFieldRefane());
+                break;
+            case "07":
+                $(Anexo.FormBody).append(Anexo.getFieldRS());
+                $(Anexo.FormBody).append(Anexo.getFieldRefane());
                 break;
             case "06":
                 $(Anexo.FormBody).append(Anexo.getFieldRS());
@@ -333,7 +337,8 @@ var FormPago = {
     Importe: "#input-importe",
     TotalPagar: "#form-pagar-total",
     TotalPagado: "#forma-pago-total",
-    Tabla:"#tabla-forma-pago",
+    Tabla: "#tabla-forma-pago",
+    PrintPreFact: "#print-prefact",
     initForm: function () {
         $(FormPago.TotalPagar).text(parseFloat($(Form.Total).text()).toFixed(2));
         $(FormPago.TotalPagado).text("00.00"); $(FormPago.Tabla).find("tbody tr").remove();
@@ -504,6 +509,9 @@ var FormPago = {
                     if (App.isError(response.respuesta)) { alert(response.respuesta); }
                     if (App.isExito(response.respuesta)) {
                         printFactura($(Form.Tabla), anexo, response);
+                        if ($(FormPago.PrintPreFact).is(":checked")) {
+                            printPreFactura($(Form.Tabla), Form);
+                        }
                         $(Form.Und).val("");
                         clearDesc(Form.PerDesc, Form.UndDesc);
                         Anexo.clear($(Form.Anexo));
