@@ -22,9 +22,20 @@ var Validar = {
         return r.test(dni);
     },
     Anexo: function (a) {
-        if (a.nrodoc.length == 11) return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);
-        else if (a.nrodoc.length == 8) return Validar.DNI(a.nrodoc) && Validar.StrValido(a.desane) && Validar.StrValido(a.refane);
-        alert("El formato del documento es incorrecto");
+        var aux = true;
+        switch (a.tipdoc) {
+            case "01":
+                aux = Validar.DNI(a.nrodoc);
+            case "04":
+
+            case "07":
+                console.log(a);
+                return aux && Validar.StrValido(a.apepat) && Validar.StrValido(a.apemat) && Validar.StrValido(a.nombre1);
+                break;
+            case "06":
+                return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane);
+        }
+        alert(Msg.ANEXO_INVALIDO);
         return false;
     },
     StrValido: function (s) { return $.trim(s).length > 0; },
@@ -61,9 +72,15 @@ var App = {
     ControlTeclado: "input[name=control-teclado-opciones]",
     CARSUBSTR: 3,
     getImageText: function (t, cl) {
-        var c = document.createElement('canvas');;
+        var fontsize = "30";
+        var c = document.createElement('canvas');
         var ctx = c.getContext("2d");
-        ctx.font = "bold 15px sans-serif"; ctx.fillText(t, 50, 50);
+        ctx.font = "bold " + fontsize + "px sans-serif";
+        var arr = t.split(" ");
+        for (var i = 0; i < arr.length; i++) {
+            ctx.fillText(arr[i], 10, fontsize*(i+1));
+        }
+        
         var img = c.toDataURL("image/png");
         return $('<img src="' + img + '" class="img-responsive img-thumbnail '+cl+'"/>');
     },
@@ -123,17 +140,17 @@ function print(div) {
 }
 function printPreFactura(t, f) {
     var itd = t.find("tbody tr").length;
-    var tp = $("<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\"><thead><tr> <th>Cant.</th> <th style=\"text-align:left;\">Producto</th></tr></thead><tbody></tbody></table>");
+    var tp = $("<table width=\"100%\"><thead><tr> <th>Cant.</th> <th>Producto</th></tr></thead><tbody></tbody></table>");
     t.find("tbody tr").each(function () {
         var nf = $("<tr></tr>");
         nf.append($("<td style='text-align:center;'></td>").append($(this).find("td input[type=number]").val()));
-        nf.append($("<td></td>").append($(this).find("td").get(f.CPRODUCTO).innerHTML));
+        nf.append($("<td style='text-align:left;'></td>").append($(this).find("td").get(f.CPRODUCTO).innerHTML));
         tp.find("tbody").append(nf);
     });
     var separador = "<hr />";
-    var dp = $("<div style='width:" + ANCHO_IMPRESION + ";'><h4 style='text-align:center;'>EL CHALAN S.A.C.</h4><div>");
+    var dp = $("<div><h4 align='center'>EL CHALAN S.A.C.</h4><div>");
     dp.append(tp);
-    var strf = "<table width=" + ANCHO_IMPRESION + " style=\"font-size:" + TAMANO_FUENTE + ";\" ><tr><td>{ITEMS}</td><td></td></tr></table>";
+    var strf = "<table ><tr><td>{ITEMS}</td><td></td></tr></table>";
     strf = strf.replace("{ITEMS}",  "Items: ".concat(itd));
     taux = $(strf)
     dp.append($(separador));

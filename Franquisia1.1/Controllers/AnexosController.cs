@@ -122,22 +122,23 @@ namespace Franquisia1._1.Controllers
                     anexos aux = db.anexos.Where(b => b.idcia.Equals(codcia) && b.tipane.Equals("C") && b.codane.Equals(anexo.nrodoc)).FirstOrDefault();
                     if (aux != null)
                     {
-                        if (anexo.situane.Equals("V"))
+                        if (aux.situane.Equals("V"))
                         {
                             
                             aux.refane = anexo.refane != null ? anexo.refane.ToUpper() : "";
                             aux.tipdoc = anexo.tipdoc != null ? anexo.tipdoc.ToUpper() : "";
                             aux.nrodoc = anexo.nrodoc != null ? anexo.nrodoc.ToUpper() : "";
                             aux.rucane = anexo.rucane != null ? anexo.rucane.ToUpper() : "";
-                            aux.nombre1 = anexo.desane != null ? anexo.nombre1.ToUpper() : "";
-                            aux.nombre2 = anexo.desane != null ? anexo.nombre2.ToUpper() : "";
-                            aux.apepat = anexo.desane != null ? anexo.apepat.ToUpper() : "";
-                            aux.apemat = anexo.desane != null ? anexo.apemat.ToUpper() : "";
-                            aux.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", new { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat });
-                            aux.fmod = DateTime.Now.ToString("dd/mm/aaaa");
+                            aux.nombre1 = anexo.nombre1 != null ? anexo.nombre1.ToUpper() : "";
+                            aux.nombre2 = anexo.nombre2 != null ? anexo.nombre2.ToUpper() : "";
+                            aux.apepat = anexo.apepat != null ? anexo.apepat.ToUpper() : "";
+                            aux.apemat = anexo.apemat != null ? anexo.apemat.ToUpper() : "";
+                            string[] s = { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat };
+                            aux.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", s);
+                            aux.fmod = DateTime.Now.ToString("dd/MM/yyyy");
                             db.SaveChanges();
                             rpta = "EXITO: Anexo actualizado";
-                            return Json(new { respuesta = rpta, anexo = anexo }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = rpta, anexo = aux }, JsonRequestBehavior.AllowGet);
                         }
                         else { rpta = "ERROR: No se puede actualizar porque el registro esta deshabilitado"; }
                     }

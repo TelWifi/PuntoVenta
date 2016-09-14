@@ -58,20 +58,20 @@ var Anexo = {
     GroupTipDoc: "#group-tipane",
     InputGroupTD:"input[name=tipo-cm]",
     BtnTipDoc: "btn-info",
-    initForm: function () {
-        var grnt = $(Anexo.InputGroupTD+":radio"); grnt.first().prop('checked', true); grnt.first().parent().addClass(Anexo.BtnTipDoc);
-        Anexo.updateForm(grnt.first());
-    },
-    initForm: function(v){
+    initForm: function (v) {
+        v = v == null ? $(Anexo.InputGroupTD).val() : v;
+        $(Anexo.InputGroupTD + ":checked").parent().removeClass(Anexo.BtnTipDoc);
         $(Anexo.InputGroupTD + ":checked").prop('checked', false);
-        $(Anexo.InputGroupTD + ":checked").removeClass(Anexo.BtnTipDoc);
-        $(Anexo.InputGroupTD + "[value='" + v + "']").prop('checked', true);
-        $(Anexo.InputGroupTD).parent().addClass(Anexo.BtnTipDoc);
-        Anexo.updateForm($(Anexo.InputGroupTD + ":checked"));
+        var i = $(Anexo.InputGroupTD + "[value='" + v + "']");
+        i.prop('checked', true);
+        i.parent().addClass(Anexo.BtnTipDoc);
+        Anexo.updateForm(i);
     },
     updateForm: function (i) {
+        var nd = $(Anexo.FormBody).find("#input-nrodoc").val();
         $(Anexo.FormBody).empty();
         $(Anexo.FormBody).append(Anexo.getFieldNrodoc(i.data("desc")));
+        $(Anexo.FormBody).find("#input-nrodoc").val(nd);
         switch (i.data("codigo")) {
             case "01": case "04":case "07":
                 $(Anexo.FormBody).append(Anexo.getFieldNombres());
@@ -107,6 +107,7 @@ var Anexo = {
             success: function (response, textStatus, jqXHR) {
                 if (App.isError(response.respuesta) || App.isAdvert(response.respuesta)) { alert(response.respuesta); }
                 else if (App.isExito(response.respuesta)) { Anexo.show(response.anexo, d); }
+                console.log(response.anexo);
             },
             error: function (xhr, status) { errorAjax(xhr, status); }
         });
@@ -515,20 +516,6 @@ $(document).ready(function () {
     $(".btn-seleccionar-anexo").on("click", function () {
         $(".modal").modal("hide");var modal = $("#modal-seleccionar-anexo");modal.data("anexo", $(this).data("anexo"));modal.modal('show');
     });
-    $(".btn-actualizar-anexo").on("click", function () {
-        Anexo.getDB($(Form.Anexo), function (a) {
-            Anexo.initForm(a.tipdoc);
-            var m = $(Form.FormAnexo);
-            m.find("#input-nrodoc").val(a.nrodoc);
-            m.find("#input-refane").val(a.refane);
-            m.find("#input-ape").val(a.ape);
-            m.find("#input-nom1").val(a.nom1);
-            m.find("#input-nom2").val(a.nom2);
-            m.find("#input-desane").val(a.desane);
-            m.find(Anexo.BtnSubmit).text("Actualizar");
-            m.modal("show");
-        } );
-    });
     $("#btn-buscar-razon").on("click", function () {
         buscarAjax("/Anexos/BuscarRazon", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane","tipdoc", "nrodoc", "refane"],
         function (f) {
@@ -695,29 +682,46 @@ $(document).ready(function () {
 
     $(Anexo.BtnSubmit).on("click", function () {
         var anexo = {};
+        var m = $(Anexo.FormBody);
         anexo.nrodoc = m.find("#input-nrodoc").val();
         anexo.tipdoc = $(Anexo.InputGroupTD+":checked").val();     
         anexo.refane = m.find("#input-refane").val();
         anexo.apepat = m.find("#input-ape").val() != null ? m.find("#input-ape").val().split(" ")[0] : null;
         anexo.apemat = m.find("#input-ape").val() != null ? m.find("#input-ape").val().split(" ")[1] : null;
-        anexo.nom1 = m.find("#input-nom1").val();
-        anexo.nom2 = m.find("#input-nom2").val();
+        anexo.nombre1 = m.find("#input-nom1").val();
+        anexo.nombre2 = m.find("#input-nom2").val();
         anexo.desane = m.find("#input-desane").val();
+        if (!Validar.Anexo(anexo)) { return alert(Msg.ANEXO_INVALIDO);}
         switch ($(this).text()) {
             case "Guardar":
-                Anexo.createDB(anexo);
+                Anexo.createDB(anexo, $(Form.Anexo));
                 break;
             case "Actualizar":
-                Anexo.updateDB(anexo)
+                Anexo.updateDB(anexo, $(Form.Anexo))
                 break;
         }
         $(Form.FormAnexo).modal("hide");
+    });
+    $(".btn-actualizar-anexo").on("click", function () {
+        Anexo.getDB($(Form.Anexo), function (a) {
+            Anexo.initForm(a.tipdoc);
+            var m = $(Anexo.FormBody);
+            m.find("#input-nrodoc").val(a.nrodoc);
+            m.find("#input-refane").val(a.refane);
+            m.find("#input-ape").val(a.apepat + " " + a.apemat);
+            m.find("#input-nom1").val(a.nombre1);
+            m.find("#input-nom2").val(a.nombre2);
+            m.find("#input-desane").val(a.desane);
+            $(Form.FormAnexo).find(Anexo.BtnSubmit).text("Actualizar");
+            $(Form.FormAnexo).modal("show");
+        });
     });
     $("#conventa-btn-buscar").on("click", function () {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
     });
     $("#conventa-texto").on("keyup", function (evt) {
-        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar", Form.Tabla));
+        console.log("dasd")
+        buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
     });
     $('#conventa-texto').bind('accepted', function (e, keyboard, el) {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
