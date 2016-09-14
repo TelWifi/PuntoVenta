@@ -41,9 +41,6 @@ var Form = {
             error: function (xhr, status) { errorAjax(xhr, status); }
         });
     },
-    
-
-
 
     getInput: function (id, t, l, p) {
         return $("<div class='form-group'><label for='" + id + "'>" + l + "</label><input id='" + id + "' type='" + t + "' class='form-control' placeholder='" + p + "' /></div>");
@@ -53,6 +50,7 @@ var Form = {
     }
 }
 var Anexo = {
+    FormTitle: "#modal-crearane-titulo",
     FormBody: "#modal-crearane-body",
     BtnSubmit: "#modal-crear-anexo-submit",
     GroupTipDoc: "#group-tipane",
@@ -73,7 +71,12 @@ var Anexo = {
         $(Anexo.FormBody).append(Anexo.getFieldNrodoc(i.data("desc")));
         $(Anexo.FormBody).find("#input-nrodoc").val(nd);
         switch (i.data("codigo")) {
-            case "01": case "04":case "07":
+            case "01":
+                $(Anexo.FormBody).append(Anexo.getFieldNombres());
+                $(Anexo.FormBody).append(Anexo.getFieldApe());
+                $(Anexo.FormBody).append(Anexo.getFieldRefane());
+                break;
+            case "04": case "07":
                 $(Anexo.FormBody).append(Anexo.getFieldNombres());
                 $(Anexo.FormBody).append(Anexo.getFieldApe());
                 break;
@@ -126,6 +129,7 @@ var Anexo = {
                     Anexo.initForm();
                     m.find("input[type='text']").val("");
                     m.find("input[type='text']").first().val(a.nrodoc);
+                    m.find(Anexo.FormTitle).text("Agregar Cliente");
                     m.find(Anexo.BtnSubmit).text("Guardar");
                     m.modal("show");
                 }
@@ -712,6 +716,7 @@ $(document).ready(function () {
             m.find("#input-nom1").val(a.nombre1);
             m.find("#input-nom2").val(a.nombre2);
             m.find("#input-desane").val(a.desane);
+            $(Form.FormAnexo).find(Anexo.FormTitle).text("Actualizar Cliente");
             $(Form.FormAnexo).find(Anexo.BtnSubmit).text("Actualizar");
             $(Form.FormAnexo).modal("show");
         });

@@ -21,10 +21,8 @@ namespace Franquisia1._1.Controllers
                 anexos anexo = JsonConvert.DeserializeObject<anexos>(a);
                 string rpta = "ERROR: ";
                 bool estado = true;
-                if (String.IsNullOrWhiteSpace(anexo.desane)) { estado = false; rpta += "raz\u00F3n social/apellidos y nombres no puede ser nulo o vac\u00EDo\n"; }
                 if (String.IsNullOrWhiteSpace(anexo.tipdoc)) { estado = false; rpta += "Tipo de documento no puede ser nulo o vac\u00EDo\n"; }
                 if (String.IsNullOrWhiteSpace(anexo.nrodoc)) { estado = false; rpta += "N\u00FAmero de documento no puede ser nulo o vac\u00EDo\n"; }
-                if (String.IsNullOrWhiteSpace(anexo.refane)) { estado = false; rpta += "Direcci\u00F3n no puede ser nulo o vac\u00EDo"; }
                 if (estado)
                 {
                     string codcia = Session["Loged_usrfile_ciafile"].ToString();
@@ -38,15 +36,20 @@ namespace Franquisia1._1.Controllers
                         anexo.refane = anexo.refane != null ? anexo.refane.ToUpper() : "";
                         anexo.tipdoc = anexo.tipdoc != null ? anexo.tipdoc.ToUpper() : "";
                         anexo.nrodoc = anexo.nrodoc != null ? anexo.nrodoc.ToUpper() : "";
+                        anexo.rucane = anexo.tipane.Equals("06")? anexo.nrodoc : "";
                         anexo.rucane = anexo.rucane != null ? anexo.rucane.ToUpper() : "";
-                        anexo.nombre1 = anexo.desane != null ? anexo.nombre1.ToUpper() : "";
-                        anexo.nombre2 = anexo.desane != null ? anexo.nombre2.ToUpper() : "";
-                        anexo.apepat = anexo.desane != null ? anexo.apepat.ToUpper() : "";
-                        anexo.apemat = anexo.desane != null ? anexo.apemat.ToUpper() : "";
-                        anexo.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", new { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat });
+                        anexo.nombre1 = anexo.nombre1 != null ? anexo.nombre1.ToUpper() : "";
+                        anexo.nombre2 = anexo.nombre2 != null ? anexo.nombre2.ToUpper() : "";
+                        anexo.apepat = anexo.apepat != null ? anexo.apepat.ToUpper() : "";
+                        anexo.apemat = anexo.apemat != null ? anexo.apemat.ToUpper() : "";
+                        if (String.IsNullOrWhiteSpace(anexo.desane))
+                        {
+                            string[] s = { anexo.nombre1, anexo.nombre2, anexo.apepat, anexo.apemat };
+                            anexo.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", s); 
+                        }
                         anexo.situane = "V";
                         anexo.usuario = idusr;
-                        anexo.fcrea = DateTime.Now.ToString("dd/mm/aaaa");
+                        anexo.fcrea = DateTime.Now.ToString("dd/MM/yyyy");
                         db.anexos.Add(anexo);
                         db.SaveChanges();
                         anexo = db.anexos.Where(b => b.idcia.Equals(codcia) && b.tipane.Equals("C") && b.codane.Equals(anexo.nrodoc)
@@ -54,7 +57,7 @@ namespace Franquisia1._1.Controllers
                         return Json(new { respuesta = "EXITO: Anexo creado", anexo = anexo }, JsonRequestBehavior.AllowGet);
                         
                     }
-                    else { return Json(new { respuesta = "ADVERTENCIA: El anexo ya existe\n", anexo = aux}, JsonRequestBehavior.AllowGet); }
+                    else { return Json(new { respuesta = "ADVERTENCIA: El anexo ya existe\n", anexo = new { anexo.nrodoc, anexo.desane, anexo.refane } }, JsonRequestBehavior.AllowGet); }
                 }
                 return Json(new { respuesta = rpta }, JsonRequestBehavior.AllowGet);
             }catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
@@ -72,10 +75,13 @@ namespace Franquisia1._1.Controllers
                 if (!String.IsNullOrWhiteSpace(clave))
                 {
                     clave = clave.Trim();
+                    var c = db.tdtipdoc.ToList().Select(a=>a.TIPDOC);
                     var lista = (from a in db.anexos
                                  join b in db.maesgen on a.tipdoc equals b.clavemaesgen
-                                 where a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.nrodoc.Contains(clave) && b.idmaesgen.Equals("002") && a.situane.Equals("V") && b.statemaesgen.Equals("V")
-                                 && db.tdtipdoc.ToList().Select(c => c.TIPDOC).Contains(b.clavemaesgen) orderby a.nrodoc
+                                 where a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.nrodoc.Contains(clave) && b.idmaesgen.Equals("002") &&
+                                 a.situane.Equals("V") && b.statemaesgen.Equals("V")
+                                 && c.Contains(b.clavemaesgen)
+                                 orderby a.nrodoc
                                  select new { desane = a.desane, tipdoc = b.parm1maesgen, nrodoc = a.nrodoc, refane = a.refane }
                                      ).ToList();
                     return Json(new { respuesta ="EXITO: LA PETICION SE REALIZO EXITOSAMENTE",lista = serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
@@ -95,10 +101,13 @@ namespace Franquisia1._1.Controllers
 
                 if (!String.IsNullOrWhiteSpace(clave)){
                     clave = clave.Trim();
-                    var lista = (from a in db.anexos join b in db.maesgen on a.tipdoc equals b.clavemaesgen
-                                 where a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.desane.Contains(clave) && b.idmaesgen.Equals("002") && a.situane.Equals("V") && b.statemaesgen.Equals("V")
-                                 && db.tdtipdoc.ToList().Select(c=>c.TIPDOC).Contains(b.clavemaesgen) orderby a.desane
-                                 select new { desane=a.desane,tipdoc=b.parm1maesgen, nrodoc=a.nrodoc, refane=a.refane}
+                    var c = db.tdtipdoc.ToList().Select(a => a.TIPDOC);
+                    var lista = (from a in db.anexos
+                                 join b in db.maesgen on a.tipdoc equals b.clavemaesgen
+                                 where a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.desane.Contains(clave) && b.idmaesgen.Equals("002")
+                                 && a.situane.Equals("V") && b.statemaesgen.Equals("V") && c.Contains(b.clavemaesgen)
+                                 orderby a.desane
+                                 select new { desane = a.desane, tipdoc = b.parm1maesgen, nrodoc = a.nrodoc, refane = a.refane }
                                      ).ToList();
                     return Json(new { respuesta="EXITO: LA PETICION SE REALIZO EXITOSAMENTE", lista=serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
                 }
@@ -128,17 +137,20 @@ namespace Franquisia1._1.Controllers
                             aux.refane = anexo.refane != null ? anexo.refane.ToUpper() : "";
                             aux.tipdoc = anexo.tipdoc != null ? anexo.tipdoc.ToUpper() : "";
                             aux.nrodoc = anexo.nrodoc != null ? anexo.nrodoc.ToUpper() : "";
-                            aux.rucane = anexo.rucane != null ? anexo.rucane.ToUpper() : "";
+                            aux.rucane = anexo.tipdoc.Equals("06") ? anexo.nrodoc : "";
                             aux.nombre1 = anexo.nombre1 != null ? anexo.nombre1.ToUpper() : "";
                             aux.nombre2 = anexo.nombre2 != null ? anexo.nombre2.ToUpper() : "";
                             aux.apepat = anexo.apepat != null ? anexo.apepat.ToUpper() : "";
                             aux.apemat = anexo.apemat != null ? anexo.apemat.ToUpper() : "";
-                            string[] s = { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat };
-                            aux.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", s);
+                            if (String.IsNullOrWhiteSpace(anexo.desane))
+                            {
+                                string[] s = { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat };
+                                anexo.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", s);
+                            }
                             aux.fmod = DateTime.Now.ToString("dd/MM/yyyy");
                             db.SaveChanges();
                             rpta = "EXITO: Anexo actualizado";
-                            return Json(new { respuesta = rpta, anexo = aux }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = rpta, anexo = new { aux.nrodoc, aux.desane, aux.refane } }, JsonRequestBehavior.AllowGet);
                         }
                         else { rpta = "ERROR: No se puede actualizar porque el registro esta deshabilitado"; }
                     }

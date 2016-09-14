@@ -22,20 +22,20 @@ var Validar = {
         return r.test(dni);
     },
     Anexo: function (a) {
-        var aux = true;
+        console.log(a);
         switch (a.tipdoc) {
             case "01":
-                aux = Validar.DNI(a.nrodoc);
+                return Validar.DNI(a.nrodoc) && Validar.StrValido(a.apepat) && Validar.StrValido(a.apemat) && Validar.StrValido(a.nombre1);
+                break;
             case "04":
-
+                return Validar.StrValido(a.nrodoc) && Validar.StrValido(a.apepat) && Validar.StrValido(a.apemat) && Validar.StrValido(a.nombre1);
+                break;
             case "07":
-                console.log(a);
-                return aux && Validar.StrValido(a.apepat) && Validar.StrValido(a.apemat) && Validar.StrValido(a.nombre1);
+                return Validar.StrValido(a.nrodoc) && Validar.StrValido(a.apepat) && Validar.StrValido(a.apemat) && Validar.StrValido(a.nombre1);
                 break;
             case "06":
                 return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane);
         }
-        alert(Msg.ANEXO_INVALIDO);
         return false;
     },
     StrValido: function (s) { return $.trim(s).length > 0; },
@@ -47,7 +47,6 @@ var Validar = {
 var Msg = {
     UNDATENCION: "unidad de atenci\u00F3n",
     DIVATENCION: "divisi\u00F3n de atenci\u00F3n",
-
     APERTURAR_UND: "La unidad de atenci\u00F3n No est\u00E1 aperturada\n\u00BFDesea aperturarla?",
     ANULAR_CONSUMO: "\u00BFDesea anular el consumo?",
     CANT_NO_MENOR_A: "ERROR: La cantidad ingresada no puede ser menor que <attr>",
@@ -80,7 +79,6 @@ var App = {
         for (var i = 0; i < arr.length; i++) {
             ctx.fillText(arr[i], 10, fontsize*(i+1));
         }
-        
         var img = c.toDataURL("image/png");
         return $('<img src="' + img + '" class="img-responsive img-thumbnail '+cl+'"/>');
     },
