@@ -14,6 +14,28 @@ namespace Franquisia1._1
     
     public partial class anexos
     {
+        public anexos()
+        {
+            refane = string.Empty;
+            rucane = string.Empty;
+            repane = string.Empty;
+            carane = string.Empty;
+            provane = string.Empty;
+            depane = string.Empty;
+            paisane = string.Empty;
+            posane = string.Empty;
+            telane = string.Empty;
+            situane = "V";
+            is_servicio = "N";
+            alma_pt = string.Empty;
+            is_domiciliado ="S";
+            apliconve = "N";
+            corto = string.Empty;
+            procmp = string.Empty;
+            subprocmp = string.Empty;
+            codaux = string.Empty;
+            convenio = "0";
+        }
         public string idcia { get; set; }
         public string tipane { get; set; }
         public string codane { get; set; }

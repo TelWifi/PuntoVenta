@@ -22,16 +22,19 @@
                     </div>
                 </div>
 
-                <div id="tipos-comprobantes" class="btn-group btn-group-xs btn-group-justified">
+                <div id="group-tipdocemi" class="btn-group btn-group-xs btn-group-justified">
                     @foreach (var tipdoc in ViewBag.tipdocs)
                     {
                         <div class="btn btn-default">
-                            <input type="radio" name="tipo-documentos" value="@tipdoc.clave" class="hide" data-desc="@tipdoc.descripcion" />@tipdoc.descripcion
+                            <input type="radio" name="tipdocemi" value="@tipdoc.clave" class="hide" data-desc="@tipdoc.descripcion" />@tipdoc.descripcion
                         </div>
                     }
                 </div>
                 <div id="tabla-factura-anexo" class="anexo">
                     <div class="input-group">
+                        <span class="input-group-btn">
+                            <a class="btn-clear-anexo btn btn-default"><span class="glyphicon glyphicon-menu-left"></span></a>
+                        </span>
                         <input type="number" placeholder="RUC/DNI" class="anexo-nrodoc form-control" value="@(ViewBag.anexo!=null?ViewBag.anexo.nrodoc:"")"/>
                         <span class="input-group-btn">
                             <a class="btn-actualizar-anexo btn btn-warning"><span class="glyphicon glyphicon-retweet"></span></a>
@@ -157,7 +160,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="modal-pagar" data-tabla="#tabla-factura" data-anexo="#tabla-factura-anexo">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -258,111 +260,29 @@
         </div>
     </div>
 </div>
-<div class="modal" id="modal-crear-anexo" data-anexo="#tabla-factura-anexo" data-padre="">
+<div class="modal" id="modal-anexo" data-anexo="#tabla-factura-anexo" data-padre="">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <label id="modal-crearane-titulo"></label> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <div class="panel panel-body">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <div id="group-tipane" class="btn-group btn-group-vertical btn-block">
-                                @foreach (var item in ViewBag.cm)
-                                {
-                                    <div class="btn btn-default">
-                                        <input name="tipo-cm" type="radio" class="hide" value="@item.clavemaesgen" data-desc="@item.desmaesgen" data-codigo="@item.clavemaesgen" />@item.parm1maesgen
-                                    </div>
-                                }
-                            </div>
+                <div id="group-tipane" class="btn-group btn-group-justified">
+                    @foreach (var item in ViewBag.cm)
+                    {
+                        <div class="btn btn-default">
+                            <input name="tipo-cm" type="radio" class="hide" value="@item.clavemaesgen" data-desc="@item.desmaesgen" data-codigo="@item.clavemaesgen" />@item.parm1maesgen
                         </div>
-                        <div class="col-sm-9">
-                            <div id="modal-crearane-body" class="form form-horizontal"></div>
-                            <div class="row"><button id="modal-crear-anexo-submit" class="btn btn-primary btn-block">Guardar</button></div>
-                        </div>
-                    </div>
+                    }
                 </div>
+                <div class="panel panel-body" style="padding-bottom:0;">
+                    <div id="ane-body" class="form form-horizontal"></div>
+                </div>
+                <button id="modal-anexo-submit" class="btn btn-primary btn-block">Guardar</button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal" id="modal-actualizar-anexo-dni" data-anexo="#tabla-factura-anexo" data-padre="">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <label id="actualizar-dni-titulo"></label><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="panel panel-body">
-                    <div class="form form-horizontal">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <label>DNI:</label>
-                                    <input type="number" id="form-actdni-nrodoc" class="form-control" placeholder="Ingrese DNI" disabled />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Dirección</label><input type="text" id="form-actdni-refane" class="form-control" placeholder="Ingrese dirección" />
-                        </div>
-                        <div class="form-group">
-                            <label>Apellidos</label><input type="text" id="form-actdni-ape" class="form-control" placeholder="Ingrese apellidos" />
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label>Nombre 1</label><input type="text" id="form-actdni-nom1" class="form-control" placeholder="Ingrese primer nombre" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label>Nombre 2</label><input type="text" id="form-actdni-nom2" class="form-control" placeholder="Ingrese segundo nombre" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button id="btn-actdni" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal" id="modal-actualizar-anexo-ruc" data-anexo="#tabla-factura-anexo" data-padre="">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <label id="actualizar-ruc-titulo"></label><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="panel panel-body">
-                    <div class="form form-horizontal">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <label>RUC:</label>
-                                    <input type="number" id="form-actruc-nrodoc" class="form-control" placeholder="Ingrese DNI" disabled />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Razón Social</label><input type="text" id="form-actruc-desane" class="form-control" placeholder="Ingrese Razón Social" />
-                        </div>
-                        <div class="form-group">
-                            <label>Dirección</label>
-                            <textarea id="form-actruc-refane" rows="3" class="form-control" placeholder="Ingrese dirección"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <button id="btn-actruc" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="modal-cambiar-undatencion">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

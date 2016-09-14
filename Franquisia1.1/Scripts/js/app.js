@@ -22,7 +22,6 @@ var Validar = {
         return r.test(dni);
     },
     Anexo: function (a) {
-        console.log(a);
         switch (a.tipdoc) {
             case "01":
                 return Validar.DNI(a.nrodoc) && Validar.StrValido(a.apepat) && Validar.StrValido(a.apemat) && Validar.StrValido(a.nombre1);
@@ -34,9 +33,10 @@ var Validar = {
                 return Validar.StrValido(a.nrodoc) && Validar.StrValido(a.apepat) && Validar.StrValido(a.apemat) && Validar.StrValido(a.nombre1);
                 break;
             case "06":
-                return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane);
+                return Validar.RUC(a.nrodoc) && Validar.StrValido(a.desane); break;
+            default:
+                return Validar.StrValido(a.nrodoc) && Validar.StrValido(a.desane);
         }
-        return false;
     },
     StrValido: function (s) { return $.trim(s).length > 0; },
     StrLength: function (s, l) { return s.length == l; },
@@ -57,7 +57,7 @@ var Msg = {
     NO_NULO_O_VACIO: "ERROR: <attr> no puede ser nulo o vac\u00EDo",
     NO_EXISTE: "ERROR: No existe <attr>",
     NRODOC_INVALIDO: "ERROR: El n\u00FAmero de documento no es valido, debe tener:\nRUC: 11 caracteres\nDNI: 8 caracteres",
-    ANEXO_INVALIDO:"ERROR: Los datos ingresados son incorrectos",
+    ANEXO_INVALIDO:"ERROR: Los datos del cliente son incorrectos",
     SELECCIONE_ATTR: "RECOMENDACION: Seleccione <attr>",
     SELECCION_UND: "RECOMENDACION: Seleccione <attr>".replace("<attr>", "una unidad de atenci\u00F3n"),
     SELECCION_DIV: "RECOMENDACION: Seleccione <attr>".replace("<attr>", "una unidad de atenci\u00F3n"),
@@ -70,6 +70,17 @@ var Msg = {
 var App = {
     ControlTeclado: "input[name=control-teclado-opciones]",
     CARSUBSTR: 3,
+    getTipNrodoc:function(nrodoc){
+        var r = /\d{11}/;
+        if (r.test(nrodoc)) {
+            return "06";
+        }
+        r = /(^([0-9]{8,8})|^)$/;
+        if (r.test(nrodoc)) {
+            return "01";
+        }
+        return "07";
+    },
     getImageText: function (t, cl) {
         var fontsize = "30";
         var c = document.createElement('canvas');
@@ -86,10 +97,10 @@ var App = {
         return $("<img class=\"img-responsive img-thumbnail "+cl+"\" src=\"data:image/gif;base64," + decBase64(arr) + "\" />");
     },
     getPanelServ: function () {
-        return $("<div class=\"col-xs-4 col-sm-3 col-md-2 panel-servicio\"></div>")
+        return $("<div class='col-xs-4 col-sm-3 col-md-2 panel-servicio'></div>")
     },
     getInputCantidad: function () {
-        var i = $("<input type=\"number\" min=\"1\" max=\"1000\" value=\"1\" class=\"numero\" />");
+        var i = $("<input type='number' min='1' max='1000' value='1' class='numero' />");
         if ($(App.ControlTeclado + ":checked").val() == "ACT") { tecladoNumerico(i); }
         return i;
     },
@@ -138,20 +149,19 @@ function print(div) {
 }
 function printPreFactura(t, f) {
     var itd = t.find("tbody tr").length;
-    var tp = $("<table width=\"100%\"><thead><tr> <th>Cant.</th> <th>Producto</th></tr></thead><tbody></tbody></table>");
+    var tp = $("<table  class='text-left'><thead><tr> <th>Cant.</th> <th>Producto</th></tr></thead><tbody></tbody></table>");
     t.find("tbody tr").each(function () {
         var nf = $("<tr></tr>");
         nf.append($("<td style='text-align:center;'></td>").append($(this).find("td input[type=number]").val()));
-        nf.append($("<td style='text-align:left;'></td>").append($(this).find("td").get(f.CPRODUCTO).innerHTML));
+        nf.append($("<td></td>").append($(this).find("td").get(f.CPRODUCTO).innerHTML));
         tp.find("tbody").append(nf);
     });
-    var separador = "<hr />";
-    var dp = $("<div><h4 align='center'>EL CHALAN S.A.C.</h4><div>");
+    var dp = $("<pre><h4 align='center'>EL CHALAN S.A.C.</h4></pre>");
     dp.append(tp);
     var strf = "<table ><tr><td>{ITEMS}</td><td></td></tr></table>";
     strf = strf.replace("{ITEMS}",  "Items: ".concat(itd));
     taux = $(strf)
-    dp.append($(separador));
+    dp.append($("<hr />"));
     dp.append(taux);
     if (!print(dp)) { alert(Msg.ERROR_IMPRIMIR); }
 }

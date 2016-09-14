@@ -36,8 +36,7 @@ namespace Franquisia1._1.Controllers
                         anexo.refane = anexo.refane != null ? anexo.refane.ToUpper() : "";
                         anexo.tipdoc = anexo.tipdoc != null ? anexo.tipdoc.ToUpper() : "";
                         anexo.nrodoc = anexo.nrodoc != null ? anexo.nrodoc.ToUpper() : "";
-                        anexo.rucane = anexo.tipane.Equals("06")? anexo.nrodoc : "";
-                        anexo.rucane = anexo.rucane != null ? anexo.rucane.ToUpper() : "";
+                        anexo.rucane = anexo.tipdoc.Equals("06")? anexo.nrodoc : "";
                         anexo.nombre1 = anexo.nombre1 != null ? anexo.nombre1.ToUpper() : "";
                         anexo.nombre2 = anexo.nombre2 != null ? anexo.nombre2.ToUpper() : "";
                         anexo.apepat = anexo.apepat != null ? anexo.apepat.ToUpper() : "";
@@ -47,9 +46,26 @@ namespace Franquisia1._1.Controllers
                             string[] s = { anexo.nombre1, anexo.nombre2, anexo.apepat, anexo.apemat };
                             anexo.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", s); 
                         }
+                        anexo.tipper = "";
+                        if (!String.IsNullOrWhiteSpace(anexo.rucane))
+                        {
+                            switch (anexo.rucane.ToCharArray()[0])
+                            {
+                                case '1':
+                                    anexo.tipper = "01";
+                                    break;
+                                case '2':
+                                    anexo.tipper = "02";
+                                    break;
+                                default:
+                                    
+                                    break;
+                            }
+                        }
                         anexo.situane = "V";
                         anexo.usuario = idusr;
                         anexo.fcrea = DateTime.Now.ToString("dd/MM/yyyy");
+                        anexo.fmod = anexo.fcrea;
                         db.anexos.Add(anexo);
                         db.SaveChanges();
                         anexo = db.anexos.Where(b => b.idcia.Equals(codcia) && b.tipane.Equals("C") && b.codane.Equals(anexo.nrodoc)
@@ -145,7 +161,7 @@ namespace Franquisia1._1.Controllers
                             if (String.IsNullOrWhiteSpace(anexo.desane))
                             {
                                 string[] s = { aux.nombre1, aux.nombre2, aux.apepat, aux.apemat };
-                                anexo.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", s);
+                                aux.desane = anexo.desane != null ? anexo.desane.ToUpper() : String.Join(" ", s);
                             }
                             aux.fmod = DateTime.Now.ToString("dd/MM/yyyy");
                             db.SaveChanges();
