@@ -13,6 +13,7 @@ var Form = {
     BtnTipDocEmi: "active",
     FormAnexo: "#modal-anexo",
     FormSelPerAte: "#modal-seleccionar-peratencion",
+    FormSelAnexo: "#modal-seleccionar-anexo",
     FormCambiarUnd: "#modal-cambiar-undatencion",
     SelectCambiarDiv: "#modal-cambiar-divatencion",
     Total: "#tabla-factura-total",
@@ -106,7 +107,6 @@ var Anexo = {
                 break;
         }
         if ($(App.ControlTeclado + ":checked").val() == "ACT") { $(Anexo.FormBody).find("input[type=text]").keyboard(); $(Anexo.FormBody).find("textarea").keyboard();}
-        console.log($(Anexo.BtnSubmit).text());
         $(Anexo.BtnSubmit).text() == "Guardar" || $(Anexo.FormBody).find("#input-nrodoc").val() == "" ? "" : Anexo.getDB($(Form.Anexo), function (a) {
             var m = $(Anexo.FormBody);
             m.find("#input-nrodoc").val(a.nrodoc);
@@ -136,7 +136,6 @@ var Anexo = {
             success: function (response, textStatus, jqXHR) {
                 if (App.isError(response.respuesta) || App.isAdvert(response.respuesta)) { alert(response.respuesta); }
                 else if (App.isExito(response.respuesta)) { Anexo.show(response.anexo, d); }
-                console.log(response.anexo);
             },
             error: function (xhr, status) { errorAjax(xhr, status); }
         });
@@ -173,6 +172,7 @@ var Anexo = {
         });
     }
 };
+
 function resetTabla(t) { $(t).find("tbody tr").remove(); $(t).data("codigo", ""); $(t + "-items").text("-"); $(t + "-igv").text("-"); $(t + "-total").text("-"); }
 
 function printFactura(t, a, r) {
@@ -524,6 +524,13 @@ var FormPago = {
         } else { alert("ERROR: Para poder realizar la transacci\u00F3n los totales debe coincidir"); }
     }
 };
+var FormBuscar = {
+    BtnRuc: "#btn-buscar-ruc",
+    BtnRazon: "#btn-buscar-razon",
+    TxtBuscar: "#txtBuscar",
+    Tabla: "#tabla-seleccionar-anexo",
+
+};
 $(document).ready(function () {
     Form.IGV = Form.getIGV();
     Form.initTipDocEmi();
@@ -536,56 +543,30 @@ $(document).ready(function () {
     $(".anexo").find(".anexo-nrodoc").bind('accepted', function (e, keyboard, el) { Anexo.getDB($(this).parent().parent()); });
     $(".anexo").find(".anexo-nrodoc").keypress(function (e) { if (e.which == 13) { Anexo.getDB($(this).parent().parent()); } });
     $(".btn-seleccionar-anexo").on("click", function () {
-        $(".modal").modal("hide"); var modal = $("#modal-seleccionar-anexo"); modal.data("anexo", $(this).data("anexo")); modal.modal('show');
+        $(".modal").modal("hide"); var modal = $(Form.FormSelAnexo); modal.data("anexo", $(this).data("anexo")); modal.modal('show');
     });
     $(".btn-clear-anexo").on("click", function () {
         Anexo.clear($(this).parent().parent().parent());
     });
-    $("#btn-buscar-razon").on("click", function () {
-        buscarAjax("/Anexos/BuscarRazon", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane","tipdoc", "nrodoc", "refane"],
+    $(FormBuscar.BtnRazon + ", " + FormBuscar.BtnRuc).on("click", function () {
+        var url = "/Anexos/BuscarNrodoc";
+        if ($(this).data("val") =="razon") { url = "/Anexos/BuscarRazon";}
+        buscarAjax(url, $(FormBuscar.TxtBuscar).val(), $(FormBuscar.Tabla), ["desane","tipdoc", "nrodoc", "refane"],
         function (f) {
-            var m = $("#modal-seleccionar-anexo");
-            f.on("click", function () {
-                var input = Form.InputGroupTDE+":checked";
-                var aux = "";
-                switch ($(input).val()) {
-                    case "01": aux = "RUC"; break;
-                }
-                console.log(aux);
-                if (aux != f.find('td').get(1).innerHTML) {
-                    return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando se emite una " + $(input).data("desc"));
-                }
-
-                var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(2).innerHTML, refane: f.find('td').get(3).innerHTML};
-                Anexo.show(a, $(m.data("anexo"))); m.modal('hide');
-            });
-        });
-    });
-    $("#btn-buscar-ruc").on("click", function () {
-        buscarAjax("/Anexos/BuscarNrodoc", $("#txtBuscar").val(), $("#tabla-seleccionar-anexo"), ["desane", "tipdoc", "nrodoc", "refane"],
-        function (f) {
-            var m = $("#modal-seleccionar-anexo");
+            var m = $(Form.FormSelAnexo);
             f.on("click", function () {
                 var input = Form.InputGroupTDE+":checked";
                 var aux = "";
                 switch ($(input).val()) {
                     case "01":
-                        if ("RUC" != f.find('td').get(1).innerHTML) {
-                            return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc"));
-                        }
+                        if ("RUC" != f.find('td').get(1).innerHTML) { return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc")); }
                         break;
-
                     default:
-                        if ("RUC" == f.find('td').get(1).innerHTML) {
-                            return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc"));
-                        }
+                        if ("RUC" == f.find('td').get(1).innerHTML) { return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc")); }
                         break;
                 }
-                console.log(aux);
-                
                 var a = {desane: f.find('td').get(0).innerHTML, nrodoc: f.find('td').get(2).innerHTML, refane: f.find('td').get(3).innerHTML};
-                Anexo.show(a, $(m.data("anexo")));
-                m.modal('hide');
+                Anexo.show(a, $(m.data("anexo"))); m.modal('hide');
             });
         });
     });
@@ -599,7 +580,6 @@ $(document).ready(function () {
         FormPago.initForm();
         $(FormPago.Name).modal('show');
     });
-   
     $("#cambiar-undatencion").on("click", function () {
         if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCIONE_DIV); }
         if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }

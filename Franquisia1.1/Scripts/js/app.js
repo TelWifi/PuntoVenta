@@ -69,16 +69,13 @@ var Msg = {
 };
 var App = {
     ControlTeclado: "input[name=control-teclado-opciones]",
+    BtnCT:"active",
     CARSUBSTR: 3,
     getTipNrodoc:function(nrodoc){
         var r = /\d{11}/;
-        if (r.test(nrodoc)) {
-            return "06";
-        }
+        if (r.test(nrodoc)) { return "06";}
         r = /(^([0-9]{8,8})|^)$/;
-        if (r.test(nrodoc)) {
-            return "01";
-        }
+        if (r.test(nrodoc)) { return "01";}
         return "07";
     },
     getImageText: function (t, cl) {
@@ -88,7 +85,7 @@ var App = {
         ctx.font = "bold " + fontsize + "px sans-serif";
         var arr = t.split(" ");
         for (var i = 0; i < arr.length; i++) {
-            ctx.fillText(arr[i], 10, fontsize*(i+1));
+            ctx.fillText(arr[i], 10, fontsize * (i + 1));
         }
         var img = c.toDataURL("image/png");
         return $('<img src="' + img + '" class="img-responsive img-thumbnail '+cl+'"/>');
@@ -151,7 +148,6 @@ function printPreFactura(t, f) {
     var l = 35;
     var s2 = "<pre >EL CHALAN S.A.C.\nARTICULO\t\t    |CANT|<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th></tr></thead></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Items: \t</td><td id='items'></td></tr></table></pre>";
     var su = $("<div></div>");
-
     s2 = $(s2);
     var cant = 0;
     var ti = s2.find("#t-i");
@@ -165,14 +161,6 @@ function printPreFactura(t, f) {
     s2.find("#items").append(cant);
     su.append(s2);
     if (!print(su)) { alert(Msg.ERROR_IMPRIMIR); }
-    //var dp = $("<pre>EL CHALAN S.A.C. \n Cant.\tProducto</pre>");
-    //dp.append(tp);
-    //var strf = "<table ><tr><td>{ITEMS}</td><td></td></tr></table>";
-    //strf = strf.replace("{ITEMS}",  "Items: ".concat(itd));
-    //taux = $(strf)
-    //dp.append($("<hr />"));
-    //dp.append(taux);
-    if (!print(s)) { alert(Msg.ERROR_IMPRIMIR); }
 }
 function cambiarUndatencion(cd,su, sd, nu, nd, udes){
     if (!Validar.Dato(cd) || !Validar.Dato(su.val()) || !Validar.Dato(sd.val()) || !Validar.Dato(nu) || !Validar.Dato(nd)){ return alert(Msg.CAMPOS_NULOS_O_VACIOS); }
@@ -246,15 +234,7 @@ function tecladoNumerico(s, n) {
     if (!Validar.Dato(n)) { n = 11; }
     s.keyboard({
         layout: 'custom',
-        customLayout: {
-            'normal': [
-                '1 2 3 ',
-                '4 5 6',
-                '7 8 9',
-                '0 {bksp}',
-                '{a} {c}'
-            ]
-        },
+        customLayout: { 'normal': ['1 2 3 ', '4 5 6', '7 8 9', '0 {bksp}', '{a} {c}'] },
         maxLength: n,
         restrictInput: true,
         useCombos: false,
@@ -262,10 +242,10 @@ function tecladoNumerico(s, n) {
 }
 
 $(document).ready(function () {
-    $(App.ControlTeclado+":checked").parent().siblings('.btn').removeClass("active");
-    $(App.ControlTeclado+":checked").parent().addClass("active");  
+    $(App.ControlTeclado+":checked").parent().siblings('.btn').removeClass(App.BtnCT);
+    $(App.ControlTeclado+":checked").parent().addClass(App.BtnCT);  
     $("#control-teclado .btn").on("click", function () {
-        $(this).siblings('.btn').removeClass("active");$(this).addClass("active");$(this).children("input[type=radio]").prop('checked', true);
+        $(this).siblings('.btn').removeClass(App.BtnCT);$(this).addClass(App.BtnCT);$(this).children("input[type=radio]").prop('checked', true);
         if ($(App.ControlTeclado + ":checked").val() == "ACT") {
             tecladoNumerico($("input[type=number]")); $("input[type=text]").keyboard();
         } else {
