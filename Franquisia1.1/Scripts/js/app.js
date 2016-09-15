@@ -140,13 +140,13 @@ function print(div) {
     mw.document.write($(div).html());
     mw.document.write("<script type='text/javascript'>window.onload = function() { print(); close(); } </script>");
     mw.document.write("</body></html>");
-    mw.document.close(); // necessary for IE >= 10
+    //mw.document.close(); // necessary for IE >= 10
     mw.focus(); // necessary for IE >= 10
     return true;
 }
 function printPreFactura(t, f) {
     var l = 35;
-    var s2 = "<pre >EL CHALAN S.A.C.\nARTICULO\t\t    |CANT|<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th></tr></thead></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Items: \t</td><td id='items'></td></tr></table></pre>";
+    var s2 = "<pre >EL CHALAN S.A.C.<table id='t-i'><tr><td class='text-left'>ARTICULO</td><td style='width:30px;'>|CANT|</td></tr></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Items: \t</td><td id='items'></td></tr></table></pre>";
     var su = $("<div></div>");
     s2 = $(s2);
     var cant = 0;

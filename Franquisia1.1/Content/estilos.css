@@ -17,7 +17,9 @@ header{
 textarea{
     resize: none;
 }
-
+ul li{
+    cursor:pointer;
+}
 .field-validation-error {
     color: #f00;
 }

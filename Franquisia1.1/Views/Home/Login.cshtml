@@ -1,7 +1,7 @@
 ﻿@model Franquisia1._1.usrfile
 @{ViewBag.Title = "Ingresar";}
-<div>
-    <div id="mycarousel" style="height:30%;" class="carousel slide" data-ride="carousel">
+<div style="height:35%;">
+    <div id="mycarousel"class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <li data-target="#mycarousel" data-slide-to="0" class="active"></li>
             @for (int i = 1; i < ViewBag.cantimagenes; i++)
@@ -21,69 +21,60 @@
             }
         </div>
     </div>
-    <div id="form-login">
-        @Html.AntiForgeryToken()
-        <div class="col-xs-9 col-sm-7 col-md-4 center-block no-float ">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="panel-title text-center">Inicio de Sesión</div>
+</div>
+<div id="form-login">
+    @Html.AntiForgeryToken()
+    <div class="col-xs-9 col-sm-7 col-md-4 center-block no-float ">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><div class="panel-title text-center">Inicio de Sesión</div></div>
+            <div class="panel-body">
+                <div id="control-teclado" class="btn-group btn-group-xs btn-group-justified">
+                    <div class="btn btn-default active">
+                        <input type="radio" name="control-teclado-opciones" value="ACT" class="hide" checked />Act.Teclado
+                    </div>
+                    <div class="btn btn-default ">
+                        <input type="radio" name="control-teclado-opciones" value="DESACT" class="hide" />Desact.Teclado
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <div id="control-teclado" class="btn-group btn-group-xs btn-group-justified">
-                        <div class="btn btn-default active">
-                            <input type="radio" name="control-teclado-opciones" value="ACT" class="hide" checked />Act.Teclado
-                        </div>
-                        <div class="btn btn-default ">
-                            <input type="radio" name="control-teclado-opciones" value="DESACT" class="hide" />Desact.Teclado
-                        </div>
+                @if (Session["msg_error"] != null)
+                {
+                    <div id="msg-error" class="alert alert-danger">
+                        <ul id="lista-error"><li>@Session["msg_error"].ToString()</li>@{Session["msg_error"] = null;}</ul>
                     </div>
-                    @if (Session["msg_error"] != null)
-                    {
-                        <div id="msg-error" class="alert alert-danger">
-                            <ul id="lista-error">
-                                <li>@Session["msg_error"].ToString()</li>
-                                @{Session["msg_error"] = null;}
-                            </ul>
-                        </div>
-                    }
-                    else
-                    {
-                        <div id="msg-error" class="alert alert-danger hide"><ul id="lista-error"></ul></div>
-                    }
-                    <div class="form-group form-group-sm">
-                        <label for="idusr">Usuario</label>
-                        <input class="form-control" data-val="true" data-val-required="Ingrese Usuario" id="idusr" name="idusr" type="text" value="" />
-                        <span class="field-validation-valid" data-valmsg-for="idusr" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label for="passusr">Contrase&#241;a</label>
-                        <input class="form-control" data-val="true" data-val-required="Ingrese Contraseña" id="passusr" name="passusr" type="password" />
-                        <span class="field-validation-valid" data-valmsg-for="passusr" data-valmsg-replace="true"></span>
-                    </div>
-                    <div class="form-group form-group-sm"><select id="lista-cia" class="form-control hide"></select></div>
-                    <div class="form-group form-group-sm"><select id="lista-suc" class="form-control hide"></select></div>
-                    <div class="form-group"><select id="lista-roles" class="form-control hide"></select></div>
-                    <button id="btn-submit" class="btn btn-primary">Ingresar</button>
-                    <div class="pull-right"><img src="/Content/images/logo.png" alt="Neinco" class="img-responsive center-block" /></div>
+                }
+                else{<div id="msg-error" class="alert alert-danger hide"><ul id="lista-error"></ul></div>}
+                <div class="form-group form-group-sm">
+                    <label for="idusr">Usuario</label>
+                    <input class="form-control keyboard" id="idusr" name="idusr" type="text" placeholder="Ingrese usuario" />
+                    <span class="field-validation-valid"></span>
                 </div>
+                <div class="form-group form-group-sm">
+                    <label for="passusr">Contrase&#241;a</label>
+                    <input class="form-control keyboard" id="passusr" name="passusr" type="password" placeholder="Ingrese contraseña" />
+                    <span class="field-validation-valid"></span>
+                </div>
+                <div class="form-group form-group-sm"><select id="lista-cia" class="form-control hide"></select></div>
+                <div class="form-group form-group-sm"><select id="lista-suc" class="form-control hide"></select></div>
+                <div class="form-group"><select id="lista-roles" class="form-control hide"></select></div>
+                <button id="btn-submit" class="btn btn-primary">Ingresar</button>
+                <div class="pull-right"><img src="/Content/images/logo.png" alt="Neinco" class="img-responsive center-block" /></div>
             </div>
         </div>
     </div>
 </div>
+
 @section Scripts{
     @Scripts.Render("~/bundles/bootstrap-js")
     @Scripts.Render("~/bundles/jquery-keyboard")
     <script>
-        $("input").keyboard();
+        $(".keyboard").keyboard();
         $("#control-teclado .btn").on("click", function () {
-            $(this).siblings('.btn').removeClass("active");
-            $(this).addClass("active");
-            $(this).children("input[type=radio]").prop('checked', true);
-            if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$("input").keyboard();}
-            else { $("input").keyboard().each(function () { var t = $(this).keyboard().getkeyboard(); t.destroy(); }); }
+            $(this).siblings('.btn').removeClass("active");$(this).addClass("active");$(this).children("input[type=radio]").prop('checked', true);
+            if ($("input[name=control-teclado-opciones]:checked").val() == "ACT") {$(".keyboard").keyboard();}
+            else { $(".keyboard").keyboard().each(function () { var t = $(this).keyboard().getkeyboard(); t.destroy(); }); }
         });
         function errorAjax(xhr, status) { alert("ERROR: Error mientras se ejecutaba la petici\u00F3n\nVerifique su conexi\u00F3n a internet\n C\u00F3digo de estado: " + status); }
-        function obtenerSucursales(codcia, idusr) {
+        function getSuc(codcia, idusr) {
             selectsuc = $("#lista-suc");
             $.ajax({
                 url: "/Sucursal/Obtener",type: 'POST',data: { "codcia": codcia,"idusr":idusr },
@@ -162,7 +153,7 @@
                 });
             }
         });
-        $("#lista-cia").on("change", function () {obtenerSucursales($(this).val(), $("#idusr").val());});
+        $("#lista-cia").on("change", function () {getSuc($(this).val(), $("#idusr").val());});
     </script>
 
 }

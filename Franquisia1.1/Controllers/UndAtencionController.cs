@@ -93,42 +93,47 @@ namespace Franquisia1._1.Controllers
                    string codcia = Session["Loged_usrfile_ciafile"].ToString();
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                    string idusr = Session["Loged_usrfile_idusr"].ToString();
-                   
-                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
-                   if (p == null) { return RedirectToAction("ErrorPermiso", "Error"); }
-                   ViewBag.div = div;
-                   ViewBag.und = und;
-                   ViewBag.per = per;
-                   
-                   ViewBag.categorias = db.claserv.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
-                   ViewBag.divisiones = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
-                   ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
-                   ViewBag.puntosemision = db.punemi.Where(a => a.codcia.Equals(codcia)&&a.sucursal.Equals(sucursal) && a.situa.Equals("V")).ToList();
-                   ViewBag.cia = db.ciafile.Where(a => a.idcia.Equals(codcia)).FirstOrDefault();
-                   ViewBag.sucursal = db.sucursal.Where(a => a.codigo.Equals(sucursal)).FirstOrDefault();
-                   var td = (from A in db.tdprgven
-                                  join B in db.maesgen on A.tipdoc equals B.clavemaesgen
-                                  where A.codcia.Equals(codcia) && B.idmaesgen.Equals("110") && A.prg.Equals("V0105") orderby A.tipdoc ascending
-                                  select new { clave = A.tipdoc, descripcion = B.desmaesgen }).ToList();
-                   List<Models.AxuliarHash> tipdocs = new List<Models.AxuliarHash>();
-                   foreach (var item in td)
+                   conc c = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.UNDATENCION.Equals(und)).FirstOrDefault();
+                   if (c!=null && c.FACTURANDO.Equals("N"))
                    {
-                       tipdocs.Add(new Models.AxuliarHash(item.clave, item.descripcion));
+                       peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
+                       if (p == null) { return RedirectToAction("ErrorPermiso", "Error"); }
+                       ViewBag.div = div;
+                       ViewBag.und = und;
+                       ViewBag.per = per;
+
+                       ViewBag.categorias = db.claserv.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
+                       ViewBag.divisiones = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
+                       ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
+                       ViewBag.puntosemision = db.punemi.Where(a => a.codcia.Equals(codcia) && a.sucursal.Equals(sucursal) && a.situa.Equals("V")).ToList();
+                       ViewBag.cia = db.ciafile.Where(a => a.idcia.Equals(codcia)).FirstOrDefault();
+                       ViewBag.sucursal = db.sucursal.Where(a => a.codigo.Equals(sucursal)).FirstOrDefault();
+                       var td = (from A in db.tdprgven
+                                 join B in db.maesgen on A.tipdoc equals B.clavemaesgen
+                                 where A.codcia.Equals(codcia) && B.idmaesgen.Equals("110") && A.prg.Equals("V0105")
+                                 orderby A.tipdoc ascending
+                                 select new { clave = A.tipdoc, descripcion = B.desmaesgen }).ToList();
+                       List<Models.AxuliarHash> tipdocs = new List<Models.AxuliarHash>();
+                       foreach (var item in td)
+                       {
+                           tipdocs.Add(new Models.AxuliarHash(item.clave, item.descripcion));
+                       }
+                       ViewBag.tipdocs = tipdocs.ToList();
+
+                       List<string> tdtipdoc = db.tdtipdoc.ToList().Select(b => b.TIPDOC).ToList();
+                       var cm = db.maesgen.Where(a => a.idmaesgen.Equals("002") && tdtipdoc.Contains(a.clavemaesgen)).ToList();
+
+                       ViewBag.cm = cm.ToList();
+                       c.FACTURANDO = "S";
+                       db.SaveChanges();
+                       ViewBag.conc = c;
+                       ViewBag.forventa = db.forventa.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
+                       ViewBag.forpago = db.forpago.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
+                       ViewBag.anexo = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.codane.Equals("00000000") && a.situane.Equals("V")).FirstOrDefault();
+                       return View("Facturacion");
                    }
-                   ViewBag.tipdocs = tipdocs.ToList();
-
-                   List<string> tdtipdoc = db.tdtipdoc.ToList().Select(b=>b.TIPDOC).ToList();
-                   var cm = db.maesgen.Where(a => a.idmaesgen.Equals("002") && tdtipdoc.Contains(a.clavemaesgen)).ToList();
-
-                   ViewBag.cm = cm.ToList();
-                   conc c = db.conc.Where(a=>a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.UNDATENCION.Equals(und)).FirstOrDefault();
-                   c.FACTURANDO = "S";
-                   db.SaveChanges();
-                   ViewBag.conc = c;
-                   ViewBag.forventa = db.forventa.Where(a=>a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
-                   ViewBag.forpago = db.forpago.Where(a =>a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
-                   ViewBag.anexo = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.codane.Equals("00000000") && a.situane.Equals("V")).FirstOrDefault();
-                   return View("Facturacion");
+                   else { return RedirectToAction("ErrorPermiso", "Error"); }
+                   
                }else { return RedirectToAction("ErrorPermiso", "Error"); }
            }
            catch (System.Data.EntityException ex) { return RedirectToAction("ErroBD", "Error", ex.Message); }
@@ -144,20 +149,24 @@ namespace Franquisia1._1.Controllers
                    string codcia = Session["Loged_usrfile_ciafile"].ToString();
                    string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                    string idusr = Session["Loged_usrfile_idusr"].ToString();
+                   conc c = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.UNDATENCION.Equals(und)).FirstOrDefault();
+                   if (c!=null && c.FACTURANDO.Equals("N"))
+                   {
+                       peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
+                       if (p == null) { return RedirectToAction("ErrorPermiso", "Error"); }
+                       ViewBag.div = div;
+                       ViewBag.und = und;
+                       ViewBag.per = per;
 
-                   peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(per)).FirstOrDefault();
-                   if (p == null) { return RedirectToAction("ErrorPermiso", "Error"); }
-                   ViewBag.div = div;
-                   ViewBag.und = und;
-                   ViewBag.per = per;
-
-                   ViewBag.categorias = db.claserv.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
-                   ViewBag.divisiones = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
-                   ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
-                   ViewBag.cia = db.ciafile.Where(a => a.idcia.Equals(codcia)).FirstOrDefault();
-                   ViewBag.sucursal = db.sucursal.Where(a => a.codigo.Equals(sucursal)).FirstOrDefault();
-                   ViewBag.accesofacturacion = rol.Equals("C");
-                   return View("Consumos");
+                       ViewBag.categorias = db.claserv.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
+                       ViewBag.divisiones = db.divatencion.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal)).ToList();
+                       ViewBag.personal = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V"));
+                       ViewBag.cia = db.ciafile.Where(a => a.idcia.Equals(codcia)).FirstOrDefault();
+                       ViewBag.sucursal = db.sucursal.Where(a => a.codigo.Equals(sucursal)).FirstOrDefault();
+                       ViewBag.accesofacturacion = rol.Equals("C");
+                       return View("Consumos");
+                   }
+                   else { return RedirectToAction("ErrorPermiso", "Error"); }
                }else { return RedirectToAction("ErrorPermiso", "Error"); }
            }
            catch (System.Data.EntityException ex) { return RedirectToAction("ErroBD","Error",ex.Message);}

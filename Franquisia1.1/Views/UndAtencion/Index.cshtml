@@ -2,10 +2,13 @@
     ViewBag.Title = "Punto de Venta";
 }
 <header>
-    El Chalan S.A.C
+    <div class="pull-left">
+        <img class="img-responsive logo" src="/Content/images/logo.png" alt="Neinco">
+    </div>
     <div class="pull-right">
         <a class="btn btn-danger" href="/Home/OffLogin"><span class="glyphicon glyphicon-remove"></span> Salir</a>
     </div>
+    El Chalan S.A.C
     <div style="font-size:0.5em">
         <label class="info-divider">
             Usuario: @Session["Loged_usrfile_idusr"].ToString()
@@ -22,27 +25,36 @@
     </div>
        
 </header>
+@if (ViewBag.divs.Count>0)
+{
 
-<ul id="divisiones" class="nav nav-tabs" style="font-size:small;">
-    @foreach (var div in ViewBag.divs)
-    {
-        <li data-codigo="@div.CODIGO"><a data-toggle="tab" href="#tab-@div.CODIGO">@div.DESCRIPCION</a></li>
-    }
-</ul>
-<div class="tab-content">
-    @foreach (var div in ViewBag.divs)
-    {
-        <div id="tab-@div.CODIGO" class="tab-pane fade in">
-            <div id="divatencion-@div.CODIGO" class="panel">
-            </div>
-        </div>
-    }
+<div class="container-fluid">
+    <div class="row">
+
+        <ul id="divisiones" class="nav nav-tabs" style="font-size:small;">
+            @foreach (var div in ViewBag.divs)
+            {
+                <li data-codigo="@div.CODIGO"><a data-toggle="tab" href="#tab-@div.CODIGO">@div.DESCRIPCION</a></li>
+            }
+        </ul>
+    </div>
+       <div class="row">
+
+           <div class="tab-content">
+               @foreach (var div in ViewBag.divs)
+               {
+                   <div id="tab-@div.CODIGO" class="tab-pane fade in">
+                       <div id="divatencion-@div.CODIGO" class="panel"></div>
+                   </div>
+               }
+           </div>
+       </div>
 </div>
+
 <div class="hide">
     <label id="und-sel"></label><label id="per-sel"></label><label id="div-sel"></label>
     <label id="parpwd">@ViewBag.parpwd</label> <label id="rol">@Session["Loged_usrfile_rol"]</label>
 </div>
-
 <div class="modal " id="modal-seleccionar-peratencion">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -68,7 +80,7 @@
                     <ul id="empleados" class="list-group">
                         @foreach (var persona in ViewBag.personal)
                         {
-                            <li class="list-group-item element-selected" data-codigo="@persona.codigo" data-desc="@persona.descripcion"><a style="text-decoration:none;">@persona.descripcion</a></li>
+                            <li class="list-group-item element-selected" data-codigo="@persona.codigo" data-desc="@persona.descripcion"><a>@persona.descripcion</a></li>
                         }
                     </ul>
                 </div>
@@ -96,6 +108,12 @@
         </div>
     </div>
 </div>
+}
+else
+{
+    <h2 class="text-center text-danger">No existen divisiones de atención para esta sucursal</h2>
+}
+
 @section Scripts{
     @Scripts.Render("~/bundles/aplicacion")
     @Scripts.Render("~/bundles/app")

@@ -3,10 +3,10 @@ var Form = {
     Tabla: "#tabla-factura",
     Und: "#undatencion",
     Div: "#divatencion",
-    UndDesc: Form.Und + "-desc",
+    UndDesc: "#undatencion-desc",
     PerDesc: "#peratencion-desc",
-    FormCambiarUnd: Form.FormCambiarUnd,
-    FormSelectDiv:Form.FormSelectDiv,
+    FormCambiarUnd: "#modal-cambiar-undatencion",
+    FormSelectDiv: "#modal-cambiar-divatencion",
     getIGV: function () {
         $.ajax({
             type: "post", dataType: 'json', cache: false, url: "/Parreg/ObtenerIGV", data: {},
@@ -191,7 +191,7 @@ $(document).ready(function () {
     });
     $(".seleccion-categoria").on("click", function () {
         var codigo = $(this).data("codigo");
-        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo));
+        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo), Form.Tabla);
     });
     $("#conventa-btn-buscar").on("click", function () {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);

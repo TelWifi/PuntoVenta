@@ -178,7 +178,7 @@ function resetTabla(t) { $(t).find("tbody tr").remove(); $(t).data("codigo", "")
 function printFactura(t, a, r) {
     var l = 35;
     var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\n{docemi} ELECTR\u00D3NICA\n{cod1}-{cod2}\n</pre>";
-    var s2 = "<pre class='text-left'>Tienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha} Hora: {hora}\n" + App.getStr("*", l) + "\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n" + App.getStr("*", l) + "\nARTICULO      |CANT|PRECIO|IMPORTE\n" + App.getStr("*", l) + "<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Op. Exonerada\t{abr}</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\t{abr}</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\t{abr}</td><td id='gravada'></td></tr><tr><td>IGV\t\t{abr}</td><td id='igv'></td></tr><tr><td>Importe Total\t{abr}</td><td id='importe-total'></td></tr></table><div id='resumen'></div>\n</pre>";
+    var s2 = "<pre class='text-left'>\nTienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha} Hora: {hora}\n" + App.getStr("*", l) + "\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n" + App.getStr("*", l) + "<table><tr><td class='text-left'>ARTICULO</td><td style='width:30px;'>CANT</td><td style='width:50px;'>PRECIO</td><td style='width:50px;'>IMPORTE</td></tr> </table>" + App.getStr("*", l) + "<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Op. Exonerada\t{abr}</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\t{abr}</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\t{abr}</td><td id='gravada'></td></tr><tr><td>IGV\t\t{abr}</td><td id='igv'></td></tr><tr><td>Importe Total\t{abr}</td><td id='importe-total'></td></tr></table><div id='resumen'></div>\n</pre>";
     var s3 = "<pre>{cod-gen}\n\nRepresentaci\u00F3n impresa del Comprobante de Venta Electr\u00F3nica, esta puede ser consultada en {pag-web} autorizado mediante resoluci\u00F3n de intendencia {resol-inten}\n\n{pag-web}\nGRACIAS POR SU COMPRA\n</pre>";
     var su = $("<div></div>");
     s1 = s1.replace("{cia-desc}", r.cia.nombrecomercial);
@@ -339,12 +339,14 @@ var FormPago = {
     TotalPagado: "#forma-pago-total",
     Tabla: "#tabla-forma-pago",
     PrintPreFact: "#print-prefact",
+
     initForm: function () {
         $(FormPago.TotalPagar).text(parseFloat($(Form.Total).text()).toFixed(2));
         $(FormPago.TotalPagado).text("00.00"); $(FormPago.Tabla).find("tbody tr").remove();
         var grnt = $(FormPago.InputGroupFV+":radio"); grnt.first().parent().siblings("div").removeClass(FormPago.BtnFV);
         grnt.first().prop('checked', true); grnt.first().parent().addClass(FormPago.BtnFV);
         $(FormPago.LblFV).text(grnt.first().data("desc"));
+        $(this.PrintPreFact).prop("checked", true);
         this.updateForm();
     },
     updateForm: function (i) {
@@ -536,6 +538,7 @@ $(document).ready(function () {
     Form.initTipDocEmi();
     obtenerDetalle($(Form.Und), $(Form.Div).val(), Form.Tabla, Form.PerDesc, Form.UndDesc, function (s) {; });
     Anexo.initForm();
+    $("#puntos-emision").val($("#punemi").text());
     $(Form.Div).on("change", function () { $(Form.Und).val(""); Anexo.clear($(Form.Anexo)); resetTabla(Form.Tabla); clearDesc(Form.PerDesc, Form.UndDesc); });
     $(Form.Und).keypress(function (e) { if (e.which == 13) { changeUndAtencion($(this)); }});
     $(Form.Und).bind('accepted', function (e, keyboard, el) { changeUndAtencion($(this));});
@@ -556,7 +559,6 @@ $(document).ready(function () {
             var m = $(Form.FormSelAnexo);
             f.on("click", function () {
                 var input = Form.InputGroupTDE+":checked";
-                var aux = "";
                 switch ($(input).val()) {
                     case "01":
                         if ("RUC" != f.find('td').get(1).innerHTML) { return alert("ERROR: No puede colocar un " + f.find('td').get(1).innerHTML + " cuando el se emite una " + $(input).data("desc")); }
@@ -612,7 +614,7 @@ $(document).ready(function () {
     $("#anular-factura").on("click", function () {
         if (!Validar.Dato($(Form.Div).val())) { return alert(Msg.SELECCION_DIV); }
         if (!Validar.Dato($(Form.Tabla).data("codigo"))) { return alert(Msg.SELECCION_UND); }
-        if (confirm(MSG_DESEA_ANULAR)) {
+        if (confirm(Msg.ANULAR_CONSUMO)) {
             var cod = $(Form.Tabla).data("codigo");
             $.ajax({
                 type: "post", dataType: 'json', cache: false, url: '/Conc/Anular', data: { codigo: cod },
@@ -734,6 +736,10 @@ $(document).ready(function () {
             $(Form.FormAnexo).modal("show");
         });
     });
+    $(".seleccion-categoria").on("click", function () {
+        var codigo = $(this).data("codigo");
+        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo), Form.Tabla);
+    });
     $("#conventa-btn-buscar").on("click", function () {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
     });
@@ -743,9 +749,5 @@ $(document).ready(function () {
     });
     $('#conventa-texto').bind('accepted', function (e, keyboard, el) {
         buscarConventaDescripcion($("#conventa-texto").val(), $("#panel-buscar"), Form.Tabla);
-    });
-    $(".seleccion-categoria").on("click", function () {
-        var codigo = $(this).data("codigo");
-        buscarConventaClaserv(codigo, $("#panel-productos-" + codigo), Form.Tabla);
     });
 });
