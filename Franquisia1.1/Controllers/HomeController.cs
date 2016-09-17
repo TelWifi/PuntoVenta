@@ -279,7 +279,7 @@ namespace Franquisia1._1.Controllers
         {
             try
             {
-                //appbosaEntities db = new appbosaEntities();
+                appbosaEntities db = new appbosaEntities();
 
                 const string FromEmail = "no.reply.prueba.deploy@gmail.com";
                 const string FromDisplayName = "El Chalan S.A.C.";
