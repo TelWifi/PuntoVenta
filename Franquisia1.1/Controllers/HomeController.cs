@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Rotativa;
 
 
 namespace Franquisia1._1.Controllers
@@ -36,7 +37,9 @@ namespace Franquisia1._1.Controllers
                 appbosaEntities db = new appbosaEntities();
                 DateTime cdate;
                 List<string> tdtipdoc = db.tdtipdoc.ToList().Select(b => b.TIPDOC).ToList();
-                ViewBag.tipdocs = db.maesgen.Where(a => a.idmaesgen.Equals("002") && tdtipdoc.Contains(a.clavemaesgen)).ToList();
+                var cm = db.maesgen.Where(a => a.idmaesgen.Equals("002") && tdtipdoc.Contains(a.clavemaesgen)).ToList();
+                ViewBag.tipdocs = cm.ToList();
+                ViewBag.td = tipdoc;
                 if (DateTime.TryParse(fecha, out cdate))
                 {
                     venc vc = db.venc.Where(a => a.NRODOC.Equals(serie) && a.CONSUMO.Equals(correlativo)
@@ -141,6 +144,128 @@ namespace Franquisia1._1.Controllers
             }
             catch (Exception ex) { return RedirectToAction("Error", "Error", ex.Message); }
         }
+        
+        public ActionResult Respuesta(string tipdoc, string serie, string correlativo, string fecha, string importe)
+        {
+            try
+            {
+                appbosaEntities db = new appbosaEntities();
+                DateTime cdate;
+                List<string> tdtipdoc = db.tdtipdoc.ToList().Select(b => b.TIPDOC).ToList();
+                var cm = db.maesgen.Where(a => a.idmaesgen.Equals("002") && tdtipdoc.Contains(a.clavemaesgen)).ToList();
+                ViewBag.tipdocs = cm.ToList();
+                ViewBag.td = tipdoc;
+                if (DateTime.TryParse(fecha, out cdate))
+                {
+                    venc vc = db.venc.Where(a => a.NRODOC.Equals(serie) && a.CONSUMO.Equals(correlativo)
+                   ).FirstOrDefault();
+                    if (vc != null && vc.CDATE.Equals(cdate))
+                    {
+                        decimal impIn;
+                        if (Decimal.TryParse(importe.Replace('.', ','), out impIn))
+                        {
+                            decimal impDB = db.vend.Where(a => a.CODCIA.Equals(vc.CODCIA) && a.CODIGO.Equals(vc.CODIGO)).Sum(a => a.TOTAL);
+                            if (impIn == impDB)
+                            {
+                                List<vend> vds = db.vend.Where(a => a.CODCIA.Equals(vc.CODCIA) && a.CODIGO.Equals(vc.CODIGO)).ToList();
+                                ciafile cia = db.ciafile.Where(a => a.idcia.Equals(vc.CODCIA)).FirstOrDefault();
+                                sucursal suc = db.sucursal.Where(a => a.codcia.Equals(cia.idcia) && a.codigo.Equals(vc.SUCURSAL)).FirstOrDefault();
+                                anexos anexo = db.anexos.Where(a => a.idcia.Equals(cia.idcia) && a.tipane.Equals(vc.TIPANE) && a.codane.Equals(vc.CODANE)).FirstOrDefault();
+                                if (anexo.tipdoc.Equals(tipdoc))
+                                {
+                                    maesgen emision = db.maesgen.Where(a => a.idmaesgen.Equals("110") && a.clavemaesgen.Equals(vc.TIPDOC)).FirstOrDefault();
+                                    maesgen mgtd = db.maesgen.Where(a => a.idmaesgen.Equals("002") && a.clavemaesgen.Equals(anexo.tipdoc)).FirstOrDefault();
+                                    maesgen mgmoneda = db.maesgen.Where(a => a.idmaesgen.Equals("015") && a.clavemaesgen.Equals(vc.CODMON)).FirstOrDefault();
+                                    var u = (from a in db.venpag
+                                             join b in db.forventa on a.FORVENTA equals b.codigo
+                                             from c in db.forpago.Where(d => d.codigo.Equals(a.FORPAGO)).DefaultIfEmpty()
+                                             from d in db.tarjetas.Where(t => t.codigo.Equals(a.TARJETA)).DefaultIfEmpty()
+                                             where a.CODCIA.Equals(vc.CODCIA) && a.CODIGO.Equals(vc.CODIGO)
+                                             select new
+                                             {
+                                                 codigo = a.CODIGO,
+                                                 importe = a.IMPORTE,
+                                                 recibido = a.RECIBIDO,
+                                                 vuelto = a.VUELTO,
+                                                 forventa = b.descripcion,
+                                                 forpago = c.descripcion,
+                                                 tarjeta = d.descripcion
+                                             }
+                                 ).ToList();
+                                    decimal total = 0, sumagra = 0, sumaina = 0, sumaexo = 0, sumaigv = 0;
+                                    foreach (vend item in vds)
+                                    {
+                                        sumaigv += item.IGV;
+                                        total += item.TOTAL;
+                                        switch (item.TIPOVALORVENTA)
+                                        {
+                                            case "01":
+                                                item.GRAVADO = item.NETO;
+                                                sumagra += (decimal)item.GRAVADO;
+                                                break;
+                                            case "02":
+                                                item.EXONERADO = item.NETO;
+                                                sumaexo += (decimal)item.EXONERADO;
+                                                break;
+                                            case "03":
+                                                item.INAFECTO = item.NETO;
+                                                sumaina += (decimal)item.INAFECTO;
+                                                break;
+                                        }
+                                    }
+                                    parreg prigv = db.parreg.Where(a => a.IDCIA.Equals(cia.idcia) && a.FORM.Equals("COM")).FirstOrDefault();
+
+
+                                    AppAccounting.NumLetras nl = new AppAccounting.NumLetras();
+
+                                    ViewBag.cia = cia;
+                                    ViewBag.suc = suc;
+                                    ViewBag.fecha = cdate.ToString("dd/MM/yyyy");
+                                    ViewBag.venc = vc;
+                                    ViewBag.vends = vds;
+                                    ViewBag.anexo = anexo;
+                                    ViewBag.tipdoc = mgtd.parm1maesgen;
+                                    ViewBag.docemi = emision.parm6maesgen;
+                                    ViewBag.moneda = mgmoneda.parm1maesgen;
+                                    ViewBag.gravado = sumagra;
+                                    ViewBag.exonerado = sumaexo;
+                                    ViewBag.inafecto = sumaina;
+                                    ViewBag.igv = sumaigv;
+                                    ViewBag.com_tasa_igv = prigv.COM_TASA_IGV;
+                                    ViewBag.total = total;
+                                    ViewBag.totalstr = nl.Numero_to_Letras(mgmoneda.clavemaesgen, total);
+                                    ViewBag.resumen = u;
+                                    ViewBag.serie = vc.NRODOC;
+                                    ViewBag.correlativo = vc.CONSUMO;
+                                    ViewBag.abrevia = mgmoneda.abrevia;
+                                    return View("Documento");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.msg_error = "El monto total debe ser un n\u00FAmero v\u00E1lido";
+                            return View("Consulta");
+                        }
+                    }
+                    ViewBag.msg_error = "Los datos ingresados no coinciden con ninguno de nuestros registros";
+                    return View("Consulta");
+                }
+                else
+                {
+                    ViewBag.msg_error = "Formato de fecha incorrecto";
+                    return View("Consulta");
+                }
+            }
+            catch (Exception ex) { return RedirectToAction("Error", "Error", ex.Message); }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Download(string tipdoc, string serie, string correlativo, string fecha, string importe)
+        {
+            return new ActionAsPdf("Respuesta", new { tipdoc = tipdoc, serie = serie, correlativo = correlativo, fecha = fecha, importe = importe });
+        }
+        
         public ActionResult Login()
         {
             try

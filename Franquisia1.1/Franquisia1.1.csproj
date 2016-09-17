@@ -50,6 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Rotativa">
+      <HintPath>..\packages\Rotativa.1.6.4\lib\net40\Rotativa.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>True</Private>
     </Reference>
@@ -254,6 +257,7 @@
     </Compile>
     <Compile Include="Models\AxuliarHash.cs" />
     <Compile Include="Models\NumLetras.cs" />
+    <Compile Include="Models\PdfHtml.cs" />
     <Compile Include="numcia.cs">
       <DependentUpon>Modelo.tt</DependentUpon>
     </Compile>
@@ -419,7 +423,9 @@
       <DependentUpon>Modelo.edmx</DependentUpon>
       <LastGenOutput>Modelo.cs</LastGenOutput>
     </Content>
+    <Content Include="App_Browsers\qt.browser" />
     <None Include="Properties\PublishProfiles\NeincoSAC.pubxml" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\js\ind.js" />
     <Content Include="Scripts\js\fact.js" />
     <Content Include="Scripts\js\cons.js" />
