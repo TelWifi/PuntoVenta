@@ -268,7 +268,10 @@ namespace Franquisia1._1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Download(string tipdoc, string serie, string correlativo, string fecha, string importe)
         {
-            return new ActionAsPdf("Respuesta", new { tipdoc = tipdoc, serie = serie, correlativo = correlativo, fecha = fecha, importe = importe }) { FileName = "Documento Electrónico.pdf" };
+            return new ActionAsPdf("Respuesta", new { tipdoc = tipdoc, serie = serie, correlativo = correlativo, fecha = fecha, importe = importe }) 
+            { 
+                FileName = String.Format("{0} - {1}.pdf","Documento Electrónico", DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss"))
+            };
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -278,35 +281,41 @@ namespace Franquisia1._1.Controllers
             {
                 //appbosaEntities db = new appbosaEntities();
 
-                var fromAddress = new MailAddress("no.reply.prueba.deploy@gmail.com", "El Chalan S.A.C.");
-                var toAddress = new MailAddress(email);
-                const string fromPassword = "jtL{G/-m@*XnBH0bvq(Y";
+                const string FromEmail = "no.reply.prueba.deploy@gmail.com";
+                const string FromDisplayName = "El Chalan S.A.C.";
+                const string FromPassword = "jtL{G/-m@*XnBH0bvq(Y";
                 const string subject = "Documento Electrónico";
                 const string body = "";
+                const string host = "smtp.gmail.com";
+                const int port = 587;
+                const string SslAct = "S";
 
+                var fromAddress = new MailAddress(FromEmail, FromDisplayName);
+                var toAddress = new MailAddress(email);
                 var smtp = new SmtpClient
                 {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
+                    Host = host,
+                    Port = port,
+                    EnableSsl = SslAct.Equals("S"),
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                    Credentials = new NetworkCredential(fromAddress.Address, FromPassword)
                 };
 
                 var root = Server.MapPath("~/PDF/");
-                var pdfname = String.Format("{0} - {1}.pdf","Documento Electrónico", DateTime.Now.ToString("dd-mm-yyyy-hh-mm-ss"));
+                if (!System.IO.Directory.Exists(@root))
+                {
+                    System.IO.Directory.CreateDirectory(@root);
+                }
+                var pdfname = String.Format("{0} - {1}.pdf","Documento Electrónico", DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss"));
                 var path = Path.Combine(root, pdfname);
                 path = Path.GetFullPath(path);
-
                 var something = new Rotativa.ActionAsPdf("Respuesta", new { tipdoc = tipdoc, serie = serie, correlativo = correlativo, fecha = fecha, importe = importe }) {
                     FileName = pdfname,
                 };
-                
                 var binary = something.BuildPdf(this.ControllerContext);
                 System.IO.File.Create(path).Close();
                 System.IO.File.WriteAllBytes(@path, binary);
-                
                 
                 using (var message = new MailMessage(fromAddress, toAddress)
                 {
