@@ -155,6 +155,7 @@ namespace Franquisia1._1.Controllers
                 var cm = db.maesgen.Where(a => a.idmaesgen.Equals("002") && tdtipdoc.Contains(a.clavemaesgen)).ToList();
                 ViewBag.tipdocs = cm.ToList();
                 ViewBag.td = tipdoc;
+                ViewBag.print = true;
                 if (DateTime.TryParse(fecha, out cdate))
                 {
                     venc vc = db.venc.Where(a => a.NRODOC.Equals(serie) && a.CONSUMO.Equals(correlativo)

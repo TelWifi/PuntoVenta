@@ -19,34 +19,41 @@
     }
     #op tr td:nth-child(2){text-align:right;}
 </style>
-<header>
-    El Chalan S.A.C.
-    <div class="pull-right"><a href="http://www.neinco.com"><img src="/Content/images/logo.png" alt="Neinco" class="img-responsive logo" /></a></div>
-</header>
+@if (ViewBag.print == null)
+{ 
+    <header>
+        El Chalan S.A.C.
+        <div class="pull-right"><a href="http://www.neinco.com"><img src="/Content/images/logo.png" alt="Neinco" class="img-responsive logo" /></a></div>
+    </header>
+}
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-12 col-sm-9 col-md-8 center-block no-float">
-            <div class="panel">
-                <form action="/Home/Download" method="post">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="tipdoc" value="@ViewBag.td" required />
-                    <input type="hidden" name="serie" value="@ViewBag.serie" required />
-                    <input type="hidden" name="correlativo" value="@ViewBag.correlativo" required />
-                    <input type="hidden" name="fecha" value="@ViewBag.fecha" required />
-                    <input type="hidden" name="importe" value="@ViewBag.total" step="any" required />
-                    <button class="btn btn-sm btn-primary pull-right"><span class="glyphicon glyphicon-download-alt"></span></button>
-                </form>
-                <a href="/Home/Consulta" class="btn btn-sm btn-primary pull-left"><span class="glyphicon glyphicon-arrow-left"></span></a>
-                <div class="col-xs-9 col-sm-4 col-md-4 center-block no-float">
-                    <form action="/Home/SendMail"  method="post" class="form form-inline input-group input-group-sm">
+            @if (ViewBag.print==null)
+            {
+                <div class="panel">
+                    <form action="/Home/Download" method="post">
                         @Html.AntiForgeryToken()
-                        <input type="email" name="email" placeholder="Enviar por email" class="form-control" required />
-                        <span class="input-group-btn">
-                            <button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-send"></span></button>
-                        </span>
+                        <input type="hidden" name="tipdoc" value="@ViewBag.td" required />
+                        <input type="hidden" name="serie" value="@ViewBag.serie" required />
+                        <input type="hidden" name="correlativo" value="@ViewBag.correlativo" required />
+                        <input type="hidden" name="fecha" value="@ViewBag.fecha" required />
+                        <input type="hidden" name="importe" value="@ViewBag.total" step="any" required />
+                        <button class="btn btn-sm btn-primary pull-right"><span class="glyphicon glyphicon-download-alt"></span></button>
                     </form>
+                    <a href="/Home/Consulta" class="btn btn-sm btn-primary pull-left"><span class="glyphicon glyphicon-arrow-left"></span></a>
+                    <div class="col-xs-9 col-sm-4 col-md-4 center-block no-float">
+                        <form action="/Home/SendMail"  method="post" class="form form-inline input-group input-group-sm">
+                            @Html.AntiForgeryToken()
+                            <input type="email" name="email" placeholder="Enviar por email" class="form-control" required />
+                            <span class="input-group-btn">
+                                <button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-send"></span></button>
+                            </span>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            }
+            
             <div class="panel bordes">
                 <div class="panel-body" style="padding:5px;">
                     <div class="panel panel-default pull-right">
