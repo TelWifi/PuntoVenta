@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "Documento";
+}
+<style>
+    .panel {
+        margin-bottom: 5px;
+    }
+    .panel-body {
+        padding: 5px;
+    }
+    .bordes {
+        border: 2px solid #0D47A1;
+    }
+    hr .hrcolor{
+        color: #666;
+        background-color: #32d7e6;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    #op tr td:nth-child(2){text-align:right;}
+</style>
+<header>
+    El Chalan S.A.C.
+    <div class="pull-right"><a href="http://www.neinco.com"><img src="/Content/images/logo.png" alt="Neinco" class="img-responsive logo" /></a></div>
+</header>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-10 col-sm-9 col-md-8 center-block no-float">
+            <div class="panel">
+                <a  class="btn btn-sm btn-primary pull-right"><span class="glyphicon glyphicon-download-alt"></span></a>
+                <a href="/Home/Consulta" class="btn btn-sm btn-primary pull-left"><span class="glyphicon glyphicon-arrow-left"></span></a>
+                <div class="col-xs-9 col-sm-4 col-md-4 center-block no-float">
+                    <form class="form form-inline input-group input-group-sm" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="email" name="email" placeholder="Enviar por email" class="form-control" required/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-send"></span></button>
+                        </span>
+                    </form>
+                </div>
+            </div>
+            <div class="panel bordes">
+                <div class="panel-body" style="padding:5px;">
+                    <div class="panel panel-default pull-right">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">@ViewBag.docemi</h2>
+                        </div>
+                        <div class="panel-body text-center">
+                            @ViewBag.tipdoc: @ViewBag.anexo.nrodoc<br />
+                            @ViewBag.serie-@ViewBag.correlativo
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h3>@ViewBag.cia.nombrecomercial</h3> @ViewBag.cia.dircia
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-body" style="border: 2px solid #0D47A1">
+                <table>
+                    <tr><td>Fecha de Emisión </td><th>: @ViewBag.fecha</th></tr>
+                    <tr><td>@(@ViewBag.tipdoc.Equals("RUC")?"Razón Social":"Apellidos y Nombres") </td><th>: @ViewBag.anexo.desane</th></tr>
+                    <tr><td>@ViewBag.tipdoc </td><th>: @ViewBag.anexo.nrodoc</th></tr>
+                    <tr><td>Tipo de Moneda </td><th>: @ViewBag.moneda</th></tr>
+                </table>
+            </div>
+            <div class="panel">
+                <table class="table table-hover table-striped table-condensed" >
+                    <thead>
+                        <tr><th >Artículo</th><th style="width:10%;">Cantidad</th><th style="width:10%;">Precio</th><th style="width:10%;">Importe</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var vc in ViewBag.vends)
+                        {
+                            <tr><td>@vc.DESARTI</td><td>@vc.CANTIDAD.ToString("00.")</td><td>@vc.PREUNI.ToString("#,##0.00")</td><td class="text-right">@vc.TOTAL.ToString("#,##0.00")</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel bordes">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-sm-7 col-md-8">
+                        SON: <label>@ViewBag.totalstr</label>
+                        <div class="text-center">
+                            <hr />
+                            2t723287321783y82173wdhaisdisa
+                            <hr />
+                        </div>
+                        Autorizado mediante resolución de intendencia @ViewBag.cia.resintendencia
+                    </div>
+                    <div class="col-xs-12 col-sm-5 col-md-4">
+                        <table id="op" class="table table-condensed">
+                            <tr><td>Op. Gavada @ViewBag.abrevia </td><td>@ViewBag.gravado.ToString("#,##0.00")</td></tr>
+                            <tr><td>Op. Inafectas @ViewBag.abrevia </td><td>@ViewBag.inafecto.ToString("#,##0.00")</td></tr>
+                            <tr><td>Op. Exoneradas @ViewBag.abrevia </td><td>@ViewBag.exonerado.ToString("#,##0.00")</td></tr>
+                            <tr><td>IGV(@ViewBag.com_tasa_igv %) </td><td>@ViewBag.igv.ToString("#,##0.00")</td></tr>
+                            <tr><td><label>Total @ViewBag.abrevia</label> </td><td>@ViewBag.total.ToString("#,##0.00")</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

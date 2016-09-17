@@ -15,7 +15,8 @@ namespace Franquisia1._1.Controllers
             String controlador = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
 
             if ((!controlador.Equals("Home") && !metodo.Equals("Login"))  &&
-                (!controlador.Equals("Sucursal") && !metodo.Equals("Obtener")) )
+                (!controlador.Equals("Sucursal") && !metodo.Equals("Obtener")) &&
+                 (!controlador.Equals("Error") && !metodo.Equals("Error")))
             {
 
                 if (HttpContext.Current.Session["Loged_usrfile_idusr"] == null || HttpContext.Current.Session["Loged_usrfile_typeusr"] == null

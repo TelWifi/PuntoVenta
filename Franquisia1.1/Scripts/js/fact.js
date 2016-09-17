@@ -177,7 +177,7 @@ function resetTabla(t) { $(t).find("tbody tr").remove(); $(t).data("codigo", "")
 
 function printFactura(t, a, r) {
     var l = 35;
-    var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\n{docemi} ELECTR\u00D3NICA\n{cod1}-{cod2}\n</pre>";
+    var s1 = "<pre>{cia-desc}\n{slogan}\n\n{cia-nom}\nRUC {ruc}\nCentral: {dir-central}\n{telefono}\n{docemi}\n{cod1}-{cod2}\n</pre>";
     var s2 = "<pre class='text-left'>\nTienda {tienda}\n{direccion}\n{distrito}-{departamento}\nFecha: {fecha} Hora: {hora}\n" + App.getStr("*", l) + "\nCORRELATIVO\t: {correlativo}\nCAJA\t\t: {caja}\nTIPO DE MONEDA\t: {moneda}\nCLIENTE\t\t: {cliente}\nDOC. IDENTIDAD	: {tipdoc} : {nro-doc}\n" + App.getStr("*", l) + "<table><tr><td class='text-left'>ARTICULO</td><td style='width:30px;'>CANT</td><td style='width:50px;'>PRECIO</td><td style='width:50px;'>IMPORTE</td></tr> </table>" + App.getStr("*", l) + "<table id='t-i'><thead><tr><th></th><th style='width:30px;'></th><th style='width:50px;'></th><th style='width:50px;'></th></tr></thead></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Op. Exonerada\t{abr}</td><td id='exonerada'></td></tr><tr><td>Op. Inafecta\t{abr}</td><td id='inafecta'></td></tr><tr><td>Op. Gravada\t{abr}</td><td id='gravada'></td></tr><tr><td>IGV\t\t{abr}</td><td id='igv'></td></tr><tr><td>Importe Total\t{abr}</td><td id='importe-total'></td></tr></table><div id='resumen'></div>\n</pre>";
     var s3 = "<pre>{cod-gen}\n\nRepresentaci\u00F3n impresa del Comprobante de Venta Electr\u00F3nica, esta puede ser consultada en {pag-web} autorizado mediante resoluci\u00F3n de intendencia {resol-inten}\n\n{pag-web}\nGRACIAS POR SU COMPRA\n</pre>";
     var su = $("<div></div>");

@@ -26,9 +26,25 @@ public partial class vend
         this.UNIDAD = string.Empty;
         this.TIPOPRECIO = string.Empty;
         this.GLOSA = string.Empty;
+        this.TIPSERVEN = string.Empty;
+        this.PARTE_ALMA = string.Empty;
         this.GRAVADO = 0;
         this.EXONERADO = 0;
         this.INAFECTO = 0;
+        this.DTIPCAM = 0;
+        this.NETO_MN = 0;
+        this.SUBTOTAL_MN = 0;
+        this.DESCUENTO_MN = 0;
+        this.TOTAL_MN = 0;
+        this.NETO_US = 0;
+        this.SUBTOTAL_US = 0;
+        this.DESCUENTO_US = 0;
+        this.TOTAL_US = 0;
+        this.ORDEN_VENTA = string.Empty;
+        this.ITEM_ORDEN_VENTA = string.Empty;
+        this.EXONERADO = 0;
+        this.GRATUITA = 0;
+        this.ROL = "0";
     }
     public string CODCIA { get; set; }
 

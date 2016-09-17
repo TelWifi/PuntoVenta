@@ -130,10 +130,12 @@ namespace Franquisia1._1.Controllers
                         vend.SUBTOTAL = (decimal)item.TOTAL;
                         vend.PORCDESC = 0;
                         vend.DESCUENTO = 0;
-                        vend.TOTAL = vend.PREUNI;
+                        vend.TOTAL = vend.SUBTOTAL;
                         vend.IGV = (decimal)(vend.TOTAL * prigv.COM_TASA_IGV / (100 + prigv.COM_TASA_IGV));
                         vend.CONVENTA = item.CONVENTA;
                         conventa conventa = db.conventa.Where(a => a.codcia.Equals(codcia) && a.codigo.Equals(item.CONVENTA) && a.situa.Equals("V")).FirstOrDefault();
+                        vend.CODARTI = conventa.codigo;
+                        vend.DESARTI = conventa.descripcion;
                         vend.TIPOVALORVENTA = conventa.tipovalorventa;
                         vend.NETO = vend.TOTAL-vend.IGV;
                         sumaigv += vend.IGV;
@@ -179,12 +181,12 @@ namespace Franquisia1._1.Controllers
                         respuesta = "EXITO: Exito",
                         cia = ciafile,
                         suc = suc,
-                        fecha = DateTime.Now.ToString("dd/MM/yyyy"),
+                        fecha = venc.FECDOC,
                         hora = DateTime.Now.ToString("hh:mm tt"),
                         venc = venc,
                         anexo = anexo,
                         tipdoc = mgtd.parm1maesgen,
-                        docemi=emision.desmaesgen,
+                        docemi = emision.parm6maesgen,
                         moneda = mgmoneda.parm1maesgen,
                         gravado = sumagra,
                         exonerado = sumaexo,
