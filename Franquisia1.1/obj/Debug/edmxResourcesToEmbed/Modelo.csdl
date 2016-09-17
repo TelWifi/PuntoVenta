@@ -133,6 +133,7 @@
     <EntitySet Name="vend" EntityType="ModeloAplicacion.vend" />
     <EntitySet Name="tdtipdoc" EntityType="ModeloAplicacion.tdtipdoc" />
     <EntitySet Name="fordoc" EntityType="ModeloAplicacion.fordoc" />
+    <EntitySet Name="setupmail" EntityType="ModeloAplicacion.setupmail" />
   </EntityContainer>
   <EntityType Name="sucusr">
     <Key>
@@ -537,6 +538,7 @@
     <Property Name="POS_CODANE_DEFAULT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="POS_IS_CLAVE_PERATENCION" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
     <Property Name="POS_TIEMPO_REFRESCO_PANEL" Type="Int32" />
+    <Property Name="PLA_NACIONALIDAD_DEFAULT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="tdcom">
     <Key>
@@ -797,5 +799,22 @@
     <Property Name="LONGSERIE" Type="Int32" Nullable="false" />
     <Property Name="LONGNUMERO" Type="Int32" />
     <Property Name="COMPLETAR" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="setupmail">
+    <Key>
+      <PropertyRef Name="NOMMAIL" />
+    </Key>
+    <Property Name="NOMMAIL" Type="String" Nullable="false" MaxLength="120" FixedLength="false" Unicode="false" />
+    <Property Name="DIRMAIL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+    <Property Name="POPMAIL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+    <Property Name="SMTPMAIL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+    <Property Name="USUMAIL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+    <Property Name="PASSMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SPA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="AUTENTICACION" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="PUERTO_POP3" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+    <Property Name="PUERTO_SMTP" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+    <Property Name="CONEXION_SSL" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="CONEXION_CIFRADA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
   </EntityType>
 </Schema>

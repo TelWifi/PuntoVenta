@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c84a8bc23dd54baa8842264f1bfa9777" Name="Diagram1" ZoomLevel="66">
+      <Diagram DiagramId="c84a8bc23dd54baa8842264f1bfa9777" Name="Diagram1" ZoomLevel="59">
         <EntityTypeShape EntityType="ModeloAplicacion.ciafile" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ModeloAplicacion.divatencion" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ModeloAplicacion.sucursal" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
@@ -38,6 +38,7 @@
         <EntityTypeShape EntityType="ModeloAplicacion.vend" Width="1.5" PointX="15.375" PointY="3.75" />
         <EntityTypeShape EntityType="ModeloAplicacion.tdtipdoc" Width="1.5" PointX="15.375" PointY="14.75" />
         <EntityTypeShape EntityType="ModeloAplicacion.fordoc" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ModeloAplicacion.setupmail" Width="1.5" PointX="17.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

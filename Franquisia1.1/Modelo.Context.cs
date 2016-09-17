@@ -58,5 +58,6 @@ namespace Franquisia1._1
         public DbSet<vend> vend { get; set; }
         public DbSet<tdtipdoc> tdtipdoc { get; set; }
         public DbSet<fordoc> fordoc { get; set; }
+        public DbSet<setupmail> setupmail { get; set; }
     }
 }

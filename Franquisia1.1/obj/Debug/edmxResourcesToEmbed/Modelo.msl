@@ -315,6 +315,7 @@
     <EntitySetMapping Name="parreg">
       <EntityTypeMapping TypeName="ModeloAplicacion.parreg">
         <MappingFragment StoreEntitySet="parreg">
+          <ScalarProperty Name="PLA_NACIONALIDAD_DEFAULT" ColumnName="PLA_NACIONALIDAD_DEFAULT" />
           <ScalarProperty Name="POS_TIEMPO_REFRESCO_PANEL" ColumnName="POS_TIEMPO_REFRESCO_PANEL" />
           <ScalarProperty Name="POS_IS_CLAVE_PERATENCION" ColumnName="POS_IS_CLAVE_PERATENCION" />
           <ScalarProperty Name="POS_CODANE_DEFAULT" ColumnName="POS_CODANE_DEFAULT" />
@@ -752,6 +753,24 @@
           <ScalarProperty Name="LONGSERIE" ColumnName="LONGSERIE" />
           <ScalarProperty Name="SERIE" ColumnName="SERIE" />
           <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="setupmail">
+      <EntityTypeMapping TypeName="ModeloAplicacion.setupmail">
+        <MappingFragment StoreEntitySet="setupmail">
+          <ScalarProperty Name="CONEXION_CIFRADA" ColumnName="CONEXION_CIFRADA" />
+          <ScalarProperty Name="CONEXION_SSL" ColumnName="CONEXION_SSL" />
+          <ScalarProperty Name="PUERTO_SMTP" ColumnName="PUERTO_SMTP" />
+          <ScalarProperty Name="PUERTO_POP3" ColumnName="PUERTO_POP3" />
+          <ScalarProperty Name="AUTENTICACION" ColumnName="AUTENTICACION" />
+          <ScalarProperty Name="SPA" ColumnName="SPA" />
+          <ScalarProperty Name="PASSMAIL" ColumnName="PASSMAIL" />
+          <ScalarProperty Name="USUMAIL" ColumnName="USUMAIL" />
+          <ScalarProperty Name="SMTPMAIL" ColumnName="SMTPMAIL" />
+          <ScalarProperty Name="POPMAIL" ColumnName="POPMAIL" />
+          <ScalarProperty Name="DIRMAIL" ColumnName="DIRMAIL" />
+          <ScalarProperty Name="NOMMAIL" ColumnName="NOMMAIL" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -449,6 +449,7 @@
           <Property Name="POS_CODANE_DEFAULT" Type="char" MaxLength="20" />
           <Property Name="POS_IS_CLAVE_PERATENCION" Type="char" MaxLength="1" />
           <Property Name="POS_TIEMPO_REFRESCO_PANEL" Type="int" />
+          <Property Name="PLA_NACIONALIDAD_DEFAULT" Type="char" MaxLength="4" />
         </EntityType>
         <EntityType Name="peratencion">
           <Key>
@@ -501,6 +502,23 @@
           <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
           <Property Name="rol" Type="char" MaxLength="4" Nullable="false" />
           <Property Name="idusr" Type="char" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="setupmail">
+          <Key>
+            <PropertyRef Name="NOMMAIL" />
+          </Key>
+          <Property Name="NOMMAIL" Type="varchar" MaxLength="120" Nullable="false" />
+          <Property Name="DIRMAIL" Type="varchar" MaxLength="120" />
+          <Property Name="POPMAIL" Type="varchar" MaxLength="120" />
+          <Property Name="SMTPMAIL" Type="varchar" MaxLength="120" />
+          <Property Name="USUMAIL" Type="varchar" MaxLength="120" />
+          <Property Name="PASSMAIL" Type="varchar" MaxLength="50" />
+          <Property Name="SPA" Type="char" MaxLength="1" />
+          <Property Name="AUTENTICACION" Type="char" MaxLength="1" />
+          <Property Name="PUERTO_POP3" Type="char" MaxLength="4" />
+          <Property Name="PUERTO_SMTP" Type="char" MaxLength="4" />
+          <Property Name="CONEXION_SSL" Type="char" MaxLength="1" />
+          <Property Name="CONEXION_CIFRADA" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="sucperatencion">
           <Key>
@@ -790,6 +808,7 @@
           <EntitySet Name="preconven" EntityType="Self.preconven" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="punemi" EntityType="Self.punemi" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="rolespv" EntityType="Self.rolespv" Schema="appbosa" store:Type="Tables" />
+          <EntitySet Name="setupmail" EntityType="Self.setupmail" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="sucperatencion" EntityType="Self.sucperatencion" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="sucursal" EntityType="Self.sucursal" Schema="appbosa" store:Type="Tables" />
           <EntitySet Name="sucusr" EntityType="Self.sucusr" Schema="appbosa" store:Type="Tables" />
@@ -940,6 +959,7 @@
           <EntitySet Name="vend" EntityType="ModeloAplicacion.vend" />
           <EntitySet Name="tdtipdoc" EntityType="ModeloAplicacion.tdtipdoc" />
           <EntitySet Name="fordoc" EntityType="ModeloAplicacion.fordoc" />
+          <EntitySet Name="setupmail" EntityType="ModeloAplicacion.setupmail" />
         </EntityContainer>
         <EntityType Name="sucusr">
           <Key>
@@ -1344,6 +1364,7 @@
           <Property Name="POS_CODANE_DEFAULT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="POS_IS_CLAVE_PERATENCION" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="POS_TIEMPO_REFRESCO_PANEL" Type="Int32" />
+          <Property Name="PLA_NACIONALIDAD_DEFAULT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="tdcom">
           <Key>
@@ -1604,6 +1625,23 @@
           <Property Name="LONGSERIE" Type="Int32" Nullable="false" />
           <Property Name="LONGNUMERO" Type="Int32" />
           <Property Name="COMPLETAR" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="setupmail">
+          <Key>
+            <PropertyRef Name="NOMMAIL" />
+          </Key>
+          <Property Name="NOMMAIL" Type="String" Nullable="false" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="DIRMAIL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="POPMAIL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="SMTPMAIL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="USUMAIL" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="PASSMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SPA" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="AUTENTICACION" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="PUERTO_POP3" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PUERTO_SMTP" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="CONEXION_SSL" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="CONEXION_CIFRADA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1925,6 +1963,7 @@
           <EntitySetMapping Name="parreg">
             <EntityTypeMapping TypeName="ModeloAplicacion.parreg">
               <MappingFragment StoreEntitySet="parreg">
+                <ScalarProperty Name="PLA_NACIONALIDAD_DEFAULT" ColumnName="PLA_NACIONALIDAD_DEFAULT" />
                 <ScalarProperty Name="POS_TIEMPO_REFRESCO_PANEL" ColumnName="POS_TIEMPO_REFRESCO_PANEL" />
                 <ScalarProperty Name="POS_IS_CLAVE_PERATENCION" ColumnName="POS_IS_CLAVE_PERATENCION" />
                 <ScalarProperty Name="POS_CODANE_DEFAULT" ColumnName="POS_CODANE_DEFAULT" />
@@ -2362,6 +2401,24 @@
                 <ScalarProperty Name="LONGSERIE" ColumnName="LONGSERIE" />
                 <ScalarProperty Name="SERIE" ColumnName="SERIE" />
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="setupmail">
+            <EntityTypeMapping TypeName="ModeloAplicacion.setupmail">
+              <MappingFragment StoreEntitySet="setupmail">
+                <ScalarProperty Name="CONEXION_CIFRADA" ColumnName="CONEXION_CIFRADA" />
+                <ScalarProperty Name="CONEXION_SSL" ColumnName="CONEXION_SSL" />
+                <ScalarProperty Name="PUERTO_SMTP" ColumnName="PUERTO_SMTP" />
+                <ScalarProperty Name="PUERTO_POP3" ColumnName="PUERTO_POP3" />
+                <ScalarProperty Name="AUTENTICACION" ColumnName="AUTENTICACION" />
+                <ScalarProperty Name="SPA" ColumnName="SPA" />
+                <ScalarProperty Name="PASSMAIL" ColumnName="PASSMAIL" />
+                <ScalarProperty Name="USUMAIL" ColumnName="USUMAIL" />
+                <ScalarProperty Name="SMTPMAIL" ColumnName="SMTPMAIL" />
+                <ScalarProperty Name="POPMAIL" ColumnName="POPMAIL" />
+                <ScalarProperty Name="DIRMAIL" ColumnName="DIRMAIL" />
+                <ScalarProperty Name="NOMMAIL" ColumnName="NOMMAIL" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

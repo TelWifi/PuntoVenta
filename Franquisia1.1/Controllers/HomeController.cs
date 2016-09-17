@@ -280,15 +280,16 @@ namespace Franquisia1._1.Controllers
             try
             {
                 appbosaEntities db = new appbosaEntities();
-
-                const string FromEmail = "no.reply.prueba.deploy@gmail.com";
-                const string FromDisplayName = "El Chalan S.A.C.";
-                const string FromPassword = "jtL{G/-m@*XnBH0bvq(Y";
-                const string subject = "Documento Electrónico";
-                const string body = "";
-                const string host = "smtp.gmail.com";
-                const int port = 587;
-                const string SslAct = "S";
+                setupmail stmail = db.setupmail.ToList().First();
+                usrfile u = new usrfile();
+                string FromEmail = stmail.DIRMAIL;
+                string FromDisplayName = stmail.NOMMAIL;
+                string FromPassword = u.Desencripta(stmail.PASSMAIL);
+                string subject = "Documento Electrónico";
+                string body = "";
+                string host = stmail.SMTPMAIL;
+                int port = int.Parse(stmail.PUERTO_SMTP);
+                string SslAct = stmail.CONEXION_SSL;
 
                 var fromAddress = new MailAddress(FromEmail, FromDisplayName);
                 var toAddress = new MailAddress(email);

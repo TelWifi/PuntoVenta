@@ -284,6 +284,9 @@
     <Compile Include="rolespv.cs">
       <DependentUpon>Modelo.tt</DependentUpon>
     </Compile>
+    <Compile Include="setupmail.cs">
+      <DependentUpon>Modelo.tt</DependentUpon>
+    </Compile>
     <Compile Include="sucperatencion.cs">
       <DependentUpon>Modelo.tt</DependentUpon>
     </Compile>

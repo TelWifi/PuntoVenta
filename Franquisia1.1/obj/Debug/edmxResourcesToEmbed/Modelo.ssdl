@@ -444,6 +444,7 @@
     <Property Name="POS_CODANE_DEFAULT" Type="char" MaxLength="20" />
     <Property Name="POS_IS_CLAVE_PERATENCION" Type="char" MaxLength="1" />
     <Property Name="POS_TIEMPO_REFRESCO_PANEL" Type="int" />
+    <Property Name="PLA_NACIONALIDAD_DEFAULT" Type="char" MaxLength="4" />
   </EntityType>
   <EntityType Name="peratencion">
     <Key>
@@ -496,6 +497,23 @@
     <Property Name="codcia" Type="char" MaxLength="2" Nullable="false" />
     <Property Name="rol" Type="char" MaxLength="4" Nullable="false" />
     <Property Name="idusr" Type="char" MaxLength="6" Nullable="false" />
+  </EntityType>
+  <EntityType Name="setupmail">
+    <Key>
+      <PropertyRef Name="NOMMAIL" />
+    </Key>
+    <Property Name="NOMMAIL" Type="varchar" MaxLength="120" Nullable="false" />
+    <Property Name="DIRMAIL" Type="varchar" MaxLength="120" />
+    <Property Name="POPMAIL" Type="varchar" MaxLength="120" />
+    <Property Name="SMTPMAIL" Type="varchar" MaxLength="120" />
+    <Property Name="USUMAIL" Type="varchar" MaxLength="120" />
+    <Property Name="PASSMAIL" Type="varchar" MaxLength="50" />
+    <Property Name="SPA" Type="char" MaxLength="1" />
+    <Property Name="AUTENTICACION" Type="char" MaxLength="1" />
+    <Property Name="PUERTO_POP3" Type="char" MaxLength="4" />
+    <Property Name="PUERTO_SMTP" Type="char" MaxLength="4" />
+    <Property Name="CONEXION_SSL" Type="char" MaxLength="1" />
+    <Property Name="CONEXION_CIFRADA" Type="varchar" MaxLength="20" />
   </EntityType>
   <EntityType Name="sucperatencion">
     <Key>
@@ -785,6 +803,7 @@
     <EntitySet Name="preconven" EntityType="Self.preconven" Schema="appbosa" store:Type="Tables" />
     <EntitySet Name="punemi" EntityType="Self.punemi" Schema="appbosa" store:Type="Tables" />
     <EntitySet Name="rolespv" EntityType="Self.rolespv" Schema="appbosa" store:Type="Tables" />
+    <EntitySet Name="setupmail" EntityType="Self.setupmail" Schema="appbosa" store:Type="Tables" />
     <EntitySet Name="sucperatencion" EntityType="Self.sucperatencion" Schema="appbosa" store:Type="Tables" />
     <EntitySet Name="sucursal" EntityType="Self.sucursal" Schema="appbosa" store:Type="Tables" />
     <EntitySet Name="sucusr" EntityType="Self.sucusr" Schema="appbosa" store:Type="Tables" />

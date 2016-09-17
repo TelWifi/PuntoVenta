@@ -195,5 +195,6 @@ namespace Franquisia1._1
         public string POS_CODANE_DEFAULT { get; set; }
         public string POS_IS_CLAVE_PERATENCION { get; set; }
         public Nullable<int> POS_TIEMPO_REFRESCO_PANEL { get; set; }
+        public string PLA_NACIONALIDAD_DEFAULT { get; set; }
     }
 }

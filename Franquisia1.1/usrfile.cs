@@ -28,37 +28,54 @@ namespace Franquisia1._1
         public string cargo_firma { get; set; }
         public string dni_firma { get; set; }
         public string msn { get; set; }
+        
         string _PASS_PHRASE = "MySqlCSharpSystem";
-
         string _SALT_VALUE = "AccountingSoftware";
-
         string _HASH_ALGORITHM = "SHA1";
-
         string _PASSWORD_ITERATIONS = "2";
-
         string _INIT_VECTOR = "@1B2c3D4e5F6g7H8";
-
         string _KEY_SIZE = "256";
-
-
         public string Encripta(string cadena)
         {
             string passPhrase = this._PASS_PHRASE;
-
             string saltValue = this._SALT_VALUE;
-
             string hashAlgorithm = this._HASH_ALGORITHM;
-
             int passwordIterations = Convert.ToInt32(this._PASSWORD_ITERATIONS);
-
             string initVector = this._INIT_VECTOR;
-
             int keySize = Convert.ToInt32(this._KEY_SIZE);
-
             RijndaelSimple RijndaelSimple = new RijndaelSimple();
-
             return RijndaelSimple.Encrypt(cadena, passPhrase, saltValue, hashAlgorithm, passwordIterations, initVector, keySize);
         }
+
+        public string Desencripta(string cadena)
+        {
+            string cadenaDecriptada = string.Empty;
+
+            if (!string.IsNullOrEmpty(cadena))
+            {
+                string passPhrase = this._PASS_PHRASE;
+
+                string saltValue = this._SALT_VALUE;
+
+                string hashAlgorithm = this._HASH_ALGORITHM;
+
+                int passwordIterations = Convert.ToInt32(this._PASSWORD_ITERATIONS);
+
+                string initVector = this._INIT_VECTOR;
+
+                int keySize = Convert.ToInt32(this._KEY_SIZE);
+
+                RijndaelSimple RijndaelSimple = new RijndaelSimple();
+
+                cadenaDecriptada = RijndaelSimple.Decrypt(cadena, passPhrase, saltValue, hashAlgorithm, passwordIterations, initVector, keySize);
+            }
+
+            return cadenaDecriptada;
+        }
+
+
+
+
 
     }
 }
