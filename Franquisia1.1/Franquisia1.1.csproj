@@ -335,6 +335,7 @@
     <Content Include="Content\images\calc-yroot.png" />
     <Content Include="Content\images\external.png" />
     <Content Include="Content\images\keyboard.png" />
+    <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\ui-bg_flat_30_cccccc_40x100.png" />
     <Content Include="Content\images\ui-bg_flat_50_5c5c5c_40x100.png" />
     <Content Include="Content\images\ui-bg_glass_20_555555_1x400.png" />

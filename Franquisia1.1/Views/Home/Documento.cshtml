@@ -18,6 +18,14 @@
         margin-bottom: 10px;
     }
     #op tr td:nth-child(2){text-align:right;}
+    .img-load {
+        position: absolute;
+        left:50%;
+        top:50%;
+        height:50px;
+        width:50px;
+        z-index: 1000;
+    }
 </style>
 @if (ViewBag.print == null)
 { 
@@ -43,17 +51,21 @@
                     </form>
                     <a href="/Home/Consulta" class="btn btn-sm btn-primary pull-left"><span class="glyphicon glyphicon-arrow-left"></span></a>
                     <div class="col-xs-9 col-sm-4 col-md-4 center-block no-float">
-                        <form action="/Home/SendMail"  method="post" class="form form-inline input-group input-group-sm">
+                        <form id="sendemail" action="/Home/SendEmail" method="post" class="form form-inline input-group input-group-sm">
                             @Html.AntiForgeryToken()
+                            <input type="hidden" name="tipdoc" value="@ViewBag.td" required />
+                            <input type="hidden" name="serie" value="@ViewBag.serie" required />
+                            <input type="hidden" name="correlativo" value="@ViewBag.correlativo" required />
+                            <input type="hidden" name="fecha" value="@ViewBag.fecha" required />
+                            <input type="hidden" name="importe" value="@ViewBag.total" step="any" required />
                             <input type="email" name="email" placeholder="Enviar por email" class="form-control" required />
                             <span class="input-group-btn">
-                                <button class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-send"></span></button>
+                                <button class="btn btn-sm btn-default"><span id="loanding" class="glyphicon glyphicon-send"></span></button>
                             </span>
                         </form>
                     </div>
                 </div>
             }
-            
             <div class="panel bordes">
                 <div class="panel-body" style="padding:5px;">
                     <div class="panel panel-default pull-right">
@@ -74,7 +86,7 @@
                 <table>
                     <tr><td>Fecha de Emisión </td><th>: @ViewBag.fecha</th></tr>
                     <tr><td>@(@ViewBag.tipdoc.Equals("RUC")?"Razón Social":"Apellidos y Nombres") </td><th>: @ViewBag.anexo.desane</th></tr>
-                    <tr><td>@ViewBag.tipdoc </td><th>: @ViewBag.anexo.nrodoc</th></tr>
+                    <tr><td>@ViewBag.tipdocdesc </td><th>: @ViewBag.tipdoc : @ViewBag.anexo.nrodoc</th><th></th></tr>
                     <tr><td>Tipo de Moneda </td><th>: @ViewBag.moneda</th></tr>
                 </table>
             </div>
@@ -116,3 +128,28 @@
         </div>
     </div>
 </div>
+@section Scripts{
+    <script>
+        $("#sendemail").submit(function () {
+            var ld = $("<img class='img-load' src='/Content/images/loading.gif'/>"); $("body").append(ld);
+            var token = $(this).find('input[name="__RequestVerificationToken"]').val();
+            var email = $(this).find('input[name="email"]').val();
+            var td = $(this).find('input[name="tipdoc"]').val();
+            var s = $(this).find('input[name="serie"]').val();
+            var c = $(this).find('input[name="correlativo"]').val();
+            var f = $(this).find('input[name="fecha"]').val();
+            var i = $(this).find('input[name="importe"]').val();
+            $.ajax({
+                url: "/Home/SendEmail", type: 'POST', data: {
+                    __RequestVerificationToken: token,
+                    email: email, tipdoc: td, serie: s, correlativo: c, fecha: f, importe: i
+                },
+                success: function (response) {
+                    ld.remove();
+                    alert(response.respuesta);
+                }, error: function (xhr, status) { errorAjax(xhr, status); }
+            });
+            return false;
+        });
+    </script>
+}

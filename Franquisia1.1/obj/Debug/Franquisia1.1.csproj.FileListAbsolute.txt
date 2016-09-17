@@ -203,3 +203,4 @@ C:\Users\LuFerLux\Documents\Visual Studio 2013\Projects\PuntoVenta\Franquisia1.1
 C:\Users\LuFerLux\Documents\Visual Studio 2013\Projects\PuntoVenta\Franquisia1.1\obj\Debug\Franquisia1.1.dll
 C:\Users\LuFerLux\Documents\Visual Studio 2013\Projects\PuntoVenta\Franquisia1.1\obj\Debug\Franquisia1.1.pdb
 C:\Users\LuFerLux\Documents\Visual Studio 2013\Projects\PuntoVenta\Franquisia1.1\bin\Rotativa.dll
+C:\Users\usuario\Documents\Visual Studio 2013\Projects\PuntoVenta\Franquisia1.1\bin\Rotativa.dll

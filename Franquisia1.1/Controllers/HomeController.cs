@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Rotativa;
+using System.Net.Mail;
+using System.Net;
+using System.IO;
 
 
 namespace Franquisia1._1.Controllers
@@ -47,7 +50,7 @@ namespace Franquisia1._1.Controllers
                     if (vc!=null && vc.CDATE.Equals(cdate))
                     {
                         decimal impIn;
-                        if (Decimal.TryParse(importe.Replace('.',','), out impIn))
+                        if (Decimal.TryParse(importe.Replace(',','.'), out impIn))
                         {
                             decimal impDB = db.vend.Where(a => a.CODCIA.Equals(vc.CODCIA) && a.CODIGO.Equals(vc.CODIGO)).Sum(a => a.TOTAL);
                             if (impIn == impDB)
@@ -110,6 +113,7 @@ namespace Franquisia1._1.Controllers
                                     ViewBag.vends = vds;
                                     ViewBag.anexo = anexo;
                                     ViewBag.tipdoc = mgtd.parm1maesgen;
+                                    ViewBag.tipdocdesc = mgtd.desmaesgen;
                                     ViewBag.docemi = emision.parm6maesgen;
                                     ViewBag.moneda = mgmoneda.parm1maesgen;
                                     ViewBag.gravado = sumagra;
@@ -144,7 +148,6 @@ namespace Franquisia1._1.Controllers
             }
             catch (Exception ex) { return RedirectToAction("Error", "Error", ex.Message); }
         }
-        
         public ActionResult Respuesta(string tipdoc, string serie, string correlativo, string fecha, string importe)
         {
             try
@@ -163,7 +166,7 @@ namespace Franquisia1._1.Controllers
                     if (vc != null && vc.CDATE.Equals(cdate))
                     {
                         decimal impIn;
-                        if (Decimal.TryParse(importe.Replace('.', ','), out impIn))
+                        if (Decimal.TryParse(importe.Replace(',', '.'), out impIn))
                         {
                             decimal impDB = db.vend.Where(a => a.CODCIA.Equals(vc.CODCIA) && a.CODIGO.Equals(vc.CODIGO)).Sum(a => a.TOTAL);
                             if (impIn == impDB)
@@ -226,6 +229,7 @@ namespace Franquisia1._1.Controllers
                                     ViewBag.vends = vds;
                                     ViewBag.anexo = anexo;
                                     ViewBag.tipdoc = mgtd.parm1maesgen;
+                                    ViewBag.tipdocdesc = mgtd.desmaesgen;
                                     ViewBag.docemi = emision.parm6maesgen;
                                     ViewBag.moneda = mgmoneda.parm1maesgen;
                                     ViewBag.gravado = sumagra;
@@ -264,9 +268,60 @@ namespace Franquisia1._1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Download(string tipdoc, string serie, string correlativo, string fecha, string importe)
         {
-            return new ActionAsPdf("Respuesta", new { tipdoc = tipdoc, serie = serie, correlativo = correlativo, fecha = fecha, importe = importe });
+            return new ActionAsPdf("Respuesta", new { tipdoc = tipdoc, serie = serie, correlativo = correlativo, fecha = fecha, importe = importe }) { FileName = "Documento Electrónico.pdf" };
         }
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult SendEmail(string email, string tipdoc, string serie, string correlativo, string fecha, string importe)
+        {
+            try
+            {
+                //appbosaEntities db = new appbosaEntities();
+
+                var fromAddress = new MailAddress("no.reply.prueba.deploy@gmail.com", "El Chalan S.A.C.");
+                var toAddress = new MailAddress(email);
+                const string fromPassword = "jtL{G/-m@*XnBH0bvq(Y";
+                const string subject = "Documento Electrónico";
+                const string body = "";
+
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                };
+
+                var root = Server.MapPath("~/PDF/");
+                var pdfname = String.Format("{0} - {1}.pdf","Documento Electrónico", DateTime.Now.ToString("dd-mm-yyyy-hh-mm-ss"));
+                var path = Path.Combine(root, pdfname);
+                path = Path.GetFullPath(path);
+
+                var something = new Rotativa.ActionAsPdf("Respuesta", new { tipdoc = tipdoc, serie = serie, correlativo = correlativo, fecha = fecha, importe = importe }) {
+                    FileName = pdfname,
+                };
+                
+                var binary = something.BuildPdf(this.ControllerContext);
+                System.IO.File.Create(path).Close();
+                System.IO.File.WriteAllBytes(@path, binary);
+                
+                
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject, Body = body 
+                })
+                {
+                    message.Attachments.Add(new Attachment(path));
+                    smtp.Send(message);
+                }
+                System.IO.File.Delete(@path);
+                return Json(new { respuesta = "EXITO: Email enviado a " + email }, JsonRequestBehavior.AllowGet);
+            }
+            catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
+        }
         public ActionResult Login()
         {
             try
