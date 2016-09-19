@@ -127,9 +127,10 @@ namespace Franquisia1._1.Controllers
                        c.FACTURANDO = "S";
                        db.SaveChanges();
                        ViewBag.conc = c;
+                       parreg prg = db.parreg.Where(a=>a.FORM.Equals("POS")).FirstOrDefault();
                        ViewBag.forventa = db.forventa.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
                        ViewBag.forpago = db.forpago.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V")).ToList();
-                       ViewBag.anexo = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.codane.Equals("00000000") && a.situane.Equals("V")).FirstOrDefault();
+                       ViewBag.anexo = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.codane.Equals(prg.POS_CODANE_DEFAULT) && a.situane.Equals("V")).FirstOrDefault();
                        return View("Facturacion");
                    }
                    else { return RedirectToAction("ErrorPermiso", "Error"); }

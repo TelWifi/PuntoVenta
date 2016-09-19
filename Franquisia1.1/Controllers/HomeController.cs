@@ -45,7 +45,7 @@ namespace Franquisia1._1.Controllers
                 ViewBag.td = tipdoc;
                 if (DateTime.TryParse(fecha, out cdate))
                 {
-                    venc vc = db.venc.Where(a => a.NRODOC.Equals(serie) && a.CONSUMO.Equals(correlativo)
+                    venc vc = db.venc.Where(a => a.SERIE.Equals(serie) && a.NRODOC.Equals(correlativo)
                    ).FirstOrDefault();
                     if (vc!=null && vc.CDATE.Equals(cdate))
                     {
@@ -124,8 +124,8 @@ namespace Franquisia1._1.Controllers
                                     ViewBag.total = total;
                                     ViewBag.totalstr = nl.Numero_to_Letras(mgmoneda.clavemaesgen, total);
                                     ViewBag.resumen = u;
-                                    ViewBag.serie = vc.NRODOC;
-                                    ViewBag.correlativo = vc.CONSUMO;
+                                    ViewBag.serie = vc.SERIE;
+                                    ViewBag.correlativo = vc.NRODOC;
                                     ViewBag.abrevia = mgmoneda.abrevia;
                                     return View("Documento");
                                 }
@@ -161,7 +161,7 @@ namespace Franquisia1._1.Controllers
                 ViewBag.print = true;
                 if (DateTime.TryParse(fecha, out cdate))
                 {
-                    venc vc = db.venc.Where(a => a.NRODOC.Equals(serie) && a.CONSUMO.Equals(correlativo)
+                    venc vc = db.venc.Where(a => a.SERIE.Equals(serie) && a.NRODOC.Equals(correlativo)
                    ).FirstOrDefault();
                     if (vc != null && vc.CDATE.Equals(cdate))
                     {
@@ -240,8 +240,8 @@ namespace Franquisia1._1.Controllers
                                     ViewBag.total = total;
                                     ViewBag.totalstr = nl.Numero_to_Letras(mgmoneda.clavemaesgen, total);
                                     ViewBag.resumen = u;
-                                    ViewBag.serie = vc.NRODOC;
-                                    ViewBag.correlativo = vc.CONSUMO;
+                                    ViewBag.serie = vc.SERIE;
+                                    ViewBag.correlativo = vc.NRODOC;
                                     ViewBag.abrevia = mgmoneda.abrevia;
                                     return View("Documento");
                                 }

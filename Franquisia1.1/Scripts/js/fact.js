@@ -341,9 +341,12 @@ var FormPago = {
     PrintPreFact: "#print-prefact",
 
     initForm: function () {
+        $(FormPago.GroupFP).children().removeClass(FormPago.BtnFP);
+        $(FormPago.GroupFV).children().removeClass(FormPago.BtnFV);
+
         $(FormPago.TotalPagar).text(parseFloat($(Form.Total).text()).toFixed(2));
         $(FormPago.TotalPagado).text("00.00"); $(FormPago.Tabla).find("tbody tr").remove();
-        var grnt = $(FormPago.InputGroupFV+":radio"); grnt.first().parent().siblings("div").removeClass(FormPago.BtnFV);
+        var grnt = $(FormPago.InputGroupFV + ":radio");
         grnt.first().prop('checked', true); grnt.first().parent().addClass(FormPago.BtnFV);
         $(FormPago.LblFV).text(grnt.first().data("desc"));
         $(this.PrintPreFact).prop("checked", true);

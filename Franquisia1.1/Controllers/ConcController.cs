@@ -83,6 +83,9 @@ namespace Franquisia1._1.Controllers
                     db.venpag.Add(item);
                     index++;
                 }    
+                
+                conc conc=db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codconc)).FirstOrDefault();
+                if (conc==null){ return Json(new { respuesta = "ERROR: Error el c\u00F3digo del consumo no existe" }, JsonRequestBehavior.AllowGet); }
                 venc venc = new venc();
                 venc.CODCIA = codcia;
                 venc.CODIGO = codvenc;
@@ -108,10 +111,9 @@ namespace Franquisia1._1.Controllers
                 venc.CSIT = "RF";
                 venc.IS_GR_REMITENTE = "N";
                 venc.CODMON = parreg.POS_MON_REFERENCIA;
-                venc.NRODOC = numdoc.ToString().Split('-')[0];
-                venc.CONSUMO = numdoc.ToString().Split('-')[1];
-                conc conc=db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codconc)).FirstOrDefault();
-                if (conc==null){ return Json(new { respuesta = "ERROR: Error el c\u00F3digo del consumo no existe" }, JsonRequestBehavior.AllowGet); }
+                venc.SERIE = numdoc.ToString().Split('-')[0];
+                venc.NRODOC = numdoc.ToString().Split('-')[1];
+                venc.CONSUMO = conc.CODIGO;
                 if (conc.SITUACION.Equals("A"))
                 {
                     conc.SITUACION = "C";
@@ -196,8 +198,8 @@ namespace Franquisia1._1.Controllers
                         totalstr = nl.Numero_to_Letras(mgmoneda.clavemaesgen, total),
                         resumen = u,
                         cajero = desusr,
-                        cod1 = venc.NRODOC,
-                        cod2 = venc.CONSUMO,
+                        cod1 = venc.SERIE,
+                        cod2 = venc.NRODOC,
                         abrevia = mgmoneda.abrevia,
                     }, JsonRequestBehavior.AllowGet);
                 }

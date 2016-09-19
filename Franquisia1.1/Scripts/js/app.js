@@ -122,17 +122,9 @@ function actualizarSubtotal(f, inc, clp, cls) {var p = f.find("td").get(clp);var
 function actualizarTotal(t, cs) {var s = 0;$(t).find("tbody tr").each(function (index) {s += parseFloat($(this).find("td").get(cs).innerHTML);});$(t + "-total").text(s.toFixed(2));}
 function actualizarItems(t, ci) {$(t).find("tbody tr").each(function (index) {$(this).find("td").get(ci).innerHTML = index + 1;});$(t+"-items").text($(t).find("tbody tr").length);}
 function replaceAll(str, find, replace) { return str.replace(new RegExp(find, 'g'), replace); }
-function buscarAjax(dir, clv, t, attr, f) {
-    $.ajax({
-        type: "get", dataType: 'json', cache: false, url: dir,data: { clave: clv },
-        success: function (response, textStatus, jqXHR) {
-            t.find("tbody tr").remove(); if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }
-            $.each(jQuery.parseJSON(response.lista), function (idx, obj) {var e = []; var l = attr.length;for (var i = 0; i < l; i++) { e.push(obj[attr[i]]); }addRowEvent(t, e, f);});
-        }, error: function (xhr, status) { errorAjax(xhr, status); }
-    });
-}
+function buscarAjax(dir, clv, t, attr, f) {$.ajax({type: "get", dataType: 'json', cache: false, url: dir,data: { clave: clv },success: function (response, textStatus, jqXHR) {t.find("tbody tr").remove(); if (response.respuesta.toString().split(":")[0] == "ERROR") { return alert(response.respuesta); }$.each(jQuery.parseJSON(response.lista), function (idx, obj) {var e = []; var l = attr.length;for (var i = 0; i < l; i++) { e.push(obj[attr[i]]); }addRowEvent(t, e, f);});}, error: function (xhr, status) { errorAjax(xhr, status); }});}
 function print(div) {
-    var WIDTHPRINT = "270px", FONT_SIZE = "14px";
+    var WIDTHPRINT = "270px", FONT_SIZE = "13px";
     var mw = window.open('', 'Imprimir Factura', 'height=500,width=' + WIDTHPRINT);
     if (!mw.print) { return false; }
     var s = "<html lang='es'><head><meta charset='utf-8'><style>*{padding: 0px;margin:2px;}	body{width:" + WIDTHPRINT + ";font-size:" + FONT_SIZE + ";text-align:center;}	pre{white-space: pre-wrap;}	table{text-align: right;width: 100%;}	table>tbody>tr>td:nth-child(1) {text-align: left;}	.text-left{		text-align: left;	}</style></head><body>";
@@ -146,7 +138,8 @@ function print(div) {
 }
 function printPreFactura(t, f) {
     var l = 35;
-    var s2 = "<pre >EL CHALAN S.A.C.<table id='t-i'><tr><td class='text-left'>ARTICULO</td><td style='width:30px;'>|CANT|</td></tr></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Items: \t</td><td id='items'></td></tr></table></pre>";
+    var cia = "EL CHALAN S.A.C";
+    var s2 = "<pre >"+cia+"<table id='t-i'><tr><td class='text-left'>ARTICULO</td><td style='width:30px;'>|CANT|</td></tr></table>" + App.getStr("=", l) + "<table><tr></tr><tr><td>Items: \t</td><td id='items'></td></tr></table></pre>";
     var su = $("<div></div>");
     s2 = $(s2);
     var cant = 0;
@@ -230,16 +223,7 @@ function aperturarUndAtencion(d, u, p, c, f) {
         }, error: function (xhr, status) { errorAjax(xhr, status); }
     });
 }
-function tecladoNumerico(s, n) {
-    if (!Validar.Dato(n)) { n = 11; }
-    s.keyboard({
-        layout: 'custom',
-        customLayout: { 'normal': ['1 2 3 ', '4 5 6', '7 8 9', '0 {bksp}', '{a} {c}'] },
-        maxLength: n,
-        restrictInput: true,
-        useCombos: false,
-    });
-}
+function tecladoNumerico(s, n) { if (!Validar.Dato(n)) { n = 11; } s.keyboard({ layout: 'custom', customLayout: { 'normal': ['1 2 3 ', '4 5 6', '7 8 9', '0 {bksp}', '{a} {c}'] }, maxLength: n, restrictInput: true, useCombos: false, });}
 
 $(document).ready(function () {
     $(App.ControlTeclado+":checked").parent().siblings('.btn').removeClass(App.BtnCT);
