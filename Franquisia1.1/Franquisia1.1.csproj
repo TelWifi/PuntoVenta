@@ -256,8 +256,9 @@
       <DependentUpon>Modelo.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\AxuliarHash.cs" />
+    <Compile Include="Models\GenCod.cs" />
+    <Compile Include="Models\Msg.cs" />
     <Compile Include="Models\NumLetras.cs" />
-    <Compile Include="Models\PdfHtml.cs" />
     <Compile Include="numcia.cs">
       <DependentUpon>Modelo.tt</DependentUpon>
     </Compile>

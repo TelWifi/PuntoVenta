@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using Franquisia1._1.Models;
 
 namespace Franquisia1._1.Controllers
 {
@@ -17,12 +18,12 @@ namespace Franquisia1._1.Controllers
             try
             {
                 var rol = Session["Loged_usrfile_rol"];
-                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                if (!"C".Equals(rol)) { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
                 anexos anexo = JsonConvert.DeserializeObject<anexos>(a);
                 string rpta = "ERROR: ";
                 bool estado = true;
-                if (String.IsNullOrWhiteSpace(anexo.tipdoc)) { estado = false; rpta += "Tipo de documento no puede ser nulo o vac\u00EDo\n"; }
-                if (String.IsNullOrWhiteSpace(anexo.nrodoc)) { estado = false; rpta += "N\u00FAmero de documento no puede ser nulo o vac\u00EDo\n"; }
+                if (String.IsNullOrWhiteSpace(anexo.tipdoc)) { estado = false; rpta += Msg.AttrNoNuloVacio("Tipo de documento") + "\n"; }
+                if (String.IsNullOrWhiteSpace(anexo.nrodoc)) { estado = false; rpta += Msg.AttrNoNuloVacio(Msg.NUMDOC) + "\n"; }
                 if (estado)
                 {
                     string codcia = Session["Loged_usrfile_ciafile"].ToString();
@@ -70,10 +71,10 @@ namespace Franquisia1._1.Controllers
                         db.SaveChanges();
                         anexo = db.anexos.Where(b => b.idcia.Equals(codcia) && b.tipane.Equals("C") && b.codane.Equals(anexo.nrodoc)
                             && b.situane.Equals("V")).FirstOrDefault();
-                        return Json(new { respuesta = "EXITO: Anexo creado", anexo = anexo }, JsonRequestBehavior.AllowGet);
+                        return Json(new { respuesta = Msg.OpExitosa, anexo = anexo }, JsonRequestBehavior.AllowGet);
                         
                     }
-                    else { return Json(new { respuesta = "ADVERTENCIA: El anexo ya existe\n", anexo = new { anexo.nrodoc, anexo.desane, anexo.refane } }, JsonRequestBehavior.AllowGet); }
+                    else { return Json(new { respuesta = "ADVERTENCIA: El anexo ya existe", anexo = new { anexo.nrodoc, anexo.desane, anexo.refane } }, JsonRequestBehavior.AllowGet); }
                 }
                 return Json(new { respuesta = rpta }, JsonRequestBehavior.AllowGet);
             }catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
@@ -84,7 +85,7 @@ namespace Franquisia1._1.Controllers
             try
             {
                 var rol = Session["Loged_usrfile_rol"];
-                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                if (!"C".Equals(rol)) { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
                 
                 var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
@@ -100,8 +101,8 @@ namespace Franquisia1._1.Controllers
                                  orderby a.nrodoc
                                  select new { desane = a.desane, tipdoc = b.parm1maesgen, nrodoc = a.nrodoc, refane = a.refane }
                                      ).ToList();
-                    return Json(new { respuesta ="EXITO: LA PETICION SE REALIZO EXITOSAMENTE",lista = serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
-                }else { return Json(new { respuesta = "ERROR: EL VALOR A BUSCAR NO PUEDE SER NULO O VACIO"}, JsonRequestBehavior.AllowGet); }
+                    return Json(new { respuesta = Msg.OpExitosa, lista = serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
+                }else { return Json(new { respuesta = Msg.AttrNoNuloVacio("El valor a buscar")}, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e.Message }, JsonRequestBehavior.AllowGet); }
@@ -111,7 +112,7 @@ namespace Franquisia1._1.Controllers
             try
             {
                 var rol = Session["Loged_usrfile_rol"];
-                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                if (!"C".Equals(rol)) { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
                 var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
 
@@ -125,9 +126,9 @@ namespace Franquisia1._1.Controllers
                                  orderby a.desane
                                  select new { desane = a.desane, tipdoc = b.parm1maesgen, nrodoc = a.nrodoc, refane = a.refane }
                                      ).ToList();
-                    return Json(new { respuesta="EXITO: LA PETICION SE REALIZO EXITOSAMENTE", lista=serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
+                    return Json(new { respuesta=Msg.OpExitosa, lista=serializer.Serialize(lista) }, JsonRequestBehavior.AllowGet);
                 }
-                else { return Json(new { respuesta = "ERROR: EL VALOR A BUSCAR NO PUEDE SER NULO O VACIO"}, JsonRequestBehavior.AllowGet); }
+                else { return Json(new { respuesta = Msg.AttrNoNuloVacio("El valor a buscar")}, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex){return Json(new { respuesta = "ERROR: " + ex.Message },JsonRequestBehavior.AllowGet);}
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e.Message },JsonRequestBehavior.AllowGet); }
@@ -137,7 +138,7 @@ namespace Franquisia1._1.Controllers
             try
             {
                 var rol = Session["Loged_usrfile_rol"];
-                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                if (!"C".Equals(rol)) { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
                 anexos anexo = JsonConvert.DeserializeObject<anexos>(a);
                 string rpta;
                 if (!String.IsNullOrWhiteSpace(anexo.nrodoc))
@@ -165,14 +166,13 @@ namespace Franquisia1._1.Controllers
                             }
                             aux.fmod = DateTime.Now.ToString("dd/MM/yyyy");
                             db.SaveChanges();
-                            rpta = "EXITO: Anexo actualizado";
-                            return Json(new { respuesta = rpta, anexo = new { aux.nrodoc, aux.desane, aux.refane } }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = Msg.OpExitosa, anexo = new { aux.nrodoc, aux.desane, aux.refane } }, JsonRequestBehavior.AllowGet);
                         }
                         else { rpta = "ERROR: No se puede actualizar porque el registro esta deshabilitado"; }
                     }
                     else { rpta = "ADVERTENCIA: Anexo no registrado"; }
                 }
-                else { rpta = "ERROR: El n\u00FAmero de documento no puede ser nulo o vac\u00EDo"; }
+                else { rpta = Msg.AttrNoNuloVacio(Msg.NUMDOC); }
                 return Json(new { respuesta = rpta }, JsonRequestBehavior.AllowGet);
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
@@ -183,7 +183,7 @@ namespace Franquisia1._1.Controllers
             try
             {
                 var rol = Session["Loged_usrfile_rol"];
-                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                if (!"C".Equals(rol)) { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
                 
                 string rpta;
                 if (!String.IsNullOrWhiteSpace(nrodoc))
@@ -191,10 +191,10 @@ namespace Franquisia1._1.Controllers
                     nrodoc = nrodoc.Trim();
                     string codcia = Session["Loged_usrfile_ciafile"].ToString();
                     anexos anexo = db.anexos.Where(a => a.idcia.Equals(codcia) && a.tipane.Equals("C") && a.codane.Equals(nrodoc) && a.situane.Equals("V")).FirstOrDefault();
-                    if (anexo != null) { return Json(new { respuesta = "EXITO: Anexo obtenido", anexo = anexo }, JsonRequestBehavior.AllowGet); }
+                    if (anexo != null) { return Json(new { respuesta = Msg.OpExitosa, anexo = anexo }, JsonRequestBehavior.AllowGet); }
                     else { rpta = "ADVERTENCIA: El Anexo no est\u00E1 registrado o se encuentra deshabilitado"; }
                 }
-                else { rpta = "ERROR: EL n\u00FAmero de documento no puede ser nulo o vac\u00EDo"; }
+                else { rpta = Msg.AttrNoNuloVacio(Msg.NUMDOC); }
                 return Json(new { respuesta = rpta }, JsonRequestBehavior.AllowGet);
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }

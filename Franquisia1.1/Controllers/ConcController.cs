@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using AppAccounting;
+using Franquisia1._1.Models;
 namespace Franquisia1._1.Controllers
 {
     public class ConcController : Controller
@@ -22,7 +23,7 @@ namespace Franquisia1._1.Controllers
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
                 string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                 var rol = Session["Loged_usrfile_rol"];
-                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                if (!"C".Equals(rol)) { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
                 if (!String.IsNullOrWhiteSpace(codigo))
                 {
                     codigo = codigo.Trim();
@@ -33,11 +34,11 @@ namespace Franquisia1._1.Controllers
                         foreach (var cond in lista) { db.cond.Remove(cond); }
                         db.conc.Remove(conc);
                         db.SaveChanges();
-                        return Json(new { respuesta = "EXITO: Consumo anulado" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { respuesta = Msg.OpExitosa }, JsonRequestBehavior.AllowGet);
                     }
-                    else { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
+                    else { return Json(new { respuesta = Msg.AttrNoExiste(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
                 }
-                else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
+                else { return Json(new { respuesta = Msg.AttrNoNuloVacio(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
@@ -49,7 +50,7 @@ namespace Franquisia1._1.Controllers
             try
             {
                 var rol = Session["Loged_usrfile_rol"];
-                if (!"C".Equals(rol)) { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                if (!"C".Equals(rol)) { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
 
                 string codcia = Session["Loged_usrfile_ciafile"].ToString();
                 string sucursal = Session["Loged_usrfile_sucursal"].ToString();
@@ -60,14 +61,14 @@ namespace Franquisia1._1.Controllers
                 anexos anexo = AnexosController.crearObtener(codcia, nroane, desane, refane);
                 if (anexo == null) { return Json(new { respuesta = "ERROR: Error al obtener o crear el anexo, asegurese que los datos del cliente esten correctamente ingresados" }, JsonRequestBehavior.AllowGet); }
                 parreg parreg = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
-                if (parreg == null) { return Json(new { respuesta = "ERROR: Error al obtener par\u00E1metros intenernos" }, JsonRequestBehavior.AllowGet); }
+                if (parreg == null) { return Json(new { respuesta = Msg.ErrParam }, JsonRequestBehavior.AllowGet); }
                 parreg prigv = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("COM")).FirstOrDefault();
-                if (prigv == null) { return Json(new { respuesta = "ERROR: Error al obtener par\u00E1metros intenernos" }, JsonRequestBehavior.AllowGet); }
+                if (prigv == null) { return Json(new { respuesta = Msg.ErrParam }, JsonRequestBehavior.AllowGet); }
 
-                string numdoc = GenerarNumDoc(tipdoc);
-                if (String.IsNullOrWhiteSpace(numdoc)) { return Json(new { respuesta = "ERROR: Error al generar el n\u00FAmero del documento" }, JsonRequestBehavior.AllowGet); }
-                string codvenc = genCodVenc(codcia, punemi);
-                if (codvenc == null) { return Json(new { respuesta = "ERROR: Error al generar el c\u00F3digo de la venta" }, JsonRequestBehavior.AllowGet); }
+                string numdoc = GenCod.NumDoc(db, codcia, punemi, tipdoc);
+                if (String.IsNullOrWhiteSpace(numdoc)) { return Json(new { respuesta = Msg.ErrGenerar(Msg.NUMDOC) }, JsonRequestBehavior.AllowGet); }
+                string codvenc = GenCod.CodVenc(db, codcia, punemi);
+                if (codvenc == null) { return Json(new { respuesta = Msg.ErrGenerar(Msg.CODIGO + " de la venta") }, JsonRequestBehavior.AllowGet); }
                 
                 List<venpag> lista = JsonConvert.DeserializeObject<List<venpag>>(vp);
                 int index = 1;
@@ -85,7 +86,7 @@ namespace Franquisia1._1.Controllers
                 }    
                 
                 conc conc=db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codconc)).FirstOrDefault();
-                if (conc==null){ return Json(new { respuesta = "ERROR: Error el c\u00F3digo del consumo no existe" }, JsonRequestBehavior.AllowGet); }
+                if (conc == null) { return Json(new { respuesta = Msg.AttrNoExiste(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
                 venc venc = new venc();
                 venc.CODCIA = codcia;
                 venc.CODIGO = codvenc;
@@ -180,7 +181,7 @@ namespace Franquisia1._1.Controllers
 
                     return Json(new
                     {
-                        respuesta = "EXITO: Exito",
+                        respuesta = Msg.OpExitosa,
                         cia = ciafile,
                         suc = suc,
                         fecha = venc.FECDOC,
@@ -207,48 +208,6 @@ namespace Franquisia1._1.Controllers
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
-        }
-        private string genCodVenc(string codcia, string punemi)
-        {
-            try
-            {
-                int? codigo = 1;
-                numpos np = db.numpos.Where(a => a.CODCIA.Equals(codcia) && a.PUNEMI.Equals(punemi)).FirstOrDefault();
-                if (np != null) { np.NUMERO++; codigo = np.NUMERO; db.SaveChanges(); }
-                else
-                {
-                    codigo = 1; np = new numpos();
-                    np.CODCIA = codcia; np.PUNEMI = punemi; np.NUMERO = codigo;
-                    db.numpos.Add(np); db.SaveChanges();
-                }
-                return punemi+codigo.ToString().PadLeft(8,'0');
-            }
-            catch (System.Data.EntityException ex) { return null; }
-            catch (Exception ex) { return null; }
-        }
-        private string GenerarNumDoc(string codtipdoc)
-        {
-            try
-            {
-                string codcia = Session["Loged_usrfile_ciafile"].ToString();
-                string punemi = Session["Loged_usrfile_punemi"].ToString();
-                numpemi np = db.numpemi.Where(a => a.CODCIA.Equals(codcia) && a.PUNEMI.Equals(punemi) && a.CODIGO.Equals(codtipdoc)).FirstOrDefault();
-                if (np == null) { return null; }
-                np.NUMERO++;
-                db.SaveChanges();
-                fordoc fd = db.fordoc.Where(a=>a.CODIGO.Equals("01")).FirstOrDefault();
-                if (fd!=null )
-                {
-                    if ( fd.COMPLETAR.Equals("S"))
-                    {
-                        return np.SERIE + "-" + np.NUMERO.ToString().PadLeft((int)fd.LONGNUMERO, '0');
-                    }
-                    return np.SERIE + "-" + np.NUMERO;
-                }
-                return null;
-            }
-            catch (System.Data.EntityException ex) { return null; }
-            catch (Exception ex) { return null; }
         }
     }
 }

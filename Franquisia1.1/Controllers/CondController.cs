@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using Franquisia1._1.Models;
 namespace Franquisia1._1.Controllers
 {
     public class CondController : Controller
@@ -28,7 +29,7 @@ namespace Franquisia1._1.Controllers
                             catch (JsonException ex) { return Json(new { respuesta = "ERROR: El detalle de consumo no tinene un formato json v\u00E1lido\nDetalle de error:" + ex.Message }, JsonRequestBehavior.AllowGet); }
                             codigo = codigo.Trim();
                             conc conc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codigo)).FirstOrDefault();
-                            if (conc == null) { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
+                            if (conc == null) { return Json(new { respuesta =Msg.AttrNoExiste(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
                             else
                             {
                                 var lista = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(conc.CODIGO)).ToList();
@@ -50,13 +51,13 @@ namespace Franquisia1._1.Controllers
                                     else { return Json(new { respuesta = "ERROR: Detalle de consumo nulo, operaci\u00F3n cancelada" }, JsonRequestBehavior.AllowGet); }
                                 }
                                 db.SaveChanges();
-                                return Json(new { respuesta = "EXITO: Guardado exitosamente" }, JsonRequestBehavior.AllowGet);
+                                return Json(new { respuesta = Msg.OpExitosa }, JsonRequestBehavior.AllowGet);
                             }
                         }
-                        else { return Json(new { respuesta = "ERROR: El detalle de consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
+                        else { return Json(new { respuesta = Msg.AttrNoNuloVacio("El detalle del consumo") }, JsonRequestBehavior.AllowGet); }
                     }
-                    else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
-                }else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }                
+                    else { return Json(new { respuesta = Msg.AttrNoNuloVacio(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
+                }else { return Json(new { respuesta =Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }                
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e }, JsonRequestBehavior.AllowGet); }
@@ -73,7 +74,7 @@ namespace Franquisia1._1.Controllers
                         string codcia = Session["Loged_usrfile_ciafile"].ToString();
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                         conc conc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codigo)).FirstOrDefault();
-                        if (conc == null) { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
+                        if (conc == null) { return Json(new { respuesta = Msg.AttrNoExiste(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
                         if (conc.FACTURANDO.Equals("N"))
                         {
                             item = item.PadLeft(4, '0');
@@ -82,15 +83,15 @@ namespace Franquisia1._1.Controllers
                             {
                                 db.cond.Remove(cond);
                                 db.SaveChanges();
-                                return Json(new { respuesta = "EXITO: Guardado exitosamente" }, JsonRequestBehavior.AllowGet);
+                                return Json(new { respuesta = Msg.OpExitosa }, JsonRequestBehavior.AllowGet);
                             }
-                            else { return Json(new { respuesta = "ERROR: El item no existe" }, JsonRequestBehavior.AllowGet); }
+                            else { return Json(new { respuesta = Msg.AttrNoExiste("El item") }, JsonRequestBehavior.AllowGet); }
                         }
-                        else { return Json(new { respuesta = "ERROR: Acceso denegado, el consumo est\u00E1 en el proceso de facturaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                        else { return Json(new { respuesta = Msg.ADCPF }, JsonRequestBehavior.AllowGet); }
                     }
-                    else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
+                    else { return Json(new { respuesta = Msg.AttrNoNuloVacio(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
                 }
-                else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                else { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e }, JsonRequestBehavior.AllowGet); }
@@ -136,7 +137,7 @@ namespace Franquisia1._1.Controllers
                                                             TOTAL = a.TOTAL,
                                                             tipovalorventa = c.desmaesgen
                                                         }).OrderBy(a => a.ITEM).ToList();
-                                            return Json(new { respuesta = "EXITO: Petici\u00F3n exitosa", lista = cond, cabecera = conc, peratencion = per, undatencion = und }, JsonRequestBehavior.AllowGet);
+                                            return Json(new { respuesta = Msg.OpExitosa, lista = cond, cabecera = conc, peratencion = per, undatencion = und }, JsonRequestBehavior.AllowGet);
                                         }
                                         else { return Json(new { respuesta = "ERROR: No exite una persona asignada a atender la unidad de atenci\u00F3n" }, JsonRequestBehavior.AllowGet); }
                                     }
@@ -146,11 +147,11 @@ namespace Franquisia1._1.Controllers
                             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
                             catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
                         }
-                        else { return Json(new { respuesta = "ERROR: El C\u00F3digo de la divisi\u00F3n de atenci\u00F3n no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
+                        else { return Json(new { respuesta = Msg.AttrNoNuloVacio(Msg.CODDIV)}, JsonRequestBehavior.AllowGet); }
                     }
-                    else { return Json(new { respuesta = "ERROR: El c\u00F3digo de la unidad de atenci\u00F3n no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
+                    else { return Json(new { respuesta = Msg.AttrNoNuloVacio(Msg.CODUND) }, JsonRequestBehavior.AllowGet); }
                 }
-                else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                else { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
             catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
@@ -168,10 +169,10 @@ namespace Franquisia1._1.Controllers
                         string codcia = Session["Loged_usrfile_ciafile"].ToString();
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                         conc conc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codigo)).FirstOrDefault();
-                        if (conc == null) { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
+                        if (conc == null) { return Json(new { respuesta = Msg.AttrNoExiste(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
                         if (conc.FACTURANDO.Equals("N"))
                         {
-                            string coditem = generarCodItem(codcia, conc.CODIGO);
+                            string coditem = GenCod.CodItem(db, codcia, conc.CODIGO);
                             cond cond = new cond();
                             cond.ITEM = coditem;
                             cond.CODCIA = codcia;
@@ -185,13 +186,13 @@ namespace Franquisia1._1.Controllers
                             cond.TOTAL = cond.PREUNI * cond.CANTIDAD;
                             db.cond.Add(cond);
                             db.SaveChanges();
-                            return Json(new { respuesta = "EXITO: Exito", item = cond.ITEM }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = Msg.OpExitosa, item = cond.ITEM }, JsonRequestBehavior.AllowGet);
                         }
-                        else { return Json(new { respuesta = "ERROR: Acceso denegado, el consumo est\u00E1 en el proceso de facturaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                        else { return Json(new { respuesta = Msg.ADCPF }, JsonRequestBehavior.AllowGet); }
                     }
-                    else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
+                    else { return Json(new { respuesta = Msg.AttrNoNuloVacio(Msg.CODUND) }, JsonRequestBehavior.AllowGet); }
                 }
-                else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                else { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e }, JsonRequestBehavior.AllowGet); }
@@ -208,35 +209,23 @@ namespace Franquisia1._1.Controllers
                         string codcia = Session["Loged_usrfile_ciafile"].ToString();
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                         conc conc = db.conc.Where(a => a.CODCIA.Equals(codcia) && a.SUCURSAL.Equals(sucursal) && a.CODIGO.Equals(codigo)).FirstOrDefault();
-                        if (conc == null) { return Json(new { respuesta = "ERROR: El C\u00F3digo de consumo no existe" }, JsonRequestBehavior.AllowGet); }
+                        if (conc == null) { return Json(new { respuesta =Msg.AttrNoExiste(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
                         if (conc.FACTURANDO.Equals("N"))
                         {
                             cond cond = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(codigo) && a.ITEM.Equals(item)).FirstOrDefault();
                             cond.CANTIDAD = Convert.ToDecimal(cantidad);
                             cond.TOTAL = cond.PREUNI * cond.CANTIDAD;
                             db.SaveChanges();
-                            return Json(new { respuesta = "EXITO: Exito" }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = Msg.OpExitosa }, JsonRequestBehavior.AllowGet);
                         }
-                        else { return Json(new { respuesta = "ERROR: Acceso denegado, el consumo est\u00E1 en el proceso de facturaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                        else { return Json(new { respuesta = Msg.ADCPF }, JsonRequestBehavior.AllowGet); }
                     }
-                    else { return Json(new { respuesta = "ERROR: El c\u00F3digo del consumo no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
+                    else { return Json(new { respuesta = Msg.AttrNoNuloVacio(Msg.CODCONSUMO) }, JsonRequestBehavior.AllowGet); }
                 }
-                else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }
+                else { return Json(new { respuesta = Msg.OpExitosa }, JsonRequestBehavior.AllowGet); }
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex }, JsonRequestBehavior.AllowGet); }
             catch (Exception e) { return Json(new { respuesta = "ERROR: " + e }, JsonRequestBehavior.AllowGet); }
-        }
-        private string generarCodItem(string codcia, string codigo){
-            try
-            {
-                string item = "0001";
-                item = db.cond.Where(a => a.CODCIA.Equals(codcia) && a.CODIGO.Equals(codigo)).Max(a => a.ITEM);
-                if (item == null) { return "0001"; }
-                item = (Convert.ToInt16(item) + 1).ToString().PadLeft(4, '0');
-                return item;
-            }
-            catch (System.Data.EntityException ex) { return null; }
-            catch (Exception ex) { return null; }
         }
     }
 }

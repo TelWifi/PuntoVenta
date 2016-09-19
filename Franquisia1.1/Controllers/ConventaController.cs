@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Franquisia1._1.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -19,7 +20,7 @@ namespace Franquisia1._1.Controllers
                 var rol = Session["Loged_usrfile_rol"];
                 if ("C".Equals(rol) || "M".Equals(rol))
                 {
-                    if (String.IsNullOrWhiteSpace(claserv)) { return Json(new { respuesta = "ERROR: El c\u00F3digo de la categor\u00EDa no puede ser nulo o vac\u00EDo" }, JsonRequestBehavior.AllowGet); }
+                    if (String.IsNullOrWhiteSpace(claserv)) { return Json(new { respuesta = Msg.AttrNoNuloVacio(Msg.CODIGO+" de la categoria") }, JsonRequestBehavior.AllowGet); }
                     else
                     {
                         claserv = claserv.Trim();
@@ -27,7 +28,7 @@ namespace Franquisia1._1.Controllers
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
                         
                         parreg p = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
-                        if (p==null) { return Json(new { respuesta = "ERROR: No se encontraron los par\u00E1metros" }, JsonRequestBehavior.AllowGet); }
+                        if (p==null) { return Json(new { respuesta = Msg.ErrParam }, JsonRequestBehavior.AllowGet); }
 
                         if (p.POS_IS_IMAGEN.Equals("S"))
                         {
@@ -46,7 +47,7 @@ namespace Franquisia1._1.Controllers
                                                  descripcion = result.descripcion,
                                                  tipovalorventa = c.desmaesgen
                                              }).ToList();
-                            return Json(new { respuesta = "EXITO: EXITO", lista = listajson }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = Msg.OpExitosa, lista = listajson }, JsonRequestBehavior.AllowGet);
                         }else
                         {
                             var listajson = (from result in db.conventa
@@ -63,10 +64,10 @@ namespace Franquisia1._1.Controllers
                                                  descripcion = result.descripcion,
                                                  tipovalorventa = c.desmaesgen
                                              }).ToList();
-                            return Json(new { respuesta = "EXITO: EXITO", lista = listajson }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = Msg.OpExitosa, lista = listajson }, JsonRequestBehavior.AllowGet);
                         }
                     }
-                }else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }                
+                }else { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }                
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
@@ -86,7 +87,7 @@ namespace Franquisia1._1.Controllers
                         string sucursal = Session["Loged_usrfile_sucursal"].ToString();
 
                         parreg p = db.parreg.Where(a => a.IDCIA.Equals(codcia) && a.FORM.Equals("POS")).FirstOrDefault();
-                        if (p == null) { return Json(new { respuesta = "ERROR: No se encontraron los par\u00E1metros" }, JsonRequestBehavior.AllowGet); }
+                        if (p == null) { return Json(new { respuesta = Msg.ErrParam }, JsonRequestBehavior.AllowGet); }
 
                         if (p.POS_IS_IMAGEN.Equals("S"))
                         {
@@ -105,7 +106,7 @@ namespace Franquisia1._1.Controllers
                                                  descripcion = result.descripcion,
                                                  tipovalorventa = c.desmaesgen
                                              }).ToList();
-                            return Json(new { respuesta = "EXITO: Exito", lista = listajson }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = Msg.OpExitosa, lista = listajson }, JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
@@ -123,10 +124,10 @@ namespace Franquisia1._1.Controllers
                                                  descripcion = result.descripcion,
                                                  tipovalorventa = c.desmaesgen
                                              }).ToList();
-                            return Json(new { respuesta = "EXITO: Exito", lista = listajson }, JsonRequestBehavior.AllowGet);
+                            return Json(new { respuesta = Msg.OpExitosa, lista = listajson }, JsonRequestBehavior.AllowGet);
                         }
                     }
-                }else { return Json(new { respuesta = "ERROR: Ud. no tiene los permisos para realizar la operaci\u00F3n" }, JsonRequestBehavior.AllowGet); }                
+                }else { return Json(new { respuesta = Msg.PermisoDenegado }, JsonRequestBehavior.AllowGet); }                
             }
             catch (System.Data.EntityException ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
             catch (Exception ex) { return Json(new { respuesta = "ERROR: " + ex.Message }, JsonRequestBehavior.AllowGet); }
