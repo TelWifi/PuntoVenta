@@ -150,10 +150,9 @@
                         <a id="cambiar-undatencion" class="btn btn-secundario btn-secundario-bordes">Cambiar Und. Atención</a>
                         <a href="/UndAtencion/Consumos?div=@ViewBag.div&und=@ViewBag.und&per=@ViewBag.per" class="btn btn-secundario btn-secundario-bordes">M. Consumos</a>
                     </div>
-                    <a class="btn btn-danger" href="/Home/OffLogin"><span class="glyphicon glyphicon-remove"></span> Salir</a>
-                </div>
-                <div class="pull-right">
-                    <img class="img-responsive logo" src="/Content/images/logo.png" alt="Neinco">
+                    <div class="btn-group">
+                        <img class="img-responsive logo pull-right" src="/Content/images/logo.png" alt="Neinco">
+                    </div>
                 </div>
             </div>
         </div>
@@ -318,5 +317,4 @@
     <script>
         $("#divatencion").val(@ViewBag.div);
     </script>
-
 }

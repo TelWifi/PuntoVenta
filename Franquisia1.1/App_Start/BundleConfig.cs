@@ -27,10 +27,6 @@ namespace Franquisia1._1
                         "~/Scripts/js/jquery.keyboard.js"
                         ));
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.unobtrusive*",
-                        "~/Scripts/jquery.validate*"));
-
             bundles.Add(new StyleBundle("~/Content/cssapp").Include(
                 "~/Content/bootstrap.css",
                 "~/Content/estilos.css",
