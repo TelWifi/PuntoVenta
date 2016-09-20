@@ -18,6 +18,7 @@ namespace Franquisia1._1.Models
         public static string OpExitosa = "EXITO: Operaci\u00F3n completada";
         public static string ErrParam = "ERROR: Error al obtener "+PARAMETRO+"s intenernos";
         public static string ADCPF = "ERROR: Acceso denegado, el consumo est\u00E1 en el proceso de facturaci\u00F3n";
+        public static string PwdIncorrecta = "ERROR: Contrase\u00F1a incorrecta";
         public static string AttrNoNuloVacio(string attr)
         {
             return "ERROR: " + attr + " no puede ser nulo o vac\u00EDo";

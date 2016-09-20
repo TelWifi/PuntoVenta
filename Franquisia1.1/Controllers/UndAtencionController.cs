@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Franquisia1._1.Models;
 
 namespace Franquisia1._1.Controllers
 {
@@ -43,7 +44,7 @@ namespace Franquisia1._1.Controllers
                    peratencion p = db.peratencion.Where(a => a.codcia.Equals(codcia) && a.situa.Equals("V") && a.codigo.Equals(idperatencion)).FirstOrDefault();
                    if (p == null || !p.clave.Equals(newpwd))
                    {
-                       return Json(new { respuesta = "ERROR: Contrase\u00F1a incorrecta" }, JsonRequestBehavior.AllowGet);
+                       return Json(new { respuesta = Msg.PwdIncorrecta }, JsonRequestBehavior.AllowGet);
                    }
                }
                var rol = Session["Loged_usrfile_rol"];
